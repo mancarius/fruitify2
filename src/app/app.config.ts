@@ -5,7 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { fruityviceApiInterceptor } from './core/interceptors/fruityvice-api/fruityvice-api.interceptor';
+import { fruityviceProxyInterceptor } from '@core/interceptors/fruityvice-proxy/fruityvice-proxy.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
         registrationStrategy: 'registerWhenStable:30000'
     }),
     provideHttpClient(
-        withInterceptors([fruityviceApiInterceptor])
+        withInterceptors([fruityviceProxyInterceptor])
     )
 ]
 };
