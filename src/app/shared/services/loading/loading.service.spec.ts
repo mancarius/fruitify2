@@ -3,7 +3,7 @@ import { TestBed, async, waitForAsync } from '@angular/core/testing';
 import { LoadingService } from './loading.service';
 import { skip, take } from 'rxjs';
 
-fdescribe('LoadingService', () => {
+describe('LoadingService', () => {
   let service: LoadingService;
 
   beforeEach(() => {
