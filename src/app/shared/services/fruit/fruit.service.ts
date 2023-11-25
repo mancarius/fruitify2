@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Fruit, QueryParams } from '../../types';
-import { environment } from '../../../../environments/environment.development';
+import { Fruit, QueryParams } from '@shared/types';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map } from 'rxjs';
+import { API_BASE_URL } from '@shared/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FruitService {
-  private _baseUrl = `${environment.api}/api/fruit`;
+  private _baseUrl = API_BASE_URL;
 
   constructor(private _http: HttpClient) { }
 
