@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient, HttpHandlerFn, HttpInterceptorFn, HttpRequest, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, HttpInterceptorFn, HttpRequest, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { fruityviceProxyInterceptor } from './fruityvice-proxy.interceptor';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 
 describe('fruityviceProxyInterceptor', () => {
   let httpTesting: HttpTestingController;
   let httpClient: HttpClient;
-  let next: HttpHandlerFn;
   const interceptor: HttpInterceptorFn = (req, next) => 
     TestBed.runInInjectionContext(() => fruityviceProxyInterceptor(req, next));
 
