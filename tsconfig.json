@@ -37,6 +37,9 @@
       "@env/*": [
         "environments/*"
       ],
+      "@tokens/*": [
+        "app/tokens/*"
+      ],
     }
   },
   "angularCompilerOptions": {
