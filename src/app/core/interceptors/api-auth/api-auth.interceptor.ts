@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { API_AUTH_CONFIG } from '../../../tokens';
+import { API_AUTH_CONFIG } from '@tokens';
 
 /**
  * Interceptor function for API authentication.
@@ -15,7 +15,7 @@ export const apiAuthInterceptor: HttpInterceptorFn = (req, next) => {
   const apiAuthConfig = inject(API_AUTH_CONFIG);
 
   if (apiAuthConfig) {
-    const { addTo, key, authorizationType, value } = apiAuthConfig;
+    const { addTo, key, authorizationType, value } = apiAuthConfig.getValue();
 
     if (addTo === 'headers') {
       req = req.clone({
