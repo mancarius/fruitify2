@@ -49,6 +49,58 @@
         "maxSize": 100,
         "maxAge": "1h"
       }
+    },
+    {
+      "name": "unsplash",
+      "urls": [
+        "*api.unsplash.com/*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1h"
+      }
+    },
+    {
+      "name": "images-cache",
+      "urls": [
+        "*.jpg*",
+        "*.jpeg*",
+        "*.png*",
+        "*.apng*",
+        "*.webp*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1w"
+      }
+    },
+    {
+      "name": "video-cache",
+      "urls": [
+        "*.mp4*",
+        "*.webm*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1m"
+      }
+    },
+    {
+      "name": "fonts-cache",
+      "urls": [
+        "*.otf*",
+        "*.ttf*",
+        "*.woff*",
+        "*.woff2*"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1m"
+      }
     }
   ]
 }
