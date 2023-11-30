@@ -8,6 +8,5 @@ export type ApiAuthConfig = {
   match: string;
   addTo: "params";
   key: string;
-  authorizationType: never;
   value: string;
 }
