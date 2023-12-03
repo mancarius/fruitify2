@@ -1,5 +1,5 @@
 import { InjectionToken } from "@angular/core";
-import { ApiAuthConfig } from "@shared/types/api-auth-config";
+import { MediaServiceConfig } from "@shared/types";
 import { BehaviorSubject } from "rxjs";
 
-export const API_AUTH_CONFIG = new InjectionToken<BehaviorSubject<ApiAuthConfig>>('API_AUTH_CONFIG');
+export const MEDIA_SERVICE_CONFIG = new InjectionToken<BehaviorSubject<MediaServiceConfig>>('MEDIA_SERVICE_CONFIG');
