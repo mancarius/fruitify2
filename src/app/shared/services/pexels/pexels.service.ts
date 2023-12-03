@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { MediaOptions, MediaPhoto, MediaVideo } from '../../types';
+import { Inject, Injectable } from '@angular/core';
+import { MediaOptions, MediaPhoto, MediaServiceConfig } from '../../types';
 import { Observable, map } from 'rxjs';
 import { MediaService } from '../media/media.service';
 import { HttpClient } from '@angular/common/http';
-import { PaginationParams, Photos, Videos, Photo } from 'pexels';
-import { PEXELS_API_BASE_URL } from '../../constants';
+import { PaginationParams, Photos, Photo } from 'pexels';
 
 @Injectable({
   providedIn: 'root'
@@ -16,39 +15,25 @@ export class PexelsService extends MediaService {
     per_page: 1,
   };
 
-  constructor(private http: HttpClient) {
-    super();
+  constructor(
+    @Inject('MEDIA_SERVICE_CONFIG') _providerConfig: MediaServiceConfig,
+    private readonly _http: HttpClient
+  ) {
+    super(_providerConfig);
   }
 
-  /**
-   * Finds a photo based on the provided query and options.
-   * @param query - The search query for the photo.
-   * @param options - Additional options for the search query (optional).
-   * @returns An Observable that emits the found photo.
-   */
-  findPhoto(query: string, options: Partial<MediaOptions> = {}): Observable<MediaPhoto> {
+  override findPhoto(query: string, options: Partial<MediaOptions> = {}): Observable<MediaPhoto> {
     const queryOptions = { ...this._defaultOptions, ...options };
     const url = this._getPhotosUrl();
     const params = this._composeQueryParams(query, queryOptions);
+    const request = this.composeHttpRequest('GET', url, params);
 
-    return this.http.get<Photos>(url, { params }).pipe(
-      map(response => this._composePhotoResponse(response))
-    );
-  }
-
-  /**
-   * Finds a video based on the specified query and options.
-   * @param query The search query for the video.
-   * @param options The optional parameters for the search query.
-   * @returns An Observable that emits the video response.
-   */
-  findVideo(query: string, options: Partial<MediaOptions> = {}): Observable<MediaVideo> {
-    const queryOptions = { ...this._defaultOptions, ...options };
-    const url = this._getVideosUrl();
-    const params = this._composeQueryParams(query, queryOptions);
-
-    return this.http.get<Videos>(url, { params }).pipe(
-      map(response => this._composeVideoResponse(response))
+    return this._http.get<Photos>(request.url, {
+      headers: request.headers,
+      params: request.params,
+      observe: 'response',
+    }).pipe(
+      map(response => this._composePhotoResponse(response.body as Photos))
     );
   }
 
@@ -62,16 +47,6 @@ export class PexelsService extends MediaService {
     return url.toString();
   }
 
-  /**
-   * Returns the URL for retrieving videos from the Pexels API.
-   * @returns The URL string.
-   */
-  private _getVideosUrl(): string {
-    const url = this._composeUrl('videos/search');
-
-    return url.toString();
-  }
-
 
   /**
    * Composes a URL with the given pathname.
@@ -79,7 +54,7 @@ export class PexelsService extends MediaService {
    * @returns The composed URL.
    */
   private _composeUrl(pathname: string): URL {
-    const url = new URL(PEXELS_API_BASE_URL);
+    const url = new URL(this._providerConfig.baseUrl);
     url.pathname = pathname;
     return url;
   }
@@ -116,26 +91,20 @@ export class PexelsService extends MediaService {
   }
 
   /**
-   * Composes a video response object from the API response.
-   * @param response - The API response containing video data.
-   * @returns The composed video response object.
-   */
-  private _composeVideoResponse(response: Videos): MediaVideo {
-    const video = response.videos[0];
-
-    return {
-      url: video.video_files[0].link,
-      picture: video.image,
-      fileType: video.video_files[0].file_type,
-    };
-  }
-
-  /**
    * Returns the URL of the photo.
    * @param photo - The photo object.
    * @returns The URL of the photo.
    */
   private _getPhotoUrl(photo: Photo): string {
-    return Object.values(photo.src)[0];
+    switch (this._defaultOptions.size) {
+      case 'small':
+        return photo.src.small;
+      case 'medium':
+        return photo.src.medium;
+      case 'large':
+        return photo.src.large;
+      default:
+        return photo.src.medium;
+    }
   }
 }
