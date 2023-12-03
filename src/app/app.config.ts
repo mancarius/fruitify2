@@ -5,10 +5,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { fruityviceProxyInterceptor } from '@core/interceptors/fruityvice-proxy/fruityvice-proxy.interceptor';
 import { BehaviorSubject } from 'rxjs';
 import { MediaServiceConfig } from '@shared/types';
-import { MEDIA_SERVICE_CONFIG } from '@tokens';
+import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
+import { authenticationInterceptor, fruityviceProxyInterceptor } from '@core/interceptors';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -27,7 +27,10 @@ export const appConfig: ApplicationConfig = {
         }),
 
         provideHttpClient(
-            withInterceptors([fruityviceProxyInterceptor])
+            withInterceptors([
+                fruityviceProxyInterceptor,
+                authenticationInterceptor
+            ])
         ),
 
         {
