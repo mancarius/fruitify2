@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { PexelsService } from './pexels.service';
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { config, firstValueFrom } from 'rxjs';
-import { PEXELS_API_AUTH_CONFIG } from '@shared/constants';
+import { PEXELS_API_CONFIG } from '@shared/constants';
 import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
 
 describe('PexelsService', () => {
@@ -17,7 +17,7 @@ describe('PexelsService', () => {
         provideHttpClientTesting(),
         {
           provide: MEDIA_SERVICE_CONFIG,
-          useValue: PEXELS_API_AUTH_CONFIG
+          useValue: PEXELS_API_CONFIG
         }
       ]
     });
@@ -50,8 +50,8 @@ describe('PexelsService', () => {
       const photoPromise = firstValueFrom(photo$);
 
       const req = httpTesting.expectOne((request) => {
-        const expectedHeaders = PEXELS_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'headers');
-        const expectedParams = PEXELS_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'params');
+        const expectedHeaders = PEXELS_API_CONFIG.authConfigs.filter(config => config.addTo === 'headers');
+        const expectedParams = PEXELS_API_CONFIG.authConfigs.filter(config => config.addTo === 'params');
 
         return (
           request.method === 'GET' &&

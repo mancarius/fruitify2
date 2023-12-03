@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { MediaOptions, MediaPhoto, MediaServiceConfig } from '../../types';
 import { Observable, map } from 'rxjs';
 import { MediaService } from '../media/media.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { PaginationParams, Photos, Photo } from 'pexels';
+import { AUTH_CONFIG } from '@tokens/api';
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +27,11 @@ export class PexelsService extends MediaService {
     const queryOptions = { ...this._defaultOptions, ...options };
     const url = this._getPhotosUrl();
     const params = this._composeQueryParams(query, queryOptions);
-    const request = this.composeHttpRequest('GET', url, params);
+    const context = new HttpContext().set(AUTH_CONFIG, this._providerConfig.authConfigs);
 
-    return this._http.get<Photos>(request.url, {
-      headers: request.headers,
-      params: request.params,
+    return this._http.get<Photos>(url, {
+      params,
+      context,
       observe: 'response',
     }).pipe(
       map(response => this._composePhotoResponse(response.body as Photos))

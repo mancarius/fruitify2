@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { MediaService } from '../media/media.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { MediaOptions, MediaPhoto, MediaServiceConfig, Unsplash } from '@shared/types';
 import { Observable, map } from 'rxjs';
+import { AUTH_CONFIG } from '@tokens/api';
 
 
 @Injectable({
@@ -26,11 +27,11 @@ export class UnsplashService extends MediaService {
     const queryOptions = { ...this._defaultOptions, ...options };
     const url = this._getPhotosUrl();
     const params = this._composeQueryParams(query, queryOptions);
-    const request = this.composeHttpRequest('GET', url, params);
+    const context = new HttpContext().set(AUTH_CONFIG, this._providerConfig.authConfigs);
 
-    return this._http.get<Unsplash.Photos>(request.url, {
-      headers: request.headers,
-      params: request.params,
+    return this._http.get<Unsplash.Photos>(url, {
+      params,
+      context,
       observe: 'response',
     }).pipe(
       map(response => this._composePhotoResponse(response.body as Unsplash.Photos))

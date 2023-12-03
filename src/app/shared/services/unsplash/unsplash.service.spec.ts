@@ -3,7 +3,7 @@ import { UnsplashService } from './unsplash.service';
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
-import { UNSPLASH_API_AUTH_CONFIG } from '@shared/constants';
+import { UNSPLASH_API_CONFIG } from '@shared/constants';
 
 describe('UnsplashService', () => {
   let service: UnsplashService;
@@ -18,7 +18,7 @@ describe('UnsplashService', () => {
         provideHttpClientTesting(),
         {
           provide: MEDIA_SERVICE_CONFIG,
-          useValue: UNSPLASH_API_AUTH_CONFIG
+          useValue: UNSPLASH_API_CONFIG
         }
       ]
     });
@@ -50,8 +50,8 @@ describe('UnsplashService', () => {
       const photoPromise = firstValueFrom(photo$);
 
       const req = httpTesting.expectOne((request) => {
-        const expectedHeaders = UNSPLASH_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'headers');
-        const expectedParams = UNSPLASH_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'params');
+        const expectedHeaders = UNSPLASH_API_CONFIG.authConfigs.filter(config => config.addTo === 'headers');
+        const expectedParams = UNSPLASH_API_CONFIG.authConfigs.filter(config => config.addTo === 'params');
 
         return (
           request.method === 'GET' &&
