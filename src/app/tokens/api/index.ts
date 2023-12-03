@@ -10,7 +10,7 @@ import { BehaviorSubject } from "rxjs";
 export const MEDIA_SERVICE_CONFIG = new InjectionToken<BehaviorSubject<MediaServiceConfig>>('MEDIA_SERVICE_CONFIG');
 
 /**
- * Token for the media service authentication.
- * This context token is used to provide the configuration for the media service authentication to interceptors.
+ * Context token for the authentication configuration.
+ * It is used to provide a function that returns an array of authentication configurations.
  */
-export const MEDIA_SERVICE_AUTH = new HttpContextToken<MediaServiceConfig['authConfigs']>(() => []);
+export const AUTH_CONFIG = new HttpContextToken<MediaServiceConfig['authConfigs']>(() => []);
