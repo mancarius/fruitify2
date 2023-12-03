@@ -1,12 +1,10 @@
 import { Observable } from 'rxjs';
 
 export enum MediaType {
-  PHOTO = 'photo',
-  VIDEO = 'video',
+  PHOTO = 'photo'
 }
 
 export enum MediaSize {
-  ORIGINAL = 'original',
   SMALL = 'small',
   MEDIUM = 'medium',
   LARGE = 'large',
@@ -38,9 +36,11 @@ export type MediaVideo = Media & {
 /**
  * Represents the options for media queries.
  */
-export interface MediaOptions {
+export type MediaOptions = {
   /** The page number to return. */
   page: number;
+  /** The number of results per page. */
+  per_page: number;
   /** The maximum number of results to return. */
   limit: number;
   /** Size of the media. */
@@ -50,18 +50,11 @@ export interface MediaOptions {
 }
 
 
-/**
- * Represents a media service that provides methods for finding multimedia content.
- */
-/**
- * Represents a media finder that can be used to search for photos and videos.
- */
-export interface IMediaFinder {
-  /**
-   * The default query options.
-   */
-  defaultQueryOptions: MediaOptions;
 
+/**
+ * Represents a photo finder interface.
+ */
+export interface PhotoFinder {
   /**
    * Finds a photo based on the specified query and options.
    * @param query The search query.
@@ -69,12 +62,4 @@ export interface IMediaFinder {
    * @returns An Observable that emits the found photo.
    */
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto>;
-
-  /**
-   * Finds a video based on the specified query and options.
-   * @param query The search query.
-   * @param options The optional query options.
-   * @returns An Observable that emits the found video.
-   */
-  findVideo(query: string, options?: Partial<MediaOptions>): Observable<MediaVideo>;
 }

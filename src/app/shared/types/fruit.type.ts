@@ -1,4 +1,4 @@
-import { Nutritions } from "./nutritions"
+import { Nutritions } from "./nutritions.type"
 
 export type Fruit = {
   genus: string,
