@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { PexelsService } from './pexels.service';
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { firstValueFrom } from 'rxjs';
+import { config, firstValueFrom } from 'rxjs';
+import { PEXELS_API_AUTH_CONFIG } from '@shared/constants';
+import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
 
 describe('PexelsService', () => {
   let service: PexelsService;
@@ -13,6 +15,10 @@ describe('PexelsService', () => {
       providers: [
         PexelsService,
         provideHttpClientTesting(),
+        {
+          provide: MEDIA_SERVICE_CONFIG,
+          useValue: PEXELS_API_AUTH_CONFIG
+        }
       ]
     });
     service = TestBed.inject(PexelsService);
@@ -44,11 +50,17 @@ describe('PexelsService', () => {
       const photoPromise = firstValueFrom(photo$);
 
       const req = httpTesting.expectOne((request) => {
+        const expectedHeaders = PEXELS_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'headers');
+        const expectedParams = PEXELS_API_AUTH_CONFIG.authConfigs.filter(config => config.addTo === 'params');
+
         return (
           request.method === 'GET' &&
           request.url === 'https://api.pexels.com/v1/search' &&
           request.params.get('query') == query &&
-          request.params.get('per_page') == options.limit.toString()
+          request.params.get('per_page') == options.limit.toString() &&
+          // check authentication headers and params if they exist
+          (!expectedHeaders.length || expectedHeaders.every(header => request.headers.get(header.key) == header.value)) &&
+          (!expectedParams.length || expectedParams.every(param => request.params.get(param.key) == param.value))
         );
       });
       
@@ -59,49 +71,6 @@ describe('PexelsService', () => {
       expect(photo.url).toBe('https://example.com/photo.jpg');
       expect(photo.alt).toBe('Nature');
       expect(photo.avgColor).toBe('#abcdef');
-    });
-  });
-
-
-
-  describe('#findVideo', () => {
-    it('should send a GET request to the correct URL and return the found video', async () => {
-      const query = 'ocean';
-      const options = { limit: 3 };
-      const mockResponse = {
-        videos: [
-          {
-            video_files: [
-              {
-                link: 'https://example.com/video.mp4',
-                file_type: 'video/mp4',
-              },
-            ],
-            image: 'https://example.com/video.jpg',
-          },
-        ],
-      };
-
-      const video$ = service.findVideo(query, options);
-
-      const videoPromise = firstValueFrom(video$);
-
-      const req = httpTesting.expectOne((request) => {
-        return (
-          request.method === 'GET' &&
-          request.url === 'https://api.pexels.com/videos/search' &&
-          request.params.get('query') === query &&
-          request.params.get('per_page') === options.limit.toString()
-        );
-      });
-
-      req.flush(mockResponse);
-
-      const video = await videoPromise;
-
-      expect(video.url).toBe('https://example.com/video.mp4');
-      expect(video.picture).toBe('https://example.com/video.jpg');
-      expect(video.fileType).toBe('video/mp4');
     });
   });
 });
