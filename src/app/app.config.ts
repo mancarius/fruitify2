@@ -7,8 +7,8 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { fruityviceProxyInterceptor } from '@core/interceptors/fruityvice-proxy/fruityvice-proxy.interceptor';
 import { BehaviorSubject } from 'rxjs';
-import { ApiAuthConfig } from '@shared/types/api-auth-config';
-import { API_AUTH_CONFIG } from '@tokens';
+import { MediaServiceConfig } from '@shared/types';
+import { MEDIA_SERVICE_CONFIG } from '@tokens';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -31,8 +31,8 @@ export const appConfig: ApplicationConfig = {
         ),
 
         {
-            provide: API_AUTH_CONFIG,
-            useFactory: () => new BehaviorSubject<ApiAuthConfig|null>(null)
+            provide: MEDIA_SERVICE_CONFIG,
+            useFactory: () => new BehaviorSubject<MediaServiceConfig|null>(null)
         },
 
         {
