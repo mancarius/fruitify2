@@ -19,14 +19,14 @@ export class LoadingService {
   /**
    * Increases the loading count by 1, indicating that a loading operation has started.
    */
-  public startLoading(): void {
+  public start(): void {
     this._loadingCount.next(this._loadingCount.value + 1);
   }
 
   /**
    * Stops the loading process by decrementing the loading count.
    */
-  public stopLoading(): void {
+  public stop(): void {
     this._loadingCount.next(this._loadingCount.value - 1);
   }
 }

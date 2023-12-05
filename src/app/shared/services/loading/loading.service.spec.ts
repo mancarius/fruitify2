@@ -22,12 +22,12 @@ describe('LoadingService', () => {
   describe('#startLoading', () => {
 
     it('should exists', () => {
-      expect(service.startLoading).toBeTruthy();
+      expect(service.start).toBeTruthy();
     });
 
     it('should increase the loading count by 1', () => {
       const initialLoadingCount = service['_loadingCount'].value;
-      service.startLoading();
+      service.start();
       expect(service['_loadingCount'].value).toEqual(initialLoadingCount + 1);
     });
 
@@ -38,12 +38,12 @@ describe('LoadingService', () => {
   describe('#stopLoading', () => {
 
     it('should exists', () => {
-      expect(service.stopLoading).toBeTruthy();
+      expect(service.stop).toBeTruthy();
     });
 
     it('should decrease the loading count by 1', () => {
       const initialLoadingCount = service['_loadingCount'].value;
-      service.stopLoading();
+      service.stop();
       expect(service['_loadingCount'].value).toEqual(initialLoadingCount - 1);
     });
 
