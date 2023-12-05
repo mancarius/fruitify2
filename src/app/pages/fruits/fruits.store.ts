@@ -18,8 +18,8 @@ export const fruitsInitialState: FruitsState = {
 
 @Injectable()
 export class FruitsStore extends ComponentStore<FruitsState> {
-  private readonly _startLoading = this._loadingService.startLoading.bind(this._loadingService);
-  private readonly _stopLoading = this._loadingService.stopLoading.bind(this._loadingService);
+  private readonly _startLoading = this._loadingService.start.bind(this._loadingService);
+  private readonly _stopLoading = this._loadingService.stop.bind(this._loadingService);
 
   constructor(private _fruitService: FruitService, private _loadingService: LoadingService) {
     super(fruitsInitialState);

@@ -41,7 +41,7 @@ describe('FruitsStore', () => {
 
     it('should call LoadingService#startLoading once', () => {
       store['_startLoading']();
-      expect(store['_loadingService'].startLoading).toHaveBeenCalledTimes(1);
+      expect(store['_loadingService'].start).toHaveBeenCalledTimes(1);
     });
 
   });
@@ -56,7 +56,7 @@ describe('FruitsStore', () => {
 
     it('should call LoadingService#stopLoading once', () => {
       store['_stopLoading']();
-      expect(store['_loadingService'].stopLoading).toHaveBeenCalledTimes(1);
+      expect(store['_loadingService'].stop).toHaveBeenCalledTimes(1);
     });
 
   });
