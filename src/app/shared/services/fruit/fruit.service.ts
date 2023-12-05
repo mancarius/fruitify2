@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Fruit, QueryParams } from '@shared/types';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, map, shareReplay, take } from 'rxjs';
 import { API_BASE_PATHNAME } from '@shared/constants';
 
 @Injectable({
@@ -9,16 +9,25 @@ import { API_BASE_PATHNAME } from '@shared/constants';
 })
 export class FruitService {
   private _baseUrl = API_BASE_PATHNAME;
+  private _entities = new BehaviorSubject<Fruit[]>([]);
+  private _http = inject(HttpClient);
 
-  constructor(private _http: HttpClient) { }
+  /**
+   * Observable stream of entities.
+   */
+  public readonly entities$ = this._entities.asObservable().pipe(shareReplay(1));
 
   /**
    * Retrieves all fruits.
    * @returns An Observable that emits an array of Fruit objects.
    */
   public getAll(): Observable<Fruit[]> {
-    const url = this._composeUrl('all');
-    return this._http.get<Fruit[]>(url);
+    if (this._entities.value.length === 0) {
+      const url = this._composeUrl('all');
+      this._http.get<Fruit[]>(url).subscribe(this._entities);
+    }
+
+    return this.entities$.pipe(take(1));
   }
 
   /**
