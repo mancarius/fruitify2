@@ -1,18 +1,20 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideServiceWorker } from '@angular/service-worker';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { MediaServiceConfig } from '@shared/types';
 import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
 import { authenticationInterceptor, fruityviceProxyInterceptor } from '@core/interceptors';
+import { MediaService } from '@shared/services/media/media.service';
+import { mediaServiceFactory } from '@shared/helpers';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
 
         provideAnimations(),
 
@@ -41,6 +43,12 @@ export const appConfig: ApplicationConfig = {
         {
             provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
             useValue: { appearance: 'outline' }
+        },
+
+        {
+            provide: MediaService,
+            useFactory: mediaServiceFactory,
+            deps: [MEDIA_SERVICE_CONFIG, HttpClient]
         },
     ]
 };
