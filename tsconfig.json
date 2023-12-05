@@ -40,6 +40,9 @@
       "@tokens/*": [
         "app/tokens/*"
       ],
+      "@resolvers/*": [
+        "app/resolvers/*"
+      ],
     }
   },
   "angularCompilerOptions": {
