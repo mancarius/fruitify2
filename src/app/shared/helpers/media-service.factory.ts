@@ -3,6 +3,7 @@ import { PexelsService } from '../services/pexels/pexels.service';
 import { HttpClient } from '@angular/common/http';
 import { MediaService } from '../services/media/media.service';
 import { UnsplashService } from '@shared/services/unsplash/unsplash.service';
+import { AbstractMediaProviderService } from '@shared/services/abstract-provider/abstract-provider.service';
 
 
 /**
@@ -12,12 +13,18 @@ import { UnsplashService } from '@shared/services/unsplash/unsplash.service';
  * @returns A media service instance.
  */
 export function mediaServiceFactory(mediaServiceConfig: MediaServiceConfig, http: HttpClient): MediaService {
+  let mediaProvider: AbstractMediaProviderService;
+  
   switch (mediaServiceConfig.provider) {
     case MediaProvidersEnum.PEXELS:
-      return new PexelsService(mediaServiceConfig, http);
+      mediaProvider = new PexelsService(mediaServiceConfig, http);
+      break;
     case MediaProvidersEnum.UNSPLASH:
-      return new UnsplashService(mediaServiceConfig, http);
+      mediaProvider = new UnsplashService(mediaServiceConfig, http);
+      break;
     default:
       throw new Error(`Media provider '${mediaServiceConfig.provider}' not supported.`);
   }
+
+  return new MediaService(mediaProvider);
 }
