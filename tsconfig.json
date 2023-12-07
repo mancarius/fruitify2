@@ -41,7 +41,7 @@
         "app/tokens/*"
       ],
       "@resolvers/*": [
-        "app/resolvers/*"
+        "app/resolvers/index.ts"
       ],
     }
   },
