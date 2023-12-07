@@ -5,3 +5,4 @@ export * from "./photo-finder.interface";
 export * from "./media-providers.enum";
 export * from "./media-service-config.type";
 export * from "./unsplash.type";
+export * from "./nullable.type";
