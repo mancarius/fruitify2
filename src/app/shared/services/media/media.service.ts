@@ -1,23 +1,18 @@
-import { Inject, Injectable } from '@angular/core';
-import { PhotoFinder, MediaOrientation, MediaPhoto, MediaOptions, MediaSize, MediaServiceConfig } from '../../types';
+import { Injectable } from '@angular/core';
+import { PhotoFinder, MediaPhoto, MediaOptions } from '../../types';
+import { AbstractMediaProviderService } from '../abstract-provider/abstract-media-provider.service';
 import { Observable } from 'rxjs';
-import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
 
 @Injectable({
   providedIn: 'root'
 })
-export abstract class MediaService implements PhotoFinder {
-  readonly defaultQueryOptions: MediaOptions = {
-    page: 1,
-    per_page: 10,
-    limit: 10,
-    size: MediaSize.MEDIUM,
-    orientation: MediaOrientation.LANDSCAPE,
-  };
+/**
+ * Service for finding media, such as photos, using a media provider.
+ */
+export class MediaService implements PhotoFinder {
+  constructor(private readonly provider: AbstractMediaProviderService) {}
 
-
-  constructor(@Inject(MEDIA_SERVICE_CONFIG) protected readonly _providerConfig: MediaServiceConfig) {}
-
-
-  abstract findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto>;
+  findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
+    return this.provider.findPhoto(query, options);
+  }
 }
