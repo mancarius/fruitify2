@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { Nullable } from '.';
 
 export enum MediaType {
   PHOTO = 'photo'
@@ -24,8 +25,8 @@ export type Media = {
 };
 
 export type MediaPhoto = Media & {
-  alt: string|null,
-  avgColor: string|null,
+  alt: Nullable<string>,
+  avgColor: Nullable<string>,
 };
 
 export type MediaVideo = Media & {
