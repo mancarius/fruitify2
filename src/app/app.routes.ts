@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { fruitResolver } from '@resolvers/fruit/fruit.resolver';
+import { fruitResolver, fruitsResolver } from '@resolvers';
 
 export const routes: Routes = [
   {
@@ -11,13 +11,14 @@ export const routes: Routes = [
   {
     path: 'fruits',
     providers: [FruitService],
-    resolve: {
-      fruits: fruitResolver
-    },
     children: [
       {
         title: 'Fruits',
         path: '',
+        pathMatch: 'full',
+        resolve: {
+          fruits: fruitsResolver
+        },
         loadChildren: async () => {
           const c = await import('./pages/fruits/fruits.component');
           return c.FruitsComponent;
@@ -26,6 +27,10 @@ export const routes: Routes = [
       {
         title: 'Fruit',
         path: '/:id/*',
+        pathMatch: 'full',
+        resolve: {
+          fruit: fruitResolver
+        },
         loadChildren: async () => {
           const c = await import('./pages/fruit/fruit.component');
           return c.FruitComponent;
