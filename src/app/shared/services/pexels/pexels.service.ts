@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
 import { MediaOptions, MediaPhoto, MediaServiceConfig } from '../../types';
 import { Observable, map } from 'rxjs';
-import { MediaService } from '../media/media.service';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PaginationParams, Photos, Photo } from 'pexels';
 import { AUTH_CONFIG } from '@tokens/api';
+import { AbstractMediaProviderService } from '../abstract-provider/abstract-media-provider.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PexelsService extends MediaService {
+export class PexelsService extends AbstractMediaProviderService {
   private _defaultOptions: MediaOptions & PaginationParams = {
     ...this.defaultQueryOptions,
     page: 1,

@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
-import { MediaService } from '../media/media.service';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { MediaOptions, MediaPhoto, MediaServiceConfig, Unsplash } from '@shared/types';
 import { Observable, map } from 'rxjs';
 import { AUTH_CONFIG } from '@tokens/api';
+import { AbstractMediaProviderService } from '../abstract-provider/abstract-media-provider.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class UnsplashService extends MediaService {
+export class UnsplashService extends AbstractMediaProviderService {
   private _defaultOptions: MediaOptions = {
     ...this.defaultQueryOptions,
     page: 1,
