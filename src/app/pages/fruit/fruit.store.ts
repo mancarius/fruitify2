@@ -30,9 +30,8 @@ export class FruitStore extends ComponentStore<fruitState> implements OnStateIni
   readonly fruit$ = this.select(state => state.fruit);
   readonly photo$ = this.select(state => state.photo);
   readonly loading$ = this.select(state => state.loading);
-  readonly vm$ = this.select(this.fruit$, this.photo$, this.loading$, (fruit, photo, loading) => ({ fruit, photo, loading }));
 
-  readonly setFruit = this.updater((state, fruit: Fruit) => ({ ...state, fruit }));
+  readonly setFruit = this.updater((state, fruit: Fruit|null) => ({ ...state, fruit }));
   readonly setPhoto = this.updater((state, photo: MediaPhoto|null) => ({ ...state, photo }));
   readonly setLoading = this.updater((state, loading: boolean) => ({ ...state, loading }));
 
