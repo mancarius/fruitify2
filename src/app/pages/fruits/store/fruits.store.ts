@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Fruit } from "../../shared/types";
+import { Fruit } from "../../../shared/types";
 import { ComponentStore, tapResponse } from "@ngrx/component-store";
-import { FruitService } from '../../shared/services/fruit/fruit.service';
+import { FruitService } from '../../../shared/services/fruit/fruit.service';
 import { Observable, switchMap, tap } from 'rxjs';
-import { LoadingService } from '../../shared/services/loading/loading.service';
+import { LoadingService } from '../../../shared/services/loading/loading.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export type FruitsState = {

@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { FruitsStore } from './fruits.store';
-import { FruitService } from '../../shared/services/fruit/fruit.service';
-import { LoadingService } from '../../shared/services/loading/loading.service';
+import { FruitService } from '../../../shared/services/fruit/fruit.service';
+import { LoadingService } from '../../../shared/services/loading/loading.service';
 import { of, skip, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Fruit } from '../../shared/types';
+import { Fruit } from '../../../shared/types';
 
 describe('FruitsStore', () => {
   let fruitServiceSpy: jasmine.SpyObj<FruitService>;
