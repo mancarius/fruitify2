@@ -1,31 +1,19 @@
-import { Injectable, effect, signal } from "@angular/core"
+import { Injectable, signal } from "@angular/core"
 import { ComponentStore, tapResponse } from "@ngrx/component-store"
 import { MediaService } from "@shared/services/media/media.service";
 import { Fruit, MediaPhoto, Nullable } from "@shared/types"
 import { Observable, of, switchMap, tap } from "rxjs";
 
 @Injectable()
-export class FruitStore extends ComponentStore<object> {
+export class PhotoStore extends ComponentStore<object> {
   constructor(private _mediaService: MediaService) {
     super();
-
-    // I'm using `allowSignalWrites` here because I want to be able to set the photo
-    // from the `fetchPhoto` method. This isn't safe in general, but it's fine here.
-    effect(() => this.fetchPhoto(this.fruit()), {
-      allowSignalWrites: true
-    });
   }
 
   /* ===== State ===== */
 
-  readonly fruit = signal<Nullable<Fruit>>(null);
   readonly photo = signal<Nullable<MediaPhoto>>(null);
   readonly loading = signal<boolean>(false);
-
-
-  /* ===== Updaters ===== */
-
-  readonly setFruit = (fruit?: Nullable<Fruit>) => this.fruit.set(fruit ?? null);
 
 
   /* ===== Effects ===== */
