@@ -2,7 +2,7 @@ import { Component, EffectRef, Injector, OnInit, Signal, effect, inject } from '
 import { FruitsSearchComponent } from './components/fruits-search/fruits-search.component';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Fruit } from '../../shared/types';
-import { FruitsStore } from './fruits.store';
+import { FruitsStore } from './store/fruits.store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LoadingService } from '../../shared/services/loading/loading.service';
 import { provideComponentStore } from '@ngrx/component-store';
