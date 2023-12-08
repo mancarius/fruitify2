@@ -1,48 +1,31 @@
-import { Injectable } from "@angular/core"
-import { ComponentStore, OnStateInit, tapResponse } from "@ngrx/component-store"
+import { Injectable, effect, signal } from "@angular/core"
+import { ComponentStore, tapResponse } from "@ngrx/component-store"
 import { MediaService } from "@shared/services/media/media.service";
-import { Fruit, MediaPhoto } from "@shared/types"
+import { Fruit, MediaPhoto, Nullable } from "@shared/types"
 import { Observable, of, switchMap, tap } from "rxjs";
 
-export type fruitState = {
-  fruit: Fruit|null;
-  photo: MediaPhoto | null;
-  loading: boolean;
-}
-
-export const fruitDefaultState: fruitState = {
-  fruit: null,
-  photo: null,
-  loading: false,
-}
-
-
 @Injectable()
-export class FruitStore extends ComponentStore<fruitState> implements OnStateInit {
+export class FruitStore extends ComponentStore<object> {
   constructor(private _mediaService: MediaService) {
-    super(fruitDefaultState)
+    super();
+
+    effect(() => this.fetchPhoto(this.fruit()));
   }
 
-  ngrxOnStateInit() {
-    this.fetchPhoto(this.fruit$);
-  }
+  readonly fruit = signal<Nullable<Fruit>>(null);
+  readonly photo = signal<Nullable<MediaPhoto>>(null);
+  readonly loading = signal<boolean>(false);
 
-  readonly fruit$ = this.select(state => state.fruit);
-  readonly photo$ = this.select(state => state.photo);
-  readonly loading$ = this.select(state => state.loading);
+  readonly setFruit = (fruit?: Nullable<Fruit>) => this.fruit.set(fruit ?? null);
 
-  readonly setFruit = this.updater((state, fruit: Fruit|null) => ({ ...state, fruit }));
-  readonly setPhoto = this.updater((state, photo: MediaPhoto|null) => ({ ...state, photo }));
-  readonly setLoading = this.updater((state, loading: boolean) => ({ ...state, loading }));
-
-  readonly fetchPhoto = this.effect((fruit$: Observable<Fruit|null>) => {
+  readonly fetchPhoto = this.effect((fruit$: Observable<Nullable<Fruit>>) => {
     return fruit$.pipe(
-      tap(() => this.setLoading(true)),
+      tap(() => this.loading.set(true)),
       switchMap((fruit) => fruit ? this._mediaService.findPhoto(fruit.name) : of(null)),
       tapResponse(
-        this.setPhoto,
+        this.photo.set,
         (error) => console.error(error),
-        () => this.setLoading(false),
+        () => this.loading.set(false),
       ),
     );
   });
