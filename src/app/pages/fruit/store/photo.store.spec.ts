@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { FruitStore } from './fruit.store';
-import { MediaService } from '../../shared/services/media/media.service';
+import { PhotoStore } from './photo.store';
+import { MediaService } from '../../../shared/services/media/media.service';
 import { of } from 'rxjs';
 
-fdescribe('FruitStore', () => {
-  let store: FruitStore;
+fdescribe('PhotoStore', () => {
+  let store: PhotoStore;
   let mediaService: MediaService;
 
   beforeEach(() => {
@@ -12,26 +12,20 @@ fdescribe('FruitStore', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        FruitStore,
+        PhotoStore,
         { provide: MediaService, useValue: mediaService },
       ],
     });
 
-    store = TestBed.inject(FruitStore);
+    store = TestBed.inject(PhotoStore);
   });
 
-  it('should set the fruit', () => {
-    const fruit = { name: 'Apple' } as any;
-    store.setFruit(fruit);
-    expect(store.fruit()).toEqual(fruit);
-  });
-
-  it('should fetch the photo when fruit changes', () => {
+  it('should fetch the photo', () => {
     const fruit = { name: 'Apple' } as any;
     const photo = { url: 'apple.jpg' } as any;
     (mediaService.findPhoto as jasmine.Spy).and.returnValue(of(photo));
 
-    store.setFruit(fruit);
+    store.fetchPhoto(fruit);
 
     TestBed.flushEffects();
 
@@ -41,7 +35,7 @@ fdescribe('FruitStore', () => {
   });
 
   it('should not fetch the photo when fruit is null', () => {
-    store.setFruit(null);
+    store.fetchPhoto(null);
 
     expect(store.loading()).toBe(false);
     expect(mediaService.findPhoto).not.toHaveBeenCalled();
