@@ -1,11 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { FruitStore } from './fruit.store';
 import { provideComponentStore } from '@ngrx/component-store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
-import { Fruit } from '@shared/types';
+import { Fruit, Nullable } from '@shared/types';
 
 @Component({
   selector: 'app-fruit',
@@ -15,17 +14,16 @@ import { Fruit } from '@shared/types';
   templateUrl: './fruit.component.html',
   styleUrl: './fruit.component.scss'
 })
-export class FruitComponent implements OnInit {
+export class FruitComponent {
   private _activatedRoute = inject(ActivatedRoute);
   private _cs = inject(FruitStore);
+  private _routeData = toSignal<Data | { fruit: Nullable<Fruit> }>(this._activatedRoute.data);
 
-  protected fruit = toSignal(this._cs.fruit$);
-  protected photo = toSignal(this._cs.photo$);
-  protected loading = toSignal(this._cs.loading$);
+  protected fruit = this._cs.fruit;
+  protected photo = this._cs.photo;
+  protected loading = this._cs.loading;
 
-  ngOnInit() {
-    this._cs.setFruit(this._activatedRoute.data.pipe(
-      map((data) => data['fruit'] as Fruit | null)
-    ));
+  constructor() {
+    effect(() => this._cs.setFruit(this._routeData()?.fruit));
   }
 }
