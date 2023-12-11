@@ -6,20 +6,28 @@ import { HomeComponent } from '@pages/home/home.component';
 export const routes: Routes = [
   {
     title: 'Frutify',
-    path: '',
+    path: 'fruits',
+    pathMatch: 'prefix',
     providers: [FruitService],
-    pathMatch: 'full',
-    runGuardsAndResolvers: 'always',
-    resolve: {
-      fruits: fruitsResolver
-    },
-    component: HomeComponent,
     children: [
+    
+      {
+        title: 'Frutify',
+        path: '',
+        pathMatch: 'full',
+        runGuardsAndResolvers: 'always',
+        resolve: {
+          fruits: fruitsResolver
+        },
+        component: HomeComponent,
+      },
+
+    
       {
         title: 'Fruit',
-        path: 'fruit/:id/*',
+        path: ':fruitName',
         pathMatch: 'full',
-        runGuardsAndResolvers: 'pathParamsChange',
+        runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
         resolve: {
           fruit: fruitResolver
         },
@@ -28,8 +36,19 @@ export const routes: Routes = [
           return c.FruitComponent;
         },
       }
+
     ]
   },
+
+
+  {
+    title: 'Frutify',
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'fruits',
+  },
+
+
   {
     title: '404',
     path: '**',
