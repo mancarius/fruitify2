@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Fruit, QueryParams } from '@shared/types';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, forkJoin, map, shareReplay, take } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, map, shareReplay, take, tap } from 'rxjs';
 import { API_BASE_PATHNAME } from '@shared/constants';
 
 @Injectable({
@@ -24,7 +24,9 @@ export class FruitService {
   public getAll(): Observable<Fruit[]> {
     if (this._entities.value.length === 0) {
       const url = this._composeUrl('all');
-      this._http.get<Fruit[]>(url).subscribe(this._entities);
+      return this._http.get<Fruit[]>(url).pipe(
+        tap(entities => this._entities.next(entities))
+      );
     }
 
     return this.entities$.pipe(take(1));
