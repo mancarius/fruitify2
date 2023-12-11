@@ -37,10 +37,10 @@
       "@env/*": [
         "environments/*"
       ],
-      "@tokens/*": [
-        "app/tokens/*"
+      "@tokens": [
+        "app/tokens/index.ts"
       ],
-      "@resolvers/*": [
+      "@resolvers": [
         "app/resolvers/index.ts"
       ],
     }
