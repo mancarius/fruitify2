@@ -1,41 +1,41 @@
 import { Routes } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
 import { fruitResolver, fruitsResolver } from '@resolvers';
+import { HomeComponent } from '@pages/home/home.component';
 
 export const routes: Routes = [
   {
+    title: 'Frutify',
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'fruits'
-  },
-  {
-    path: 'fruits',
     providers: [FruitService],
+    pathMatch: 'full',
+    runGuardsAndResolvers: 'always',
+    resolve: {
+      fruits: fruitsResolver
+    },
+    component: HomeComponent,
     children: [
       {
-        title: 'Fruits',
-        path: '',
-        pathMatch: 'full',
-        resolve: {
-          fruits: fruitsResolver
-        },
-        loadChildren: async () => {
-          const c = await import('./pages/fruits/fruits.component');
-          return c.FruitsComponent;
-        },
-      },
-      {
         title: 'Fruit',
-        path: '/:id/*',
+        path: 'fruit/:id/*',
         pathMatch: 'full',
+        runGuardsAndResolvers: 'pathParamsChange',
         resolve: {
           fruit: fruitResolver
         },
-        loadChildren: async () => {
+        loadComponent: async () => {
           const c = await import('./pages/fruit/fruit.component');
           return c.FruitComponent;
         },
       }
     ]
+  },
+  {
+    title: '404',
+    path: '**',
+    loadComponent: async () => {
+      const c = await import('./pages/not-found/not-found.component');
+      return c.NotFoundComponent;
+    },
   }
 ];
