@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Data } from '@angular/router';
-import { PhotoStore } from './store/photo.store';
+import { PhotoStore } from '@shared/store';
 import { provideComponentStore } from '@ngrx/component-store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Fruit, Nullable } from '@shared/types';
