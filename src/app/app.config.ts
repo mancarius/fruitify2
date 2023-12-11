@@ -7,10 +7,11 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { MediaServiceConfig } from '@shared/types';
-import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
-import { authenticationInterceptor, fruityviceProxyInterceptor } from '@core/interceptors';
+import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
+import { authenticationInterceptor } from '@core/interceptors';
 import { MediaService } from '@shared/services/media/media.service';
 import { mediaServiceFactory } from '@shared/helpers';
+import { PEXELS_API_CONFIG } from '@shared/constants';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -29,15 +30,12 @@ export const appConfig: ApplicationConfig = {
         }),
 
         provideHttpClient(
-            withInterceptors([
-                fruityviceProxyInterceptor,
-                authenticationInterceptor
-            ])
+            withInterceptors([authenticationInterceptor])
         ),
 
         {
-            provide: MEDIA_SERVICE_CONFIG,
-            useFactory: () => new BehaviorSubject<MediaServiceConfig|null>(null)
+            provide: MEDIA_SERVICE_CONFIG_TOKEN,
+            useFactory: () => new BehaviorSubject<MediaServiceConfig | null>(PEXELS_API_CONFIG)
         },
 
         {
@@ -48,7 +46,7 @@ export const appConfig: ApplicationConfig = {
         {
             provide: MediaService,
             useFactory: mediaServiceFactory,
-            deps: [MEDIA_SERVICE_CONFIG, HttpClient]
+            deps: [MEDIA_SERVICE_CONFIG_TOKEN, HttpClient]
         },
     ]
 };
