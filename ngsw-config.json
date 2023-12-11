@@ -31,10 +31,10 @@
     {
       "name": "fruityvice-api",
       "urls": [
-        "*fruityvice.com/api/*"
+        "*fruityvice.*/api/*"
       ],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 100,
         "maxAge": "1h"
       }
