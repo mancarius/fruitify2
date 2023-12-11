@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PhotoFinder, MediaPhoto, MediaOptions } from '../../types';
-import { AbstractMediaProviderService } from '../abstract-provider/abstract-media-provider.service';
+import { AbstractMediaProviderService } from '../abstract-media-provider/abstract-media-provider.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,6 +13,6 @@ export class MediaService implements PhotoFinder {
   constructor(private readonly provider: AbstractMediaProviderService) {}
 
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
-    return this.provider.findPhoto(query, options);
+    return this.provider.findPhoto(query + " fruit", options);
   }
 }
