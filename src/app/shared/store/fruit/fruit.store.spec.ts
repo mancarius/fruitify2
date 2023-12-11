@@ -66,7 +66,7 @@ describe('FruitsStore', () => {
   describe('#fetchFruits', () => {
 
     it('should exists a fetchFruits method', () => {
-      expect(store.fetchFruits).toBeTruthy();
+      expect(store.fetchAllFruits).toBeTruthy();
     });
 
     it('should call _startLoading, _stopLoading and FruitService#getAll once', (done: DoneFn) => {
@@ -81,7 +81,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.fetchFruits();
+      store.fetchAllFruits();
     });
 
     it('should update state with given fruits', (done: DoneFn) => {
@@ -93,7 +93,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.fetchFruits();
+      store.fetchAllFruits();
     });
 
     it('should update state with given error', (done: DoneFn) => {
@@ -105,7 +105,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.fetchFruits();
+      store.fetchAllFruits();
     });
 
   });
@@ -115,7 +115,7 @@ describe('FruitsStore', () => {
   describe('#getFruitByName', () => {
 
     it('should exists a getFruitByName method', () => {
-      expect(store.getFruitByName).toBeTruthy();
+      expect(store.getFruitsByQuery).toBeTruthy();
     });
 
     it('should call _startLoading and _stopLoading once', (done: DoneFn) => {
@@ -129,7 +129,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitByName('');
+      store.getFruitsByQuery('');
     });
 
     it('should call FruitService#getWithQuery once with correct params', (done: DoneFn) => {
@@ -141,7 +141,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitByName(searchText);
+      store.getFruitsByQuery(searchText);
     });
 
     it('should update state with given fruit', (done: DoneFn) => {
@@ -153,7 +153,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitByName('banana');
+      store.getFruitsByQuery('banana');
     });
 
     it('should update state with given error', (done: DoneFn) => {
@@ -165,7 +165,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitByName('banana');
+      store.getFruitsByQuery('banana');
     });
 
   });
