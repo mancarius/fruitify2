@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { MediaOptions, MediaPhoto, MediaServiceConfig, Unsplash } from '@shared/types';
 import { Observable, map } from 'rxjs';
-import { AUTH_CONFIG } from '@tokens/api';
-import { AbstractMediaProviderService } from '../abstract-provider/abstract-media-provider.service';
+import { AUTH_CONFIG_CONTEXT_TOKEN } from '@tokens';
+import { AbstractMediaProviderService } from '../abstract-media-provider/abstract-media-provider.service';
 
 
 @Injectable({
@@ -27,7 +27,7 @@ export class UnsplashService extends AbstractMediaProviderService {
     const queryOptions = { ...this._defaultOptions, ...options };
     const url = this._getPhotosUrl();
     const params = this._composeQueryParams(query, queryOptions);
-    const context = new HttpContext().set(AUTH_CONFIG, this._providerConfig.authConfigs);
+    const context = new HttpContext().set(AUTH_CONFIG_CONTEXT_TOKEN, this._providerConfig.authConfigs);
 
     return this._http.get<Unsplash.Photos>(url, {
       params,
