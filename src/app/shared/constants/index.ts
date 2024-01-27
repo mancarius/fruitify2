@@ -1,5 +1,5 @@
 import { environment } from "@env/environment.development";
-import { MediaProvidersEnum, MediaServiceConfig } from "@shared/types";
+import { MediaProvidersEnum, MediaServiceConfig, Nutritions } from "@shared/types";
 
 export const API_BASE_PATHNAME = '/api/fruit';
 
@@ -29,4 +29,13 @@ export const UNSPLASH_API_CONFIG: MediaServiceConfig = {
       value: `${environment.unsplashApiKey}`
     }
   ]
+};
+
+
+export const NUTRITION_COLORS: Record<keyof Nutritions, string> = {
+  carbohydrates: '#fbbf24',
+  protein: '#f87171',
+  fat: '#60a5fa',
+  calories: '#34d399',
+  sugar: '#f472b6',
 };

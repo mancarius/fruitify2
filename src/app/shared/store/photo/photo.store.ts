@@ -1,7 +1,7 @@
 import { Injectable, signal } from "@angular/core"
 import { ComponentStore, tapResponse } from "@ngrx/component-store"
 import { MediaService } from "@shared/services/media/media.service";
-import { Fruit, MediaOrientation, MediaPhoto, MediaSize, Nullable } from "@shared/types"
+import { Fruit, FruitWithOptions, MediaOptions, MediaOrientation, MediaPhoto, MediaSize, Nullable } from "@shared/types"
 import { Observable, of, switchMap, tap } from "rxjs";
 
 @Injectable()
@@ -18,10 +18,10 @@ export class PhotoStore extends ComponentStore<object> {
 
   /* ===== Effects ===== */
 
-  readonly fetchPhoto = this.effect((fruit$: Observable<Nullable<Fruit>>) => {
-    return fruit$.pipe(
+  readonly fetchPhoto = this.effect((fruitAndOptions$: Observable<FruitWithOptions>) => {
+    return fruitAndOptions$.pipe(
       tap(() => this.loading.set(true)),
-      switchMap((fruit) => this._findPhoto(fruit)
+      switchMap(({ fruit, options = {}}) => this._findPhoto(fruit, options)
         .pipe(
           tapResponse(
             this.photo.set,
@@ -41,7 +41,13 @@ export class PhotoStore extends ComponentStore<object> {
    * @param fruit - The fruit to find the photo for.
    * @returns An observable that emits the photo if found, or null if not found.
    */
-  private _findPhoto(fruit: Nullable<Fruit>): Observable<Nullable<MediaPhoto>> {
-    return fruit ? this._mediaService.findPhoto(fruit.name, { limit: 1, orientation: MediaOrientation.LANDSCAPE, size: MediaSize.SMALL }) : of(null);
+  private _findPhoto(fruit: Nullable<Fruit>, options?: Partial<MediaOptions>): Observable<Nullable<MediaPhoto>> {
+    
+    return fruit ? this._mediaService.findPhoto(fruit.name, {
+      limit: 1,
+      orientation: MediaOrientation.LANDSCAPE,
+      size: MediaSize.SMALL,
+      ...options,
+    }) : of(null);
   }
 }

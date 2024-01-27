@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ControlValueAccessor, FormControl, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Nullable, SearchContext } from '@shared/types';
+import { MatSelectModule } from '@angular/material/select';
 
 type ChangeFn = (value: Record<SearchContext, Nullable<string>> | null) => void;
 type TouchedFn = () => void;
@@ -21,6 +22,7 @@ type TouchedFn = () => void;
     MatButtonModule,
     MatIconModule,
     MatInputModule,
+    MatSelectModule
   ],
   providers: [
     {

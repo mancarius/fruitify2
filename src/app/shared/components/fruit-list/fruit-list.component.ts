@@ -11,20 +11,24 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   imports: [CommonModule, FruitPreviewComponent, FruitPreviewPlaceholderComponent, RouterLink, RouterLinkActive],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
+  host: {
+    class: 'block',
+  },
+
   template: `
     <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       @for (fruit of fruits(); track fruit.id) {
-        <li class="flex flex-col">
+        <li class="aspect-[3/2] flex flex-col">
           @defer (on viewport) {
-            <a class="aspect-[3/2] flex"
-              [routerLink]="['/fruits', fruit.name.toLocaleLowerCase()]"
+            <a class="grow flex"
+              [routerLink]="['/fruit', fruit.name.toLocaleLowerCase()]"
               [queryParams]="{ fruitId: fruit.id }"
               routerLinkActive="active"
             >
               <app-fruit-preview class="grow flex justify-center items-center" [fruit]="fruit"></app-fruit-preview>
             </a>
           } @placeholder {
-            <app-fruit-preview-placeholder></app-fruit-preview-placeholder>
+            <app-fruit-preview-placeholder class="grow"></app-fruit-preview-placeholder>
           }
         </li>
       } @empty {
@@ -33,10 +37,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         </li>
       }
     </ul>
-  `,
-
-  styles: [`:host { display: block; }`]
-
+  `
 })
 export class FruitListComponent {
   @Input({ alias: `fruits`, required: true })

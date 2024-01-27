@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Params, ResolveFn } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { catchError, defer, finalize, of } from 'rxjs';
+import { catchError, defer, finalize, map, of } from 'rxjs';
 import { Fruit, QueryParams } from '@shared/types';
 import { LoadingService } from '@shared/services/loading/loading.service';
 
@@ -16,6 +16,7 @@ export const fruitsResolver: ResolveFn<Fruit[]> = (route, state) => {
     ? service.getWithQuery(query)
     : service.getAll()
   ).pipe(
+    map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
     finalize(() => loader.stop()),
     catchError(() => of([]))
   );

@@ -9,6 +9,7 @@ import { FruitPreviewPlaceholderComponent } from '@shared/components/fruit-previ
 import { FruitListComponent } from '@shared/components/fruit-list/fruit-list.component';
 import { FruitPreviewComponent } from '@shared/components/fruit-preview/fruit-preview.component';
 import { HomeStore } from './home.store';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ import { HomeStore } from './home.store';
     FruitListComponent,
     FruitPreviewComponent,
     FruitPreviewPlaceholderComponent,
+    RouterLink
   ],
   providers: [
     provideComponentStore(HomeStore),

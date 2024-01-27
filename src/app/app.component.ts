@@ -1,14 +1,11 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MinimalHorizontalLayoutComponent } from './shared/layouts/minimalist-horizontal-layout/minimal-horizontal-layout.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MinimalHorizontalLayoutComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
 })
-export class AppComponent {
-  title = 'fruitify';
-}
+export class AppComponent {}

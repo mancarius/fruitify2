@@ -1,0 +1,1 @@
+export * from './minimalist-horizontal-layout/minimal-horizontal-layout.component';

@@ -43,6 +43,9 @@
       "@resolvers": [
         "app/resolvers/index.ts"
       ],
+      "@guards": [
+        "app/guards/index.ts"
+      ],
     }
   },
   "angularCompilerOptions": {

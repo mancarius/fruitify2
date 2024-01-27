@@ -6,7 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   standalone: true,
   imports: [MatProgressSpinnerModule],
 
-  template: `<mat-spinner size="30" color="primary"></mat-spinner>`,
+  template: `<mat-spinner diameter="30" color="primary"></mat-spinner>`,
 
   styles: [`:host { display: flex; justify-content: center; align-items: center; }`],
 })

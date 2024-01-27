@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Fruit, QueryParams } from "../../types";
 import { ComponentStore, tapResponse } from "@ngrx/component-store";
 import { FruitService } from '../../services/fruit/fruit.service';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { LoadingService } from '../../services/loading/loading.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -59,7 +59,10 @@ export class FruitStore extends ComponentStore<FruitState> {
       switchMap(() => this._fruitService.getAll()),
       tap(() => this._stopLoading()),
       tapResponse(
-        (fruits) => this.patchState({ fruits }),
+        (fruits) => {
+          fruits.sort((a, b) => a.name.localeCompare(b.name));
+          this.patchState({ fruits })
+        },
         (error: HttpErrorResponse) => this.patchState({ error: error.message }),
       ),
     );
@@ -76,7 +79,10 @@ export class FruitStore extends ComponentStore<FruitState> {
       switchMap((queryParams) => this._fruitService.getWithQuery(queryParams)),
       tap(() => this._stopLoading()),
       tapResponse(
-        (fruits) => this.patchState({ fruits }),
+        (fruits) => {
+          fruits.sort((a, b) => a.name.localeCompare(b.name))
+          this.patchState({ fruits })
+        },
         (error: HttpErrorResponse) => this.patchState({ error: error.message }),
       ),
     );

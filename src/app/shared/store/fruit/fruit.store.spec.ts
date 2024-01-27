@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { FruitsStore } from './fruits.store';
+import { FruitStore } from './fruit.store';
 import { FruitService } from '../../../shared/services/fruit/fruit.service';
 import { LoadingService } from '../../../shared/services/loading/loading.service';
 import { of, skip, take } from 'rxjs';
@@ -9,7 +9,7 @@ import { Fruit } from '../../../shared/types';
 describe('FruitsStore', () => {
   let fruitServiceSpy: jasmine.SpyObj<FruitService>;
   let loadingServiceSpy: jasmine.SpyObj<LoadingService>;
-  let store: FruitsStore;
+  let store: FruitStore;
 
   beforeEach(() => {
     fruitServiceSpy = jasmine.createSpyObj<FruitService>('FruitService', ['getAll', 'getWithQuery']);
@@ -18,13 +18,13 @@ describe('FruitsStore', () => {
     TestBed.configureTestingModule({
       imports: [],
       providers: [
-        FruitsStore,
+        FruitStore,
         { provide: FruitService, useValue: fruitServiceSpy},
         { provide: LoadingService, useValue: loadingServiceSpy },
       ]
     });
     
-    store = TestBed.inject(FruitsStore);
+    store = TestBed.inject(FruitStore);
   });
 
   it('should be created', () => {
@@ -129,19 +129,19 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitsByQuery('');
+      store.getFruitsByQuery({});
     });
 
     it('should call FruitService#getWithQuery once with correct params', (done: DoneFn) => {
-      const searchText = 'searchText';
+      const query = { name: 'searchText' };
       fruitServiceSpy.getWithQuery.and.resolveTo();
 
       store.fruits$.pipe(skip(1), take(1)).subscribe(() => {
-        expect(fruitServiceSpy.getWithQuery).toHaveBeenCalledOnceWith({ name: searchText });
+        expect(fruitServiceSpy.getWithQuery).toHaveBeenCalledOnceWith({ name: query });
         done();
       });
 
-      store.getFruitsByQuery(searchText);
+      store.getFruitsByQuery(query);
     });
 
     it('should update state with given fruit', (done: DoneFn) => {
@@ -153,7 +153,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitsByQuery('banana');
+      store.getFruitsByQuery({ name: 'banana' });
     });
 
     it('should update state with given error', (done: DoneFn) => {
@@ -165,7 +165,7 @@ describe('FruitsStore', () => {
         done();
       });
 
-      store.getFruitsByQuery('banana');
+      store.getFruitsByQuery({ name: 'banana' });
     });
 
   });
