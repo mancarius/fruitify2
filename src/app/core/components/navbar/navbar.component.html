@@ -1,44 +1,26 @@
-<nav
-  class="w-full flex flex-wrap items-center justify-between px-2 py-3"
->
-  <div
-    class="container px-4 mx-auto flex flex-wrap items-center justify-between"
-  >
-    <div
-      class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
-    >
-      <a
-        class="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-blue-950 dark:text-white"
-        href="/"
-        >Fruitify</a
-      ><button
-        mat-icon-button
-        class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none text-white"
-        type="button"
-        (click)="toggleNavbar()"
-      >
-        <mat-icon class="text-blue-950 dark:text-white opacity-80">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
-      </button>
+<nav class="w-full flex flex-wrap items-center justify-between px-2 py-3">
+  <div class="container px-4 mx-auto flex flex-wrap items-center justify-between">
+    <div class="w-full relative flex lg:w-auto lg:static lg:block">
+      <a class="text-sm font-bold leading-relaxed inline-block mr-4 ml-2 py-2 whitespace-nowrap uppercase text-blue-950 dark:text-white flex items-center"
+        href="/">
+        Fruitify
+      </a>
+      <div class="ml-auto flex gap-4">
+        <app-theme-toggler></app-theme-toggler>
+        <button mat-icon-button
+          class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none text-white"
+          type="button" (click)="toggleNavbar()">
+          <mat-icon class="text-blue-950 dark:text-white opacity-80">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
+        </button>
+      </div>
     </div>
     <div
       class="lg:flex flex-grow items-center bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent lg:shadow-none"
-      [ngClass]="{'hidden': !showMenu, 'block': showMenu}"
-    >
-      <ul class="flex flex-col lg:flex-row list-none mr-auto">
-        <li class="flex items-center">
-          <a
-            class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-            href="#!"
-            ><i
-              class="lg:text-gray-300 text-gray-500 far fa-file-alt text-lg leading-lg mr-2"
-            ></i>
-            Docs</a
-          >
-        </li>
-      </ul>
+      [ngClass]="{'hidden': !showMenu, 'block': showMenu}">
+      <ul class="flex flex-col lg:flex-row list-none mr-auto"></ul>
       <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
         <li class="flex items-center">
-          <app-theme-toggler></app-theme-toggler>
+          
         </li>
       </ul>
     </div>
