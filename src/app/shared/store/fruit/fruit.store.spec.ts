@@ -13,7 +13,7 @@ describe('FruitsStore', () => {
 
   beforeEach(() => {
     fruitServiceSpy = jasmine.createSpyObj<FruitService>('FruitService', ['getAll', 'getWithQuery']);
-    loadingServiceSpy = jasmine.createSpyObj<LoadingService>('LoadingService', ['start', 'stop'], { isLoading$: of(false) });
+    loadingServiceSpy = jasmine.createSpyObj<LoadingService>('LoadingService', ['start', 'stop'], { loading$: of(false) });
 
     TestBed.configureTestingModule({
       imports: [],

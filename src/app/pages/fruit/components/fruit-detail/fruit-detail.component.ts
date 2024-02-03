@@ -13,7 +13,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   imports: [CommonModule, RouterLink, RouterLinkActive, MatListModule, MatCardModule, FruitNutritionsComponent],
   template: `
     @if(fruit) {
-      <h3 class="text-black dark:text-white m-0">Classification</h3>
+      <h3 class="font-bold text-sm text-black dark:text-white m-0">Classification</h3>
 
       <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10 shadow-none">
         <mat-nav-list role="list" class="w-full">
@@ -37,7 +37,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         </mat-nav-list>
       </mat-card>
 
-      <h3 class="text-black dark:text-white m-0">Nutritions</h3>
+      <h3 class="font-bold text-sm text-black dark:text-white m-0">Nutritions</h3>
 
       <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10 shadow-none">
         <mat-card-content>

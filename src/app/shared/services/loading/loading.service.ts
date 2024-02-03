@@ -14,7 +14,7 @@ export class LoadingService {
    * Observable that emits a boolean value indicating whether the loading state is active or not.
    * Use this property to subscribe to loading state changes.
    */
-  public isLoading$ = this._loadingCount.pipe(map(loadingCount => loadingCount > 0), shareReplay(1));
+  public loading$ = this._loadingCount.pipe(map(loadingCount => loadingCount > 0), shareReplay(1));
 
   /**
    * Increases the loading count by 1, indicating that a loading operation has started.

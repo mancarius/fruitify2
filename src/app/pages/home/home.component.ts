@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   private _queryParams$ = this.searchControl.valueChanges;
 
   public fruits: Signal<Fruit[]> = toSignal(this._cs.fruits$, { initialValue: [] });
-  public loading: Signal<boolean> = toSignal(this._loadingService.isLoading$, { initialValue: false });
+  public loading: Signal<boolean> = toSignal(this._loadingService.loading$, { initialValue: false });
 
   ngOnInit() {
     this._cs.search(this._queryParams$);

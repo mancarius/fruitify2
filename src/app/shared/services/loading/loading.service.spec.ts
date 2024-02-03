@@ -54,11 +54,11 @@ describe('LoadingService', () => {
   describe('#isLoading', () => {
 
     it('should exists', () => {
-      expect(service.isLoading$).toBeTruthy();
+      expect(service.loading$).toBeTruthy();
     });
 
     it('should return true when the loading count is greater than 0', (done: DoneFn) => {
-      service.isLoading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
+      service.loading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
         expect(isLoading).toEqual(true);
         done();
       });
@@ -67,7 +67,7 @@ describe('LoadingService', () => {
     });
 
     it('should return false when the loading count is 0', (done: DoneFn) => {
-      service.isLoading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
+      service.loading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
         expect(isLoading).toEqual(false);
         done();
       });

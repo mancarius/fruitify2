@@ -43,7 +43,7 @@ export class UnsplashService extends AbstractMediaProviderService {
    * @returns The URL string.
    */
   private _getPhotosUrl(): string {
-    const url = this._composeUrl('v1/search');
+    const url = this._composeUrl('search/photos');
 
     return url.toString();
   }

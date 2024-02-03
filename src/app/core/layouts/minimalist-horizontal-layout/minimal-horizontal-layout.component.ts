@@ -12,7 +12,7 @@ import { NavbarComponent } from '@core/components/navbar/navbar.component';
   },
   template: `
     <!-- Header -->
-    <header class="fixed top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md">
+    <header class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md">
       <app-navbar></app-navbar>
     </header>
 
