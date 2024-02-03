@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, effect, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { NavbarComponent } from '@core/components/navbar/navbar.component';
 import { FooterComponent } from '@core/components/footer/footer.component';
-import { getActivatedRouteTitle } from '@shared/helpers';
-import { Nullable } from '@shared/types';
+import { injectRouteTitle } from '@shared/helpers';
 
 @Component({
   selector: 'app-settings-layout',
@@ -41,18 +39,7 @@ import { Nullable } from '@shared/types';
   `,
 })
 export class SettingsLayoutComponent {
-  private _route = inject(ActivatedRoute);
-  private _routerEvent = toSignal(inject(Router).events);
-
   location = inject(Location);
-  routeTitle = signal<Nullable<string>>(null);
-
-  constructor() {
-    effect(() => {
-      if (this._routerEvent() instanceof NavigationEnd) {
-        this.routeTitle.set(getActivatedRouteTitle(this._route));
-      }
-    }, { allowSignalWrites: true })
-  }
+  routeTitle = injectRouteTitle();
 }
 

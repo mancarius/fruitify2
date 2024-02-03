@@ -1,1 +1,1 @@
-export * from "./getActivatedRouteTitle";
+export * from "./injectRouteTitle";
