@@ -1,1 +1,1 @@
-export * from './media-service.factory';
+export * from "./getActivatedRouteTitle";

@@ -4,7 +4,7 @@ import { fruitResolver, fruitsResolver, photoResolver, fruitRouteTitleResolver }
 import { HomeComponent } from '@pages/home/home.component';
 import { MinimalHorizontalLayoutComponent } from '@core/layouts';
 
-export const routes: Routes = [
+export default [
   // Fruits
   {
     path: 'fruits',
@@ -15,8 +15,8 @@ export const routes: Routes = [
 
       // Load `FruitsComponent` when the user navigates to `/fruits`
       {
-        title: 'Frutify',
         path: '',
+        title: 'Frutify',
         pathMatch: 'full',
         runGuardsAndResolvers: 'always',
         resolve: { fruits: fruitsResolver },
@@ -44,7 +44,7 @@ export const routes: Routes = [
           photo: photoResolver
         },
         loadComponent: async () => {
-          const c = await import('./pages/fruit/fruit.component');
+          const c = await import('@pages/fruit/fruit.component');
           return c.FruitComponent;
         },
       }
@@ -52,9 +52,18 @@ export const routes: Routes = [
     ]
   },
 
+  // Settings
+  {
+    path: 'settings',
+    loadComponent: async () => {
+      const c = await import('@core/layouts');
+      return c.SettingsLayoutComponent
+    },
+    loadChildren: async () => import('@pages/settings/settings.routes'),
+  },
+
   // Redirect to `fruits` if no route matches
   {
-    title: 'Frutify',
     path: '',
     pathMatch: 'full',
     redirectTo: 'fruits',
@@ -71,7 +80,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: async () => {
-          const c = await import('./pages/not-found/not-found.component');
+          const c = await import('@pages/not-found/not-found.component');
           return c.NotFoundComponent;
         },
       },
@@ -80,8 +89,8 @@ export const routes: Routes = [
 
   // Redirect to `not-found` if no route matches
   {
-    title: '404',
     path: '**',
+    title: '404',
     redirectTo: 'not-found',
   }
-];
+] satisfies Routes;
