@@ -1,10 +1,21 @@
-import { Component, ContentChild, Input, inject } from '@angular/core';
+import { Component, ContentChild, Directive, Input, TemplateRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RelatedFruitsStore } from './related-fruits.store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RelatedFruitsContentDirective } from '@shared/directives/related-fruits-content.directive';
 import { Fruit, Nullable } from '@shared/types';
 import { provideComponentStore } from '@ngrx/component-store';
+
+
+
+@Directive({
+  selector: '[appRelatedFruitsContent]',
+  standalone: true
+})
+export class RelatedFruitsContentDirective {
+  readonly templateRef = inject(TemplateRef);
+}
+
+
 
 @Component({
   selector: 'app-related-fruits',

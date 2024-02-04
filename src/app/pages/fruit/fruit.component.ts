@@ -8,8 +8,7 @@ import { Fruit, MediaPhoto, Nullable } from '@shared/types';
 import { Observable, filter, map } from 'rxjs';
 import { FruitPreviewComponent } from '@shared/components/fruit-preview/fruit-preview.component';
 import { FruitDetailComponent } from './components/fruit-detail/fruit-detail.component';
-import { RelatedFruitsComponent } from '@shared/components/related-fruits/related-fruits.component';
-import { RelatedFruitsContentDirective } from '@shared/directives/related-fruits-content.directive';
+import { RelatedFruitsComponent, RelatedFruitsContentDirective } from '@shared/components/related-fruits/related-fruits.component';
 import { FruitListComponent } from '@shared/components/fruit-list/fruit-list.component';
 import { MatCardModule } from '@angular/material/card';
 
