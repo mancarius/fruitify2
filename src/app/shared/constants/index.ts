@@ -1,12 +1,28 @@
 import { environment } from "@env/environment.development";
-import { MediaProvidersEnum, MediaServiceConfig, Nutritions } from "@shared/types";
+import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProviderCollection, Nutritions } from "@shared/types";
 
+/**
+ * The base pathname for the API endpoints related to fruit.
+ */
 export const API_BASE_PATHNAME = '/api/fruit';
 
 /**
  * The base URL for the Fruityvice proxy.
  */
 export const FRUITYVICE_PROXY_BASE_URL = environment.fruityviceProxy;
+
+export const MEDIA_SERVICE_PROVIDERS: MediaServiceProviderCollection = {
+  [MediaProvidersEnum.PEXELS]: {
+    name: MediaProvidersEnum.PEXELS,
+    link: 'https://www.pexels.com/',
+    description: 'The best free stock photos & videos shared by talented creators.'
+  },
+  [MediaProvidersEnum.UNSPLASH]: {
+    name: MediaProvidersEnum.UNSPLASH,
+    link: 'https://www.unsplash.com/',
+    description: "The internet's source of freely-usable images."
+  }
+};
 
 /**
  * Configuration object for Pexels API.
@@ -35,7 +51,7 @@ export const UNSPLASH_API_CONFIG: MediaServiceConfig = {
       addTo: "headers",
       key: "Authorization",
       authorizationType: "Client-ID",
-      value: `${environment.unsplashApiKey}`
+      value: environment.unsplashApiKey
     }
   ]
 };

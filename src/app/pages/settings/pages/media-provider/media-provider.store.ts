@@ -1,17 +1,17 @@
 import { ComponentStore, OnStateInit } from "@ngrx/component-store";
 import { Inject, Injectable, Injector, WritableSignal, effect } from "@angular/core";
-import { MediaProvidersEnum, MediaServiceConfig, Nullable } from "@shared/types";
+import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProvider, MediaServiceProviderCollection, Nullable } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
 import { Observable, tap } from "rxjs";
-import { PEXELS_API_CONFIG, UNSPLASH_API_CONFIG } from "@shared/constants";
+import { API_CONFIGS, MEDIA_SERVICE_PROVIDERS } from "@shared/constants";
 
 export type MediaProviderState = {
-  providers: MediaProvidersEnum[];
-  provider: Nullable<MediaProvidersEnum>;
+  providers: MediaServiceProviderCollection;
+  provider: Nullable<MediaServiceProvider>;
 }
 
 export const mediaProviderInitialState: MediaProviderState = {
-  providers: Object.values(MediaProvidersEnum) || [],
+  providers: MEDIA_SERVICE_PROVIDERS,
   provider: null,
 };
 
@@ -28,35 +28,39 @@ export class MediaProviderStore extends ComponentStore<MediaProviderState> imple
     effect(() => {
       const provider = this._mediaServiceConfig()?.provider;
       if (provider) {
-        this.patchState({ provider });
+        this.patchState({ provider: this.get().providers[provider] });
       }
     }, { injector: this._injector, allowSignalWrites: true });
   }
 
-  readonly provider$ = this.select(state => state.provider);
 
+  /* ===== Selectors ===== */
+
+  readonly provider$ = this.select(state => state.provider);
   readonly vm$ = this.select(({ providers }) => ({ providers }));
 
-  readonly selectProvider = this.effect((provider$: Observable<MediaProvidersEnum>) => {
-    return provider$.pipe(
-      tap(provider => this._mediaServiceConfig.set(this._getMediaConfigByProvider(provider))),
+
+  /* ===== Effects ===== */
+
+  /**
+   * Selects a media provider and updates the media service configuration accordingly.
+   * @param provider$ An observable that emits the selected media provider.
+   */
+  readonly selectProvider = this.effect((providerName$: Observable<MediaServiceProvider['name']>) => {
+    return providerName$.pipe(
+      tap(providerName => this._mediaServiceConfig.set(this._getMediaConfigByProvider(providerName))),
     );
   });
+
+
+  /* ===== Private methods ===== */
 
   /**
    * Retrieves the media service configuration based on the specified provider.
    * @param provider - The media provider.
    * @returns The media service configuration.
-   * @throws Error if the provider is invalid.
    */
   private _getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
-    switch (provider) {
-      case MediaProvidersEnum.PEXELS:
-        return PEXELS_API_CONFIG;
-      case MediaProvidersEnum.UNSPLASH:
-        return UNSPLASH_API_CONFIG;
-      default:
-        throw new Error('Invalid media provider');
-    }
+    return API_CONFIGS.find(config => config.provider === provider) as MediaServiceConfig;
   }
 }

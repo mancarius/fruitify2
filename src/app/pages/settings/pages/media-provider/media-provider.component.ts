@@ -2,11 +2,12 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ViewChil
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
-import { MediaProvidersEnum, Nullable } from '@shared/types';
+import { MediaServiceProvider, Nullable } from '@shared/types';
 import { MediaProviderStore } from './media-provider.store';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { provideComponentStore } from '@ngrx/component-store';
 import { Observable, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-media-provider',
@@ -19,20 +20,24 @@ import { Observable, Subscription } from 'rxjs';
   },
   template: `
     <div class="w-full max-w-screen-sm flex flex-col gap-4">
-      <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10">
-        <mat-card-content>
+      <mat-card class="w-full bg-white dark:bg-slate-50/10">
+        <mat-card-content class="p-0">
+          <p class="text-black dark:text-white p-2 m-2">Select the provider to use to load media</p>
           <mat-selection-list #providers [multiple]="false" (selectionChange)="setProvider($event)">
-          @for(provider of vm()?.providers; track provider) {
-            <mat-list-option role="listitem" [value]="provider">
-              <span class="capitalize text-black dark:text-white">{{ provider }}</span>
+          @for(provider of vm()?.providers|keyvalue; track provider.key) {
+            <mat-list-option role="listitem" lines="2" color="primary" [value]="provider.value.name">
+              <div matListItemTitle class="text-black dark:text-white">
+                <span class="capitalize font-bold">{{ provider.value.name }}</span>
+                <a [href]="provider.value.link" class="text-sm ml-3 text-blue-700 hover:underline">{{ provider.value.link }}</a>
+              </div>
+              <div matListItemLine class="truncate text-black dark:text-white">{{ provider.value.description }}</div>
             </mat-list-option>
           }
           </mat-selection-list>
         </mat-card-content>
       </mat-card>
     </div>
-  `,
-  styles: ``
+  `
 })
 export class MediaProviderComponent implements AfterViewInit {
   private _cs = inject(MediaProviderStore);
@@ -52,8 +57,8 @@ export class MediaProviderComponent implements AfterViewInit {
    * @param event - The MatSelectionListChange event containing the selected option.
    */
   setProvider(event: MatSelectionListChange): void {
-    const provider = event.source.selectedOptions.selected[0].value as MediaProvidersEnum;
-    this._cs.selectProvider(provider);
+    const providerName = event.source.selectedOptions.selected[0].value as MediaServiceProvider['name'];
+    this._cs.selectProvider(providerName);
   }
 
   /**
@@ -61,11 +66,11 @@ export class MediaProviderComponent implements AfterViewInit {
    * 
    * @param optionValue$ The value of the option to select.
    */
-  private _selectOption(optionValue$: Observable<Nullable<MediaProvidersEnum>>): Subscription {
+  private _selectOption(optionValue$: Observable<Nullable<MediaServiceProvider>>): Subscription {
     return optionValue$.pipe(
       takeUntilDestroyed(this._destroy$),
     ).subscribe(optionValue => {
-      const option = this.providers.options.find(option => option.value === optionValue);
+      const option = this.providers.options.find(option => option.value === optionValue?.name);
       option && this.providers.selectedOptions.select(option);
     });
   }

@@ -33,7 +33,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         </li>
       } @empty {
         <li class="col-span-full">
-          <p class="text-center bg-white/80 w-fit px-2 mx-auto">No fruits found</p>
+          <p class="text-center bg-white/80 w-fit px-2 m-0 mx-auto">No fruits found</p>
         </li>
       }
     </ul>

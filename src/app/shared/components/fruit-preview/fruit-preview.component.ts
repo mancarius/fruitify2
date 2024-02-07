@@ -18,7 +18,7 @@ import { PhotoStore } from '@shared/store';
         </div>
       }
       <div class="fruit-preview__name">
-        <span class="p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white whitespace-nowrap">{{ fruit()?.name }}</span>
+        <span class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white">{{ fruit()?.name }}</span>
       </div>
     </div>
   `,

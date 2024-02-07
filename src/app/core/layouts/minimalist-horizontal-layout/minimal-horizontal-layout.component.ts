@@ -17,7 +17,7 @@ import { NavbarComponent } from '@core/components/navbar/navbar.component';
     </header>
 
     <!-- Main content -->
-    <main class="bg-white dark:bg-gray-900 pb-[80px]">
+    <main class="bg-slate-100 dark:bg-gray-800 pb-[80px]">
       <router-outlet></router-outlet>
     </main>
 
