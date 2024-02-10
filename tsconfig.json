@@ -46,6 +46,9 @@
       "@guards": [
         "app/guards/index.ts"
       ],
+      "@pipes": [
+        "app/pipes/index.ts"
+      ],
     }
   },
   "angularCompilerOptions": {

@@ -4,11 +4,12 @@ import { Fruit } from '@shared/types';
 import { FruitPreviewComponent } from '../fruit-preview/fruit-preview.component';
 import { FruitPreviewPlaceholderComponent } from '@shared/components/fruit-preview-placeholder/fruit-preview-placeholder.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { EncodeToPathSegmentPipe } from '@pipes';
 
 @Component({
   selector: 'app-fruit-list',
   standalone: true,
-  imports: [CommonModule, FruitPreviewComponent, FruitPreviewPlaceholderComponent, RouterLink, RouterLinkActive],
+  imports: [CommonModule, FruitPreviewComponent, FruitPreviewPlaceholderComponent, RouterLink, RouterLinkActive, EncodeToPathSegmentPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   host: {
@@ -21,7 +22,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <li class="aspect-[3/2] flex flex-col">
           @defer (on viewport) {
             <a class="grow flex"
-              [routerLink]="['/fruit', fruit.name.toLocaleLowerCase()]"
+              [routerLink]="['/fruit', fruit.name | encodeToPathSegment]"
               [queryParams]="{ fruitId: fruit.id }"
               routerLinkActive="active"
             >
