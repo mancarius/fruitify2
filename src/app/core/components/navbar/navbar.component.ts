@@ -13,7 +13,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
   template: `
     <nav class="w-full flex flex-wrap items-center justify-between px-2 py-3">
       <div class="container px-4 mx-auto flex flex-wrap items-center justify-between">
-        <div class="w-full relative flex lg:w-auto lg:static lg:block">
+        <div class="relative flex lg:w-auto lg:static lg:block">
           <a class="text-sm font-bold leading-relaxed inline-block mr-4 ml-2 py-2 whitespace-nowrap uppercase text-blue-950 dark:text-white flex items-center"
             routerLink="/">
             Fruitify
