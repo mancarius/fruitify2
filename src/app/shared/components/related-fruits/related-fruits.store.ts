@@ -2,7 +2,7 @@ import { Fruit, Nullable } from '@shared/types';
 import { ComponentStore, OnStateInit, tapResponse } from '@ngrx/component-store';
 import { FruitService } from '@shared/services/fruit/fruit.service';
 import { Observable, defer, of, switchMap, tap } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 export type RelatedFruitsState = {
   fruits: Fruit[];
@@ -21,9 +21,9 @@ const relatedFruitsInitialState: RelatedFruitsState = {
 
 @Injectable()
 export class RelatedFruitsStore extends ComponentStore<RelatedFruitsState> implements OnStateInit {
-  constructor(private readonly _fruitService: FruitService) {
-    super(relatedFruitsInitialState);
-  }
+  readonly #fruitService = inject(FruitService);
+
+  constructor() { super(relatedFruitsInitialState) }
 
   readonly fruits$ = this.select(state => state.fruits.slice(0, state.maxSuggestions));
   readonly loading$ = this.select(state => state.loading);
@@ -64,7 +64,7 @@ export class RelatedFruitsStore extends ComponentStore<RelatedFruitsState> imple
         fruits: [],
         loading: true
       })),
-      switchMap(family => defer(() => family ? this._fruitService.getWithQuery({ family }) : of([])).pipe(
+      switchMap(family => defer(() => family ? this.#fruitService.getWithQuery({ family }) : of([])).pipe(
         tapResponse(
           fruits => this.setFruits(fruits),
           error => console.error(error),

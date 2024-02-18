@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Fruit, QueryParams } from "../../types";
 import { ComponentStore, tapResponse } from "@ngrx/component-store";
 import { FruitService } from '../../services/fruit/fruit.service';
-import { Observable, map, switchMap, tap } from 'rxjs';
-import { LoadingService } from '../../services/loading/loading.service';
+import { Observable, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export type FruitState = {
@@ -20,10 +19,9 @@ export const fruitInitialState: FruitState = {
 
 @Injectable()
 export class FruitStore extends ComponentStore<FruitState> {
+  #fruitService = inject(FruitService);
 
-  constructor(private _fruitService: FruitService, private _loadingService: LoadingService) {
-    super(fruitInitialState);
-  }
+  constructor() { super(fruitInitialState) }
 
   /* ========== Selectors ========== */
 
@@ -44,8 +42,8 @@ export class FruitStore extends ComponentStore<FruitState> {
 
   /* ========== Updaters ========== */
 
-  private readonly _startLoading = this.updater((state) => ({ ...state, loading: true }));
-  private readonly _stopLoading = this.updater((state) => ({ ...state, loading: false }));
+  readonly #startLoading = this.updater((state) => ({ ...state, loading: true }));
+  readonly #stopLoading = this.updater((state) => ({ ...state, loading: false }));
 
   /* ========== Effects ========== */
 
@@ -55,9 +53,9 @@ export class FruitStore extends ComponentStore<FruitState> {
    */
   readonly fetchAllFruits = this.effect((trigger$) => {
     return trigger$.pipe(
-      tap(() => this._startLoading()),
-      switchMap(() => this._fruitService.getAll()),
-      tap(() => this._stopLoading()),
+      tap(() => this.#startLoading()),
+      switchMap(() => this.#fruitService.getAll()),
+      tap(() => this.#stopLoading()),
       tapResponse(
         (fruits) => {
           fruits.sort((a, b) => a.name.localeCompare(b.name));
@@ -75,9 +73,9 @@ export class FruitStore extends ComponentStore<FruitState> {
    */
   readonly getFruitsByQuery = this.effect((queryParams$: Observable<QueryParams<keyof Fruit>>) => {
     return queryParams$.pipe(
-      tap(() => this._startLoading()),
-      switchMap((queryParams) => this._fruitService.getWithQuery(queryParams)),
-      tap(() => this._stopLoading()),
+      tap(() => this.#startLoading()),
+      switchMap((queryParams) => this.#fruitService.getWithQuery(queryParams)),
+      tap(() => this.#stopLoading()),
       tapResponse(
         (fruits) => {
           fruits.sort((a, b) => a.name.localeCompare(b.name))

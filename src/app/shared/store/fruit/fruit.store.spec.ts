@@ -36,11 +36,11 @@ describe('FruitsStore', () => {
   describe('#_startLoading', () => {
 
     it('should exists a _startLoading method', () => {
-      expect(store['_startLoading']).toBeTruthy();
+      expect(store['#startLoading']).toBeTruthy();
     });
 
     it('should call LoadingService#startLoading once', () => {
-      store['_startLoading']();
+      store['#startLoading']();
       expect(store['_loadingService'].start).toHaveBeenCalledTimes(1);
     });
 
@@ -51,11 +51,11 @@ describe('FruitsStore', () => {
   describe('#_stopLoading', () => {
 
     it('should exists a _stopLoading method', () => {
-      expect(store['_stopLoading']).toBeTruthy();
+      expect(store['#stopLoading']).toBeTruthy();
     });
 
     it('should call LoadingService#stopLoading once', () => {
-      store['_stopLoading']();
+      store['#stopLoading']();
       expect(store['_loadingService'].stop).toHaveBeenCalledTimes(1);
     });
 
@@ -75,8 +75,8 @@ describe('FruitsStore', () => {
       fruitServiceSpy.getAll.and.resolveTo();
 
       store.fruits$.pipe(skip(1), take(1)).subscribe((fruits) => {
-        expect(store['_startLoading']).toHaveBeenCalledTimes(1);
-        expect(store['_stopLoading']).toHaveBeenCalledTimes(1);
+        expect(store['#startLoading']).toHaveBeenCalledTimes(1);
+        expect(store['#stopLoading']).toHaveBeenCalledTimes(1);
         expect(fruitServiceSpy.getAll).toHaveBeenCalledTimes(1);
         done();
       });
@@ -124,8 +124,8 @@ describe('FruitsStore', () => {
       fruitServiceSpy.getWithQuery.and.resolveTo();
 
       store.fruits$.pipe(skip(1), take(1)).subscribe(() => {
-        expect(store['_startLoading']).toHaveBeenCalledTimes(1);
-        expect(store['_stopLoading']).toHaveBeenCalledTimes(1);
+        expect(store['#startLoading']).toHaveBeenCalledTimes(1);
+        expect(store['#stopLoading']).toHaveBeenCalledTimes(1);
         done();
       });
 

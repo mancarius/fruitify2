@@ -1,5 +1,5 @@
 import { ComponentStore, OnStateInit } from "@ngrx/component-store";
-import { Inject, Injectable, Injector, WritableSignal, effect } from "@angular/core";
+import { Inject, Injectable, Injector, WritableSignal, effect, inject } from "@angular/core";
 import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProvider, MediaServiceProviderCollection, Nullable } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
 import { Observable, tap } from "rxjs";
@@ -17,20 +17,18 @@ export const mediaProviderInitialState: MediaProviderState = {
 
 @Injectable()
 export class MediaProviderStore extends ComponentStore<MediaProviderState> implements OnStateInit {
-  constructor(
-    @Inject(MEDIA_SERVICE_CONFIG_TOKEN) private _mediaServiceConfig: WritableSignal<Nullable<MediaServiceConfig>>,
-    private _injector: Injector,
-  ) {
-    super(mediaProviderInitialState);
-  }
+  readonly #injector = inject(Injector);
+  readonly #mediaServiceConfig: WritableSignal<Nullable<MediaServiceConfig>> = inject(MEDIA_SERVICE_CONFIG_TOKEN);
+
+  constructor() { super(mediaProviderInitialState) }
 
   ngrxOnStateInit(): void {
     effect(() => {
-      const provider = this._mediaServiceConfig()?.provider;
+      const provider = this.#mediaServiceConfig()?.provider;
       if (provider) {
         this.patchState({ provider: this.get().providers[provider] });
       }
-    }, { injector: this._injector, allowSignalWrites: true });
+    }, { injector: this.#injector, allowSignalWrites: true });
   }
 
 
@@ -48,7 +46,7 @@ export class MediaProviderStore extends ComponentStore<MediaProviderState> imple
    */
   readonly selectProvider = this.effect((providerName$: Observable<MediaServiceProvider['name']>) => {
     return providerName$.pipe(
-      tap(providerName => this._mediaServiceConfig.set(this._getMediaConfigByProvider(providerName))),
+      tap(providerName => this.#mediaServiceConfig.set(this.#getMediaConfigByProvider(providerName))),
     );
   });
 
@@ -60,7 +58,7 @@ export class MediaProviderStore extends ComponentStore<MediaProviderState> imple
    * @param provider - The media provider.
    * @returns The media service configuration.
    */
-  private _getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
+  #getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
     return API_CONFIGS.find(config => config.provider === provider) as MediaServiceConfig;
   }
 }

@@ -90,21 +90,19 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class HomeComponent implements OnInit {
-  private readonly _cs = inject(HomeStore);
-  private readonly _loadingService = inject(LoadingService);
-  private readonly _destroy$ = inject(DestroyRef);
-
+  readonly #cs = inject(HomeStore);
+  readonly #loadingService = inject(LoadingService);
+  readonly #destroy$ = inject(DestroyRef);
   readonly searchControl = new FormControl<Record<SearchContext, Nullable<string>> | null>(null);
-  private readonly _queryParams$ = this.searchControl.valueChanges;
-
-  readonly fruits: Signal<Fruit[]> = toSignal(this._cs.fruits$, { initialValue: [] });
-  readonly loading: Signal<boolean> = toSignal(this._loadingService.loading$, { initialValue: false });
+  readonly #queryParams$ = this.searchControl.valueChanges;
+  readonly fruits: Signal<Fruit[]> = toSignal(this.#cs.fruits$, { initialValue: [] });
+  readonly loading: Signal<boolean> = toSignal(this.#loadingService.loading$, { initialValue: false });
 
   ngOnInit() {
-    this._cs.search(this._queryParams$);
+    this.#cs.search(this.#queryParams$);
 
-    this._cs.queryParams$
-      .pipe(takeUntilDestroyed(this._destroy$))
+    this.#cs.queryParams$
+      .pipe(takeUntilDestroyed(this.#destroy$))
       .subscribe((queryParams) => {
         this.searchControl.patchValue(queryParams);
       });

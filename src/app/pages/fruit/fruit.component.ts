@@ -63,33 +63,33 @@ import { MatCardModule } from '@angular/material/card';
   `,
 })
 export class FruitComponent implements AfterViewInit {
-  private readonly _injector = inject(Injector);
+  readonly #injector = inject(Injector);
 
-  private readonly _activatedRoute = inject(ActivatedRoute);
+  readonly #activatedRoute = inject(ActivatedRoute);
 
-  private readonly _routeData$: Observable<Data | { fruit: Nullable<Fruit>, photo: Nullable<MediaPhoto> }> = this._activatedRoute.data;
+  readonly #routeData$: Observable<Data | { fruit: Nullable<Fruit>, photo: Nullable<MediaPhoto> }> = this.#activatedRoute.data;
 
-  private readonly _fruit$: Observable<NonNullable<Fruit>> = this._routeData$.pipe(
+  readonly #fruit$: Observable<NonNullable<Fruit>> = this.#routeData$.pipe(
     filter((data) => 'fruit' in data),
     map((data) => data.fruit)
   );
 
-  private readonly _photo$: Observable<MediaPhoto> = this._routeData$.pipe(
+  readonly #photo$: Observable<MediaPhoto> = this.#routeData$.pipe(
     filter((data) => 'photo' in data),
     map((data) => data.photo)
   );
 
-  private readonly _photo = toSignal(this._photo$, { initialValue: null });
+  readonly #photo = toSignal(this.#photo$, { initialValue: null });
   
   /* Public properties */
-  readonly fruit = toSignal(this._fruit$, { initialValue: null });
+  readonly fruit = toSignal(this.#fruit$, { initialValue: null });
 
-  readonly headerBackgroundImage = computed(() => `url(${this._photo()?.url})`);
+  readonly headerBackgroundImage = computed(() => `url(${this.#photo()?.url})`);
 
   ngAfterViewInit(): void {
     effect(() => {
       this.fruit();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, { injector: this._injector });
+    }, { injector: this.#injector });
   }
 }

@@ -61,40 +61,40 @@ type TouchedFn = () => void;
   ]
 })
 export class FruitsSearchComponent implements ControlValueAccessor {
-  private readonly _defaultContext: SearchContext = "name";
+  readonly #defaultContext: SearchContext = "name";
   readonly contextOptions: SearchContext[] = ["name", "order", "genus", "family"];
   readonly fg = new FormGroup({
-    context: new FormControl<SearchContext>(this._defaultContext, { nonNullable: true }),
+    context: new FormControl<SearchContext>(this.#defaultContext, { nonNullable: true }),
     value: new FormControl<string>("")
   });
 
-  private _change: ChangeFn = () => { };
-  private _touched: TouchedFn = () => { };
+  #change: ChangeFn = () => { };
+  #touched: TouchedFn = () => { };
 
   protected onSubmit() {
-    this._touched();
-    const { context = this._defaultContext, value = null } = this.fg.value;
+    this.#touched();
+    const { context = this.#defaultContext, value = null } = this.fg.value;
     this.emitSearchValue(context, value);
   }
 
   protected emitSearchValue(context: SearchContext, value: Nullable<string>) {
-    this._change({ [context]: value } as { [key in SearchContext]: Nullable<string> });
+    this.#change({ [context]: value } as { [key in SearchContext]: Nullable<string> });
   }
 
   writeValue(value: Record<SearchContext, Nullable<string>> | null): void {
     const context = value ? Object.keys(value)[0] as SearchContext : null;
     this.fg.patchValue({
-      context: context ?? this._defaultContext,
+      context: context ?? this.#defaultContext,
       value: context && value ? value[context] : ""
     });
   }
 
   registerOnChange(fn: ChangeFn): void {
-    this._change = fn;
+    this.#change = fn;
   }
 
   registerOnTouched(fn: TouchedFn): void {
-    this._touched = fn;
+    this.#touched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {

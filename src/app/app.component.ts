@@ -36,6 +36,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   `,
 })
 export class AppComponent {
-  private _loadingSrv = inject(LoadingService);
-  loading = toSignal(this._loadingSrv.loading$, { initialValue: false });
+  #loadingSrv = inject(LoadingService);
+  loading = toSignal(this.#loadingSrv.loading$, { initialValue: false });
 }

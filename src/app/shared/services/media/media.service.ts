@@ -15,7 +15,7 @@ import { UnsplashService } from '../unsplash/unsplash.service';
  */
 export class MediaService implements PhotoFinder {
   
-  private provider!: AbstractMediaProviderService;
+  #provider!: AbstractMediaProviderService;
   
   constructor(
     @Inject(MEDIA_SERVICE_CONFIG_TOKEN) readonly mediaServiceConfig: Signal<MediaServiceConfig | null>,
@@ -26,10 +26,10 @@ export class MediaService implements PhotoFinder {
 
       switch (config?.provider) {
         case MediaProvidersEnum.PEXELS:
-          this.provider = new PexelsService(config, http);
+          this.#provider = new PexelsService(config, http);
           break;
         case MediaProvidersEnum.UNSPLASH:
-          this.provider = new UnsplashService(config, http);
+          this.#provider = new UnsplashService(config, http);
           break;
         default:
           throw new Error(`Media provider '${config?.provider}' not supported.`);
@@ -38,6 +38,6 @@ export class MediaService implements PhotoFinder {
   }
 
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
-    return this.provider.findPhoto(query + " fruit", options);
+    return this.#provider.findPhoto(`${query} fruit`, options);
   }
 }

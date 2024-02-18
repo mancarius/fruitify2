@@ -15,7 +15,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
     <nav class="w-full flex flex-wrap items-center justify-between px-2 py-3">
       <div class="container px-4 mx-auto flex flex-wrap items-center justify-between">
         <div class="relative flex lg:w-auto lg:static lg:block">
-          <a class="text-sm font-bold leading-relaxed inline-block mr-4 ml-2 py-2 whitespace-nowrap uppercase text-blue-950 dark:text-white flex items-center"
+          <a class="text-sm font-bold leading-relaxed inline-block mr-4 ml-2 py-2 whitespace-nowrap uppercase flex items-center"
             routerLink="/">
             Fruitify
           </a>
@@ -26,7 +26,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
           <button mat-icon-button
             class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none text-white"
             type="button" (click)="toggleNavbar()">
-            <mat-icon class="text-blue-950 dark:text-white opacity-80">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
+            <mat-icon class="opacity-80">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
           </button>
         </div>
 
@@ -36,16 +36,16 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
           <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
 
             <li class="flex items-center">
-              <a class="lg:text-white lg:hover:text-blue-950 dark:text-white dark:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full"
+              <a class="lg:text-white lg:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full"
                 routerLink="/settings">
-                <mat-icon class="text-blue-950 dark:text-white opacity-80">settings</mat-icon>
+                <mat-icon class="opacity-80">settings</mat-icon>
                 <span class="lg:hidden inline-block ml-2">Settings</span>
               </a>
             </li>
 
             <li class="flex items-center">
-              <a [href]="ghLink" class="lg:text-white lg:hover:text-blue-950 dark:text-white dark:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full">
-                <mat-icon svgIcon="github" class="text-blue-950 dark:text-white opacity-80"></mat-icon>
+              <a [href]="ghLink" class="lg:text-white lg:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full">
+                <mat-icon svgIcon="github" class="opacity-80"></mat-icon>
                 <span class="lg:hidden inline-block ml-2">Github</span>
               </a>
             </li>

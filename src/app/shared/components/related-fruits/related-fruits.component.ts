@@ -54,24 +54,24 @@ export class RelatedFruitsContentDirective {
   `
 })
 export class RelatedFruitsComponent {
-  private readonly _cs = inject(RelatedFruitsStore);
+  readonly #cs = inject(RelatedFruitsStore);
 
   @ContentChild(RelatedFruitsContentDirective) content!: RelatedFruitsContentDirective;
 
   @Input({ required: true })
-  set fruit(value: Nullable<Fruit>) { this._cs.setFruit(value); }
+  set fruit(value: Nullable<Fruit>) { this.#cs.setFruit(value); }
 
   @Input()
-  set maxSuggestions(value: number | undefined) { typeof value === "number" && this._cs.setMaxSuggestions(value); }
+  set maxSuggestions(value: number | undefined) { typeof value === "number" && this.#cs.setMaxSuggestions(value); }
 
-  loading = toSignal(this._cs.select(state => state.loading));
+  readonly loading = toSignal(this.#cs.select(state => state.loading));
 
-  fruits = toSignal(this._cs.fruits$);
+  readonly fruits = toSignal(this.#cs.fruits$);
 
   /**
    * Determines whether the "Load More" button should be shown based on the maximum suggestions and the number of fruits.
    */
-  showLoadMoreBtn = toSignal(this._cs.select(state => state.maxSuggestions < state.fruits.length));
+  readonly showLoadMoreBtn = toSignal(this.#cs.select(state => state.maxSuggestions < state.fruits.length));
 
-  readonly showAll = this._cs.showAll;
+  readonly showAll = this.#cs.showAll;
 }

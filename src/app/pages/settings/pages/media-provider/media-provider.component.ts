@@ -40,15 +40,15 @@ import { Observable, Subscription } from 'rxjs';
   `
 })
 export class MediaProviderComponent implements AfterViewInit {
-  private _cs = inject(MediaProviderStore);
-  private _destroy$ = inject(DestroyRef);
+  #cs = inject(MediaProviderStore);
+  #destroy$ = inject(DestroyRef);
 
   @ViewChild('providers') providers!: MatSelectionList;
 
-  readonly vm = toSignal(this._cs.vm$);
+  readonly vm = toSignal(this.#cs.vm$);
 
   ngAfterViewInit(): void {
-    this._selectOption(this._cs.provider$);
+    this.#selectOption(this.#cs.provider$);
   }
 
   /**
@@ -58,7 +58,7 @@ export class MediaProviderComponent implements AfterViewInit {
    */
   setProvider(event: MatSelectionListChange): void {
     const providerName = event.source.selectedOptions.selected[0].value as MediaServiceProvider['name'];
-    this._cs.selectProvider(providerName);
+    this.#cs.selectProvider(providerName);
   }
 
   /**
@@ -66,9 +66,9 @@ export class MediaProviderComponent implements AfterViewInit {
    * 
    * @param optionValue$ The value of the option to select.
    */
-  private _selectOption(optionValue$: Observable<Nullable<MediaServiceProvider>>): Subscription {
+  #selectOption(optionValue$: Observable<Nullable<MediaServiceProvider>>): Subscription {
     return optionValue$.pipe(
-      takeUntilDestroyed(this._destroy$),
+      takeUntilDestroyed(this.#destroy$),
     ).subscribe(optionValue => {
       const option = this.providers.options.find(option => option.value === optionValue?.name);
       option && this.providers.selectedOptions.select(option);

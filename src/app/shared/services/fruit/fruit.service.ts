@@ -8,24 +8,24 @@ import { API_BASE_PATHNAME } from '@shared/constants';
   providedIn: 'root'
 })
 export class FruitService {
-  private _baseUrl = API_BASE_PATHNAME;
-  private _entities = new BehaviorSubject<Fruit[]>([]);
-  private _http = inject(HttpClient);
+  readonly #baseUrl = API_BASE_PATHNAME;
+  readonly #entities = new BehaviorSubject<Fruit[]>([]);
+  readonly #http = inject(HttpClient);
 
   /**
    * Observable stream of entities.
    */
-  public readonly entities$ = this._entities.asObservable().pipe(shareReplay(1));
+  readonly entities$ = this.#entities.asObservable().pipe(shareReplay(1));
 
   /**
    * Retrieves all fruits.
    * @returns An Observable that emits an array of Fruit objects.
    */
-  public getAll(): Observable<Fruit[]> {
-    if (this._entities.value.length === 0) {
-      const url = this._composeUrl('all');
-      return this._http.get<Fruit[]>(url).pipe(
-        tap(entities => this._entities.next(entities))
+  getAll(): Observable<Fruit[]> {
+    if (this.#entities.value.length === 0) {
+      const url = this.#composeUrl('all');
+      return this.#http.get<Fruit[]>(url).pipe(
+        tap(entities => this.#entities.next(entities))
       );
     }
 
@@ -37,9 +37,9 @@ export class FruitService {
    * @param id - The ID of the fruit to retrieve.
    * @returns An Observable that emits the fruit with the specified ID.
    */
-  public getById(id: number): Observable<Fruit> {
-    const url = `${this._composeUrl()}/${id}`;
-    return this._http.get<Fruit>(url);
+  getById(id: number): Observable<Fruit> {
+    const url = `${this.#composeUrl()}/${id}`;
+    return this.#http.get<Fruit>(url);
   }
 
   /**
@@ -47,8 +47,8 @@ export class FruitService {
    * @param query - The query parameters to filter the fruits.
    * @returns An observable that emits an array of fruits.
    */
-  public getWithQuery(query: QueryParams<keyof Omit<Fruit, 'nutritions' | 'id'>>): Observable<Fruit[]> {
-    return forkJoin(Object.entries(query).map(([key, value]) => this._http.get<Fruit[]>(`${this._composeUrl(key)}/${value}`)))
+  getWithQuery(query: QueryParams<keyof Omit<Fruit, 'nutritions' | 'id'>>): Observable<Fruit[]> {
+    return forkJoin(Object.entries(query).map(([key, value]) => this.#http.get<Fruit[]>(`${this.#composeUrl(key)}/${value}`)))
       .pipe(map((results) => results.flat()));
   }
 
@@ -60,8 +60,8 @@ export class FruitService {
    * @param key - The key to be appended to the URL.
    * @returns The composed URL.
    */
-  private _composeUrl(key: string = ''): string {
-    const url = this._baseUrl;
+  #composeUrl(key: string = ''): string {
+    const url = this.#baseUrl;
     const keyList = ['all', 'family', 'genus', 'order'];
 
     return keyList.includes(key) ? `${url}/${key}` : url;

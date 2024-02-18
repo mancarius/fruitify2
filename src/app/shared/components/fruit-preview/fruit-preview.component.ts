@@ -65,14 +65,14 @@ import { PhotoStore } from '@shared/store';
   `
 })
 export class FruitPreviewComponent {
-  private _photoStore = inject(PhotoStore);
+  #photoStore = inject(PhotoStore);
 
   @Input({ alias: 'fruit', required: true })
   set _fruits(fruit: Fruit) {
     this.fruit.set(fruit);
-    this._photoStore.fetchPhoto({ fruit, options: { size: MediaSize.SMALL } });
+    this.#photoStore.fetchPhoto({ fruit, options: { size: MediaSize.SMALL } });
   }
 
   protected fruit: WritableSignal<Nullable<Fruit>> = signal(null);
-  protected photo: Signal<Nullable<MediaPhoto>> = this._photoStore.photo;
+  protected photo: Signal<Nullable<MediaPhoto>> = this.#photoStore.photo;
 }

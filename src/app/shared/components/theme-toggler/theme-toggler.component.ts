@@ -17,11 +17,11 @@ import { ThemeService } from '@shared/services/theme/theme.service';
   `,
 })
 export class ThemeTogglerComponent {
-  private _themeService = inject(ThemeService);
+  readonly #themeService = inject(ThemeService);
 
-  isDarkTheme = this._themeService.isDarkTheme;
+  isDarkTheme = this.#themeService.isDarkTheme;
   iconName = computed(() => this.isDarkTheme() ? 'dark_mode' : 'light_mode' );
   tooltipMessage = computed(() => this.isDarkTheme() ?  'Switch to dark theme' : 'Switch to light theme');
 
-  toggleTheme = () => this._themeService.toggleTheme();
+  toggleTheme = () => this.#themeService.toggleTheme();
 }

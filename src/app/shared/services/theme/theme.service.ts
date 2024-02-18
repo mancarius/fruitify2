@@ -7,37 +7,37 @@ type Theme = 'light' | 'dark';
   providedIn: 'root'
 })
 export class ThemeService {
-  private _theme = signal<'light' | 'dark'>('light');
-  isDarkTheme = computed(() => this._theme() === 'dark');
+  readonly #theme = signal<'light' | 'dark'>('light');
+  readonly isDarkTheme = computed(() => this.#theme() === 'dark');
 
   constructor() {
     const storedTheme = localStorage.getItem('theme') as Nullable<Theme>;
     const preferColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' as Theme;
-    this._theme.set(storedTheme || preferColorScheme);
+    this.#theme.set(storedTheme || preferColorScheme);
 
     effect(() => {
-      localStorage.setItem('theme', untracked(this._theme));
-      this._toggleDarkClass('dark', this.isDarkTheme());
+      localStorage.setItem('theme', untracked(this.#theme));
+      this.#toggleDarkClass('dark', this.isDarkTheme());
     });
   }
 
   toggleTheme() {
-    this._theme.set(this.isDarkTheme() ? 'light' : 'dark');
+    this.#theme.set(this.isDarkTheme() ? 'light' : 'dark');
   }
 
-  private _toggleDarkClass(className: string, isDarkActive: boolean) {
+  #toggleDarkClass(className: string, isDarkActive: boolean) {
     if (isDarkActive) {
-      this._addClass(className);
+      this.#addClass(className);
     } else {
-      this._removeClass(className);
+      this.#removeClass(className);
     }
   }
 
-  private _addClass(className: string) {
+  #addClass(className: string) {
     document.body.classList.add(className);
   }
 
-  private _removeClass(className: string) {
+  #removeClass(className: string) {
     document.body.classList.remove(className);
   }
 }
