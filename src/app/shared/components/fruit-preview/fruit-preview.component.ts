@@ -10,13 +10,21 @@ import { PhotoStore } from '@shared/store';
   providers: [PhotoStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
+  host: {
+    class: 'bg-gray-500/10 relative overflow-hidden p-4',
+  },
+
   template: `
     <div class="fruit-preview">
+
       @if(photo()) {
+
         <div class="fruit-preview__photo">
           <img [ngSrc]="photo()?.url ?? ''" fill />
         </div>
+        
       }
+
       <div class="fruit-preview__name">
         <span class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white">{{ fruit()?.name }}</span>
       </div>
@@ -25,9 +33,6 @@ import { PhotoStore } from '@shared/store';
 
   styles: `
     :host {
-      position: relative;
-      padding: 1rem;
-      overflow: hidden;
       container-type: inline-size;
     }
 
@@ -52,6 +57,10 @@ import { PhotoStore } from '@shared/store';
       text-align: center;
       position: relative;
       z-index: 1;
+
+      span {
+        width: min-content;
+      }
     }
   `
 })

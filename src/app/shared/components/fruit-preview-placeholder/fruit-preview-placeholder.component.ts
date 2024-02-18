@@ -6,8 +6,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   standalone: true,
   imports: [MatProgressSpinnerModule],
 
-  template: `<mat-spinner diameter="30" color="primary"></mat-spinner>`,
+  host: {
+    class: 'flex justify-center items-center bg-gray-500/10',
+  },
 
-  styles: [`:host { display: flex; justify-content: center; align-items: center; }`],
+  template: `<mat-spinner diameter="30" color="primary"></mat-spinner>`,
 })
 export class FruitPreviewPlaceholderComponent { }

@@ -15,7 +15,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     @if(fruit) {
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Classification</h3>
 
-      <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10">
+      <mat-card class="w-full bg-white dark:bg-slate-50/10">
         <mat-nav-list role="list" class="w-full">
           <!-- Order -->
           <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{order:fruit.order}" class="w-full">
@@ -39,7 +39,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Nutritions</h3>
 
-      <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10">
+      <mat-card class="w-full bg-white dark:bg-slate-50/10">
         <mat-card-content>
           <app-fruit-nutritions [nutritions]="fruit.nutritions"></app-fruit-nutritions>
         </mat-card-content>

@@ -15,7 +15,6 @@ import { ThemeService } from '@shared/services/theme/theme.service';
       <mat-icon>{{ iconName() }}</mat-icon>
     </button>
   `,
-  
 })
 export class ThemeTogglerComponent {
   private _themeService = inject(ThemeService);

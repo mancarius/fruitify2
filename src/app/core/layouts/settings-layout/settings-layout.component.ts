@@ -13,7 +13,7 @@ import { injectRouteTitle } from '@shared/helpers';
   imports: [CommonModule, MatButtonModule, MatIconModule, RouterOutlet, NavbarComponent, FooterComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex flex-col w-full min-h-dvh',
+    class: 'flex flex-col w-full grow',
   },
   template: `
     <!-- Header -->
@@ -28,7 +28,7 @@ import { injectRouteTitle } from '@shared/helpers';
     </header>
 
     <!-- Main content -->
-    <main class="bg-slate-100 dark:bg-gray-800 pb-[80px]">
+    <main class="bg-slate-100 dark:bg-gray-800 pb-[50px] grow">
       <router-outlet></router-outlet>
     </main>
 

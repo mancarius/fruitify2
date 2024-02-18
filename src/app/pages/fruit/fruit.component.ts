@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, computed, effect, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Data } from '@angular/router';
 import { PhotoStore } from '@shared/store';
@@ -15,18 +15,19 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-fruit',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FruitPreviewComponent, FruitDetailComponent, RelatedFruitsComponent, RelatedFruitsContentDirective, FruitListComponent, MatCardModule],
   providers: [provideComponentStore(PhotoStore)],
   host: {
     class: 'w-full min-h-screen flex flex-col justify-center items-center relative'
   },
   template: `
-    <article class="w-full dark:text-slate-200 flex flex-col gap-4">
+    <article class="w-full dark:text-slate-200 flex flex-col gap-4 grow">
       <header class="relative w-full h-64 sm:h-96 flex flex-col justify-end items-center bg-center bg-no-repeat bg-cover"
         [ngStyle]="{'background-image': headerBackgroundImage()}">
-        <span id="blackOverlay" class="w-full h-full absolute opacity-60 bg-black z-0"></span>
+        <span id="blackOverlay" class="w-full h-full absolute opacity-60 bg-black z-0 dark:bg-black bg-white"></span>
         <h2
-          class="text-4xl sm:text-6xl font-bold text-white z-10 pl-4 md:pl-0 pb-4 md:pb-2 dark:text-white w-full max-w-screen-sm">
+          class="text-4xl sm:text-6xl font-bold text-black dark:text-white z-10 pl-4 md:pl-0 pb-4 md:pb-2 w-full max-w-screen-sm">
           {{fruit()?.name}}
         </h2>
       </header>
@@ -37,10 +38,10 @@ import { MatCardModule } from '@angular/material/card';
     </article>
 
     @if(fruit()) {
-      <aside class="w-full flex flex-col gap-4 max-w-screen-sm mx-auto">
-        <h3 class="font-bold text-sm text-black dark:text-white m-0">Related fruits</h3>
-
-        <mat-card class="w-full bg-slate-100 dark:bg-slate-50/10">
+      <aside class="w-full flex flex-col gap-4 p-4 pt-0">
+        <h3 class="font-bold text-sm text-black dark:text-white m-0 w-full max-w-screen-sm mx-auto">Related fruits</h3>
+      
+        <mat-card class="w-full bg-white dark:bg-slate-50/10 mx-4 w-full max-w-screen-sm mx-auto">
           <mat-card-content>
             @defer (on viewport) {
               <nav class="w-full">
@@ -50,7 +51,9 @@ import { MatCardModule } from '@angular/material/card';
                   </ng-template>
                 </app-related-fruits>
               </nav>
-            } @placeholder {
+            } @placeholder (minimum 500ms) {
+              <p class="text-slate">Loading related fruits...</p>
+            } @loading (after 100ms; minimum 1s) {
               <p class="text-slate-400 dark:text-slate-500">Loading...</p>
             }
           </mat-card-content>
@@ -60,28 +63,28 @@ import { MatCardModule } from '@angular/material/card';
   `,
 })
 export class FruitComponent implements AfterViewInit {
-  private _injector = inject(Injector);
+  private readonly _injector = inject(Injector);
 
-  private _activatedRoute = inject(ActivatedRoute);
+  private readonly _activatedRoute = inject(ActivatedRoute);
 
-  private _routeData$: Observable<Data | { fruit: Nullable<Fruit>, photo: Nullable<MediaPhoto> }> = this._activatedRoute.data;
+  private readonly _routeData$: Observable<Data | { fruit: Nullable<Fruit>, photo: Nullable<MediaPhoto> }> = this._activatedRoute.data;
 
-  private _fruit$: Observable<NonNullable<Fruit>> = this._routeData$.pipe(
+  private readonly _fruit$: Observable<NonNullable<Fruit>> = this._routeData$.pipe(
     filter((data) => 'fruit' in data),
     map((data) => data.fruit)
   );
 
-  private _photo$: Observable<MediaPhoto> = this._routeData$.pipe(
+  private readonly _photo$: Observable<MediaPhoto> = this._routeData$.pipe(
     filter((data) => 'photo' in data),
     map((data) => data.photo)
   );
 
-  private _photo = toSignal(this._photo$, { initialValue: null });
+  private readonly _photo = toSignal(this._photo$, { initialValue: null });
   
   /* Public properties */
-  fruit = toSignal(this._fruit$, { initialValue: null });
+  readonly fruit = toSignal(this._fruit$, { initialValue: null });
 
-  headerBackgroundImage = computed(() => `url(${this._photo()?.url})`);
+  readonly headerBackgroundImage = computed(() => `url(${this._photo()?.url})`);
 
   ngAfterViewInit(): void {
     effect(() => {

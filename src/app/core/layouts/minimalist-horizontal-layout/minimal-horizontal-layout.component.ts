@@ -7,9 +7,11 @@ import { NavbarComponent } from '@core/components/navbar/navbar.component';
   selector: 'app-minimal-horizontal-layout',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
+
   host: {
-    class: 'flex flex-col w-full min-h-dvh',
+    class: 'flex flex-col w-full grow',
   },
+  
   template: `
     <!-- Header -->
     <header class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md">
@@ -17,7 +19,7 @@ import { NavbarComponent } from '@core/components/navbar/navbar.component';
     </header>
 
     <!-- Main content -->
-    <main class="bg-slate-100 dark:bg-gray-800 pb-[80px]">
+    <main class="bg-gray-200 dark:bg-gray-800 pb-[50px] grow">
       <router-outlet></router-outlet>
     </main>
 

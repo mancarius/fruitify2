@@ -26,6 +26,18 @@ export class ThemeService {
   }
 
   private _toggleDarkClass(className: string, isDarkActive: boolean) {
-    document.body.classList.toggle(className, isDarkActive);
+    if (isDarkActive) {
+      this._addClass(className);
+    } else {
+      this._removeClass(className);
+    }
+  }
+
+  private _addClass(className: string) {
+    document.body.classList.add(className);
+  }
+
+  private _removeClass(className: string) {
+    document.body.classList.remove(className);
   }
 }

@@ -18,9 +18,13 @@ import { EncodeToPathSegmentPipe } from '@pipes';
 
   template: `
     <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
       @for (fruit of fruits(); track fruit.id) {
+
         <li class="aspect-[3/2] flex flex-col">
+
           @defer (on viewport) {
+
             <a class="grow flex"
               [routerLink]="['/fruit', fruit.name | encodeToPathSegment]"
               [queryParams]="{ fruitId: fruit.id }"
@@ -28,15 +32,27 @@ import { EncodeToPathSegmentPipe } from '@pipes';
             >
               <app-fruit-preview class="grow flex justify-center items-center" [fruit]="fruit"></app-fruit-preview>
             </a>
-          } @placeholder {
+
+          } @loading (after 100ms; minimum 1s) {
+
             <app-fruit-preview-placeholder class="grow"></app-fruit-preview-placeholder>
+
+          } @placeholder (minimum 500ms) {
+
+            <app-fruit-preview-placeholder class="grow"></app-fruit-preview-placeholder>
+            
           }
+
         </li>
+
       } @empty {
+
         <li class="col-span-full">
-          <p class="text-center bg-white/80 w-fit px-2 m-0 mx-auto">No fruits found</p>
+          <p class="text-center bg-white/80 dark:bg-gray-900/80 w-fit px-2 m-0 mx-auto">No fruits found</p>
         </li>
+
       }
+
     </ul>
   `
 })

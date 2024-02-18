@@ -10,6 +10,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, MatProgressSpinnerModule],
+  host: {
+    class: 'grow flex flex-col w-full',
+  },
   animations: [
     trigger('fade', [
       transition(':enter', [
