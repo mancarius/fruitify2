@@ -7,37 +7,47 @@ import { HttpClient } from '@angular/common/http';
 import { PexelsService } from '../pexels/pexels.service';
 import { UnsplashService } from '../unsplash/unsplash.service';
 
-@Injectable({
-  providedIn: 'root'
-})
 /**
  * Service for finding media, such as photos, using a media provider.
  */
+@Injectable({
+  providedIn: 'root'
+})
 export class MediaService implements PhotoFinder {
-  
+  /**
+   * The media provider used by the media service.
+   */
   #provider!: AbstractMediaProviderService;
   
+
   constructor(
     @Inject(MEDIA_SERVICE_CONFIG_TOKEN) readonly mediaServiceConfig: Signal<MediaServiceConfig | null>,
-    readonly http: HttpClient
+    private readonly _http: HttpClient
   ) {
-    effect(() => {
-      const config = mediaServiceConfig();
-
-      switch (config?.provider) {
-        case MediaProvidersEnum.PEXELS:
-          this.#provider = new PexelsService(config, http);
-          break;
-        case MediaProvidersEnum.UNSPLASH:
-          this.#provider = new UnsplashService(config, http);
-          break;
-        default:
-          throw new Error(`Media provider '${config?.provider}' not supported.`);
-      }
-    });
+    effect(() => this.#assignProvider(mediaServiceConfig()));
   }
+
 
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
     return this.#provider.findPhoto(`${query} fruit`, options);
+  }
+
+
+  /**
+   * Assigns a media provider based on the given configuration.
+   * @param config The configuration object for the media service.
+   * @throws Error if the specified media provider is not supported.
+   */
+  #assignProvider(config: MediaServiceConfig | null): void {
+    switch (config?.provider) {
+      case MediaProvidersEnum.PEXELS:
+        this.#provider = new PexelsService(config, this._http);
+        break;
+      case MediaProvidersEnum.UNSPLASH:
+        this.#provider = new UnsplashService(config, this._http);
+        break;
+      default:
+        throw new Error(`Media provider '${config?.provider}' not supported.`);
+    }
   }
 }
