@@ -21,4 +21,15 @@ export abstract class AbstractMediaProviderService implements PhotoFinder {
   constructor(protected readonly _providerConfig: MediaServiceConfig) { }
 
   abstract findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto>;
+
+  /**
+   * Composes a URL with the given pathname.
+   * @param pathname - The pathname to be appended to the base URL.
+   * @returns The composed URL.
+   */
+  protected composeUrl(pathname: string): URL {
+    const url = new URL(this._providerConfig.baseUrl);
+    url.pathname = pathname;
+    return url;
+  }
 }
