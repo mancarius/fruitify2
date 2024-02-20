@@ -12,10 +12,9 @@ export class FruitService {
   readonly #entities = new BehaviorSubject<Fruit[]>([]);
   readonly #http = inject(HttpClient);
 
-  /**
-   * Observable stream of entities.
-   */
-  readonly entities$ = this.#entities.asObservable().pipe(shareReplay(1));
+  /** Observable stream of entities. */
+  readonly entities$ = this.#entities.pipe(shareReplay(1));
+
 
   /**
    * Retrieves all fruits.
@@ -32,6 +31,7 @@ export class FruitService {
     return this.entities$.pipe(take(1));
   }
 
+
   /**
    * Retrieves a fruit by its ID.
    * @param id - The ID of the fruit to retrieve.
@@ -39,8 +39,11 @@ export class FruitService {
    */
   getById(id: number): Observable<Fruit> {
     const url = `${this.#composeUrl()}/${id}`;
-    return this.#http.get<Fruit>(url);
+    return this.#http.get<Fruit>(url).pipe(
+      tap(entity => this.#patchEntities([entity]))
+    );
   }
+
 
   /**
    * Retrieves an array of fruits based on the provided query parameters.
@@ -49,8 +52,12 @@ export class FruitService {
    */
   getWithQuery(query: QueryParams<keyof Omit<Fruit, 'nutritions' | 'id'>>): Observable<Fruit[]> {
     return forkJoin(Object.entries(query).map(([key, value]) => this.#http.get<Fruit[]>(`${this.#composeUrl(key)}/${value}`)))
-      .pipe(map((results) => results.flat()));
+      .pipe(
+        map((results) => results.flat()),
+        tap(entities => this.#patchEntities(entities))
+      );
   }
+
 
   /**
    * Composes the URL based on the provided key.
@@ -65,5 +72,26 @@ export class FruitService {
     const keyList = ['all', 'family', 'genus', 'order'];
 
     return keyList.includes(key) ? `${url}/${key}` : url;
+  }
+
+
+  /**
+   * Updates the existing entities with the provided entities or adds them if they don't exist.
+   * @param entities - The entities to be patched.
+   */
+  #patchEntities(entities: Fruit[]): void {
+    const currentEntities = this.#entities.value;
+    
+    for (let entity of entities) {
+      const index = this.#entities.value.findIndex(e => e.id === entity.id);
+
+      if (index > -1) {
+        currentEntities[index] = entity;
+      } else {
+        currentEntities.push(entity);
+      }
+    }
+
+    this.#entities.next(currentEntities);
   }
 }
