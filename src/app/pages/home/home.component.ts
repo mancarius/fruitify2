@@ -69,7 +69,7 @@ import { RouterLink } from '@angular/router';
 
         <svg class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
           version="1.1" viewBox="0 0 2560 100" x="0" y="0">
-          <polygon class="text-gray-200 dark:text-gray-800 fill-current" points="2560 0 2560 100 0 100">
+          <polygon class="text-gray-100 dark:text-gray-800 fill-current" points="2560 0 2560 100 0 100">
           </polygon>
         </svg>
       </div>

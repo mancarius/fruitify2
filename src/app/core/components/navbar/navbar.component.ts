@@ -36,7 +36,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
           <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
 
             <li class="flex items-center">
-              <a class="lg:text-white lg:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full"
+              <a class="px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full"
                 routerLink="/settings">
                 <mat-icon class="opacity-80">settings</mat-icon>
                 <span class="lg:hidden inline-block ml-2">Settings</span>
@@ -44,7 +44,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
             </li>
 
             <li class="flex items-center">
-              <a [href]="ghLink" class="lg:text-white lg:hover:text-blue-950 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full">
+              <a [href]="ghLink" class="px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold w-full">
                 <mat-icon svgIcon="github" class="opacity-80"></mat-icon>
                 <span class="lg:hidden inline-block ml-2">Github</span>
               </a>
