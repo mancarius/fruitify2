@@ -1,7 +1,7 @@
 import { Fruit, Nullable } from '@shared/types';
 import { ComponentStore, OnStateInit, tapResponse } from '@ngrx/component-store';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { Observable, defer, of, switchMap, tap } from 'rxjs';
+import { Observable, defer, distinctUntilChanged, of, shareReplay, switchMap, tap } from 'rxjs';
 import { Injectable, inject } from '@angular/core';
 
 export type RelatedFruitsState = {
@@ -25,9 +25,12 @@ export class RelatedFruitsStore extends ComponentStore<RelatedFruitsState> imple
 
   constructor() { super(relatedFruitsInitialState) }
 
-  readonly fruits$ = this.select(state => state.fruits.slice(0, state.maxSuggestions));
+  readonly fruits$ = this.select(state => state.fruits
+    .filter(fruit => fruit.id !== state.fruit?.id)
+    .slice(0, state.maxSuggestions)
+  ).pipe(shareReplay(1));
   readonly loading$ = this.select(state => state.loading);
-  readonly family$ = this.select(state => state.fruit?.family ?? null);
+  readonly family$ = this.select(state => state.fruit?.family ?? null).pipe(distinctUntilChanged(), shareReplay(1));
 
   ngrxOnStateInit() {
     this.fetchFruits(this.family$);
