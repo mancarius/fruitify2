@@ -16,7 +16,6 @@ export const fruitsResolver: ResolveFn<Fruit[]> = (route, state) => {
     ? service.getWithQuery(query)
     : service.getAll()
   ).pipe(
-    map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
     finalize(() => loader.stop()),
     catchError(() => of([]))
   );
