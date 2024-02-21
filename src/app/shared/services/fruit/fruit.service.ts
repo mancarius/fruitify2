@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Fruit, QueryParams } from '@shared/types';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, forkJoin, map, shareReplay, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, forkJoin, map, shareReplay, tap } from 'rxjs';
 import { API_BASE_PATHNAME } from '@shared/constants';
 
 @Injectable({
@@ -11,9 +11,12 @@ export class FruitService {
   readonly #baseUrl = API_BASE_PATHNAME;
   readonly #entities = new BehaviorSubject<Fruit[]>([]);
   readonly #http = inject(HttpClient);
+  readonly #loaded = new BehaviorSubject<boolean>(false);
 
   /** Observable stream of entities. */
-  readonly entities$ = this.#entities.pipe(shareReplay(1));
+  readonly entities$ = this.#entities.pipe(
+    map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
+    shareReplay(1));
 
 
   /**
@@ -21,14 +24,18 @@ export class FruitService {
    * @returns An Observable that emits an array of Fruit objects.
    */
   getAll(): Observable<Fruit[]> {
-    if (this.#entities.value.length === 0) {
-      const url = this.#composeUrl('all');
-      return this.#http.get<Fruit[]>(url).pipe(
-        tap(entities => this.#entities.next(entities))
-      );
-    }
-
-    return this.entities$.pipe(take(1));
+    return this.entities$.pipe(
+      tap(() => {
+        if (!this.#loaded.value) {
+          const url = this.#composeUrl('all');
+          this.#http.get<Fruit[]>(url).subscribe(entities => {
+            this.setLoaded(true);
+            this.#entities.next(entities);
+          });
+        }
+      }),
+      filter(() => this.#loaded.value),
+    );
   }
 
 
@@ -54,8 +61,18 @@ export class FruitService {
     return forkJoin(Object.entries(query).map(([key, value]) => this.#http.get<Fruit[]>(`${this.#composeUrl(key)}/${value}`)))
       .pipe(
         map((results) => results.flat()),
-        tap(entities => this.#patchEntities(entities))
+        tap(entities => this.#patchEntities(entities)),
+        map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
       );
+  }
+
+
+  /**
+   * Sets the loaded state of the fruit service.
+   * @param loaded - The loaded state to set.
+   */
+  setLoaded(loaded: boolean): void {
+    this.#loaded.next(loaded);
   }
 
 
@@ -81,7 +98,7 @@ export class FruitService {
    */
   #patchEntities(entities: Fruit[]): void {
     const currentEntities = this.#entities.value;
-    
+
     for (let entity of entities) {
       const index = this.#entities.value.findIndex(e => e.id === entity.id);
 
