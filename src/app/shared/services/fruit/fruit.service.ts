@@ -15,7 +15,7 @@ export class FruitService {
 
   /** Observable stream of entities. */
   readonly entities$ = this.#entities.pipe(
-    map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
+    map(function(fruits) { return fruits.sort((a, b) => a.name.localeCompare(b.name)) }),
     shareReplay(1));
 
 
@@ -62,7 +62,7 @@ export class FruitService {
       .pipe(
         map((results) => results.flat()),
         tap(entities => this.#patchEntities(entities)),
-        map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
+        map(function(fruits) { return fruits.sort((a, b) => a.name.localeCompare(b.name)) }),
       );
   }
 
