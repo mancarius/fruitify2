@@ -5,8 +5,11 @@ import { CommonModule } from '@angular/common';
   selector: 'app-not-found',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './not-found.component.html',
-  styleUrl: './not-found.component.scss'
+  template: `
+    <div class="flex items center justify-center h-full">
+      <h1>404 - Not Found</h1>
+    </div>
+  `,
 })
 export class NotFoundComponent {
 
