@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, Injector, ViewChild, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
@@ -40,15 +40,16 @@ import { Observable, Subscription } from 'rxjs';
   `
 })
 export class MediaProviderComponent implements AfterViewInit {
+  private readonly _injector = inject(Injector);
   private readonly _cs = inject(MediaProviderStore);
-  private readonly _destroy$ = inject(DestroyRef);
-
-  @ViewChild('providers') providers!: MatSelectionList;
-
+  private readonly _selectedProvider = toSignal(this._cs.provider$, { initialValue: null });
+  @ViewChild('providers') readonly providers!: MatSelectionList;
   protected readonly vm = toSignal(this._cs.vm$);
 
   ngAfterViewInit(): void {
-    this._selectOption(this._cs.provider$);
+    effect(() => {
+      this._selectOption(this._selectedProvider());
+    }, { injector: this._injector });
   }
 
   /**
@@ -64,14 +65,13 @@ export class MediaProviderComponent implements AfterViewInit {
   /**
    * Selects the list option with the specified value.
    * 
-   * @param optionValue$ The value of the option to select.
+   * @param optionValue The value of the option to select.
    */
-  private _selectOption(optionValue$: Observable<Nullable<MediaServiceProvider>>): Subscription {
-    return optionValue$.pipe(
-      takeUntilDestroyed(this._destroy$),
-    ).subscribe(optionValue => {
-      const option = this.providers.options.find(option => option.value === optionValue?.name);
-      option && this.providers.selectedOptions.select(option);
-    });
+  private _selectOption(optionValue: Nullable<MediaServiceProvider>): void {
+    const option = this.providers.options.find(option => option.value === optionValue?.name);
+    if (option)
+      this.providers.selectedOptions.select(option);
+    else
+      this.providers.selectedOptions.clear();
   }
 }
