@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Nutritions } from '@shared/types';
 import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutrition-view.component';
@@ -21,9 +21,9 @@ function transformNutritions(value: Nutritions): Array<{ name: keyof Nutritions,
   imports: [CommonModule, FruitNutritionViewComponent],
   host: { class: 'w-full flex flex-col bg-cover bg-center flex flex-col relative justify-center items-center' },
   template: `
-    <ul class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
-    @for(nutrition of nutritionEntries; track trackByNutrition){
-      <li>
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+    @for(nutrition of nutritionEntries; track trackByNutritionName){
+      <li class="rounded bg-gray-500/5 p-4">
         <app-fruit-nutrition-view [nutrition]="nutrition"></app-fruit-nutrition-view>
       </li>
     }
@@ -34,7 +34,7 @@ export class FruitNutritionsComponent {
   @Input({ alias: 'nutritions', required: true, transform: transformNutritions })
   nutritionEntries!: Array<{ name: keyof Nutritions, value: number }>;
 
-  trackByNutrition(index: number, item: { name: keyof Nutritions, value: number }) {
+  trackByNutritionName(index: number, item: { name: keyof Nutritions, value: number }) {
     return item.name;
   }
 }

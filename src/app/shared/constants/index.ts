@@ -73,3 +73,9 @@ export const NUTRITION_COLORS: Record<keyof Nutritions, string> = {
   calories: '#34d399',
   sugar: '#f472b6',
 };
+
+
+/**
+ * The default color for the nutrition.
+ */
+export const NUTRITION_DEFAULT_COLOR: string = '#e0e0e0';

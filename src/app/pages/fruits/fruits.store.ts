@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ComponentStore } from "@ngrx/component-store";
-import { LoadingService } from "@shared/services/loading/loading.service";
 import { Fruit, Nullable, SearchContext } from "@shared/types";
 import { Observable, map, shareReplay, tap } from "rxjs";
 
