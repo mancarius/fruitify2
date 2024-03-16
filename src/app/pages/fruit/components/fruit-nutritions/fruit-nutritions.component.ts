@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Nutritions } from '@shared/types';
 import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutrition-view.component';

@@ -18,19 +18,19 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       <mat-card class="w-full bg-white dark:bg-slate-50/10">
         <mat-nav-list role="list" class="w-full">
           <!-- Order -->
-          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{order:fruit.order}" class="w-full">
+          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{ order: fruit.order }" class="w-full">
             <h3 matListItemTitle class="text-black dark:text-white">Order</h3>
             <p matListItemLine class="text-slate-900 dark:text-slate-200">{{fruit.order}}</p>
           </a>
 
           <!-- Genus -->
-          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{genus:fruit.genus}" class="w-full">
+          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{ genus: fruit.genus }" class="w-full">
             <h3 matListItemTitle class="text-black dark:text-white">Genus</h3>
             <p matListItemLine class="text-slate-900 dark:text-slate-200">{{fruit.genus}}</p>
           </a>
 
           <!-- Family -->
-          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{family:fruit.family}" class="w-full">
+          <a mat-list-item role="listitem" [routerLink]="['/fruits']" [queryParams]="{ family: fruit.family }" class="w-full">
             <h3 matListItemTitle class="text-black dark:text-white">Family</h3>
             <p matListItemLine class="text-slate-900 dark:text-slate-200">{{fruit.family}}</p>
           </a>
