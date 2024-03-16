@@ -28,6 +28,15 @@ import { NgIf } from '@angular/common';
     provideComponentStore(FruitsStore),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+
+  styles: [
+    `
+      .hero-bg {
+        background-image: url("/assets/images/pexels-jane-doan-1128678.jpg")
+      }
+    `,
+  ],
+
   template: `
     @if (vm(); as vm) {
       <div class="relative pt-16 pb-32 flex content-center items-center justify-center min-h-[30rem] lg:min-h-[50vh]">
@@ -84,26 +93,23 @@ import { NgIf } from '@angular/common';
       </section>
     }
   `,
-  styles: [
-    `
-      .hero-bg {
-        background-image: url("/assets/images/pexels-jane-doan-1128678.jpg")
-      }
-    `,
-  ],
 })
 export class FruitsComponent implements OnInit {
-  readonly #destroy$ = inject(DestroyRef);
+  private readonly _destroy$ = inject(DestroyRef);
+
   private readonly _cs = inject(FruitsStore);
+
   readonly searchControl = new FormControl<Record<SearchContext, Nullable<string>> | null>(null);
+
   @Input() set fruits(fruits: Fruit[]) { this._cs.setFruits(fruits) }
+
   protected readonly vm = this._cs.vm;
 
   ngOnInit() {
     this._cs.search(this.searchControl.valueChanges);
 
     this._cs.routeQueryParams$
-      .pipe(takeUntilDestroyed(this.#destroy$))
+      .pipe(takeUntilDestroyed(this._destroy$))
       .subscribe((queryParams) => {
         this.searchControl.patchValue(queryParams);
       });
