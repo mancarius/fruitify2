@@ -17,11 +17,11 @@ import { ThemeService } from '@shared/services/theme/theme.service';
   `,
 })
 export class ThemeTogglerComponent {
-  readonly #themeService = inject(ThemeService);
+  private readonly _themeService = inject(ThemeService);
 
-  isDarkTheme = this.#themeService.isDarkTheme;
-  iconName = computed(() => this.isDarkTheme() ? 'dark_mode' : 'light_mode' );
-  tooltipMessage = computed(() => this.isDarkTheme() ?  'Switch to dark theme' : 'Switch to light theme');
+  readonly isDarkTheme = this._themeService.isDarkTheme;
+  readonly iconName = computed(() => this.isDarkTheme() ? 'dark_mode' : 'light_mode' );
+  readonly tooltipMessage = computed(() => this.isDarkTheme() ?  'Switch to dark theme' : 'Switch to light theme');
 
-  toggleTheme = () => this.#themeService.toggleTheme();
+  readonly toggleTheme = () => this._themeService.toggleTheme();
 }
