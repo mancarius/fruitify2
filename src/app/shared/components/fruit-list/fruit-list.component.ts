@@ -48,7 +48,7 @@ import { EncodeToPathSegmentPipe } from '@pipes';
       } @empty {
 
         <li class="col-span-full">
-          <p class="text-center bg-white/80 dark:bg-gray-900/80 w-fit px-2 m-0 mx-auto">No fruits found</p>
+          <p class="text-center bg-white/80 text-black dark:bg-gray-900/80 dark:text-white w-fit px-2 m-0 mx-auto">No fruits found</p>
         </li>
 
       }
