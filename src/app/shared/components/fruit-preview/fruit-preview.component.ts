@@ -72,5 +72,5 @@ export class FruitPreviewComponent {
     this._cs.setFruit(fruit);
   }
 
-  protected vm = this._cs.vm;
+  protected readonly vm = this._cs.vm;
 }
