@@ -32,7 +32,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   `,
 })
 export class SettingsComponent {
-  readonly #mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN);
+  private readonly _mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN);
 
-  provider = computed(() => this.#mediaServiceConfig()?.provider ?? 'Unkown');
+  provider = computed(() => this._mediaServiceConfig()?.provider ?? 'Unkown');
 }

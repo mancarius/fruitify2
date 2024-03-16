@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpContext, HttpInterceptorFn, HttpRequest, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { authenticationInterceptor } from './authentication.interceptor';
-import { AUTH_CONFIG } from '@tokens/api';
+import { AUTH_CONFIG_CONTEXT_TOKEN } from '@tokens';
 
-fdescribe('authenticationInterceptor', () => {
+describe('authenticationInterceptor', () => {
   let httpTesting: HttpTestingController;
   let httpClient: HttpClient;
   const interceptor: HttpInterceptorFn = (req, next) =>
@@ -32,7 +32,7 @@ fdescribe('authenticationInterceptor', () => {
 
   it('should add the authentication information to the request params', () => {
     const req = new HttpRequest('GET', 'http://example', {
-      context: new HttpContext().set(AUTH_CONFIG, [{
+      context: new HttpContext().set(AUTH_CONFIG_CONTEXT_TOKEN, [{
         addTo: 'params',
         key: 'api_key',
         value: '12345'
@@ -48,7 +48,7 @@ fdescribe('authenticationInterceptor', () => {
 
   it('should add the authentication information to the request headers', () => {
     const req = new HttpRequest('GET', 'http://example', {
-      context: new HttpContext().set(AUTH_CONFIG, [{
+      context: new HttpContext().set(AUTH_CONFIG_CONTEXT_TOKEN, [{
         addTo: 'headers',
         key: 'Authorization',
         authorizationType: 'Bearer',

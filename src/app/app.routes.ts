@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { fruitResolver, fruitsResolver, photoResolver, fruitRouteTitleResolver } from '@resolvers';
-import { HomeComponent } from '@pages/home/home.component';
 import { MinimalHorizontalLayoutComponent } from '@core/layouts';
 
 export default [
@@ -11,45 +9,15 @@ export default [
     pathMatch: 'prefix',
     providers: [FruitService],
     component: MinimalHorizontalLayoutComponent,
-    children: [
-
-      // Load `FruitsComponent` when the user navigates to `/fruits`
-      {
-        path: '',
-        title: 'Frutify',
-        pathMatch: 'full',
-        runGuardsAndResolvers: 'always',
-        resolve: { fruits: fruitsResolver },
-        component: HomeComponent,
-      },
-
-    ]
+    loadChildren: async () => import('@pages/fruits/fruits.routes')
   },
 
   // Fruit
   {
     path: 'fruit',
-    pathMatch: 'prefix',
     runGuardsAndResolvers: 'always',
     component: MinimalHorizontalLayoutComponent,
-    children: [
-      // Lazy load `FruitComponent` when the user navigates to `/fruit/:fruitName`
-      {
-        title: fruitRouteTitleResolver,
-        path: ':fruitName',
-        pathMatch: 'full',
-        runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
-        resolve: {
-          fruit: fruitResolver,
-          photo: photoResolver
-        },
-        loadComponent: async () => {
-          const c = await import('@pages/fruit/fruit.component');
-          return c.FruitComponent;
-        },
-      }
-
-    ]
+    loadChildren: async () => import('@pages/fruit/fruit.routes'),
   },
 
   // Settings

@@ -35,7 +35,7 @@ export function setRequestAuth<T>(req: HttpRequest<T>, authConfigs: MediaService
  * @param config - The configuration object specifying the header details.
  * @returns The updated headers object.
  */
-function addHeader(headers: HttpHeaders, config: Extract<ApiAuthConfig, { addTo: 'headers' }>): HttpHeaders {
+export function addHeader(headers: HttpHeaders, config: Extract<ApiAuthConfig, { addTo: 'headers' }>): HttpHeaders {
   return headers.set(config.key, `${config.authorizationType} ${config.value}`.trim());
 }
 
@@ -45,6 +45,6 @@ function addHeader(headers: HttpHeaders, config: Extract<ApiAuthConfig, { addTo:
  * @param config - The configuration object specifying the key and value of the parameter to add.
  * @returns The updated URLSearchParams object.
  */
-function addParam(params: HttpParams, config: Extract<ApiAuthConfig, { addTo: 'params' }>): HttpParams {
+export function addParam(params: HttpParams, config: Extract<ApiAuthConfig, { addTo: 'params' }>): HttpParams {
   return params.set(config.key, config.value);
 }

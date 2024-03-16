@@ -8,13 +8,13 @@ import { API_BASE_PATHNAME } from '@shared/constants';
   providedIn: 'root'
 })
 export class FruitService {
-  readonly #baseUrl = API_BASE_PATHNAME;
-  readonly #entities = new BehaviorSubject<Fruit[]>([]);
-  readonly #http = inject(HttpClient);
-  readonly #loaded = new BehaviorSubject<boolean>(false);
+  private readonly _baseUrl = API_BASE_PATHNAME;
+  private readonly _entities = new BehaviorSubject<Fruit[]>([]);
+  private readonly _http = inject(HttpClient);
+  private readonly _loaded = new BehaviorSubject<boolean>(false);
 
   /** Observable stream of entities. */
-  readonly entities$ = this.#entities.pipe(
+  readonly entities$ = this._entities.pipe(
     map(function(fruits) { return fruits.sort((a, b) => a.name.localeCompare(b.name)) }),
     shareReplay(1));
 
@@ -26,15 +26,15 @@ export class FruitService {
   getAll(): Observable<Fruit[]> {
     return this.entities$.pipe(
       tap(() => {
-        if (!this.#loaded.value) {
-          const url = this.#composeUrl('all');
-          this.#http.get<Fruit[]>(url).subscribe(entities => {
+        if (!this._loaded.value) {
+          const url = this._composeUrl('all');
+          this._http.get<Fruit[]>(url).subscribe(entities => {
             this.setLoaded(true);
-            this.#entities.next(entities);
+            this._entities.next(entities);
           });
         }
       }),
-      filter(() => this.#loaded.value),
+      filter(() => this._loaded.value),
     );
   }
 
@@ -45,9 +45,9 @@ export class FruitService {
    * @returns An Observable that emits the fruit with the specified ID.
    */
   getById(id: number): Observable<Fruit> {
-    const url = `${this.#composeUrl()}/${id}`;
-    return this.#http.get<Fruit>(url).pipe(
-      tap(entity => this.#patchEntities([entity]))
+    const url = `${this._composeUrl()}/${id}`;
+    return this._http.get<Fruit>(url).pipe(
+      tap(entity => this._patchEntities([entity]))
     );
   }
 
@@ -58,10 +58,10 @@ export class FruitService {
    * @returns An observable that emits an array of fruits.
    */
   getWithQuery(query: QueryParams<keyof Omit<Fruit, 'nutritions' | 'id'>>): Observable<Fruit[]> {
-    return forkJoin(Object.entries(query).map(([key, value]) => this.#http.get<Fruit[]>(`${this.#composeUrl(key)}/${value}`)))
+    return forkJoin(Object.entries(query).map(([key, value]) => this._http.get<Fruit[]>(`${this._composeUrl(key)}/${value}`)))
       .pipe(
         map((results) => results.flat()),
-        tap(entities => this.#patchEntities(entities)),
+        tap(entities => this._patchEntities(entities)),
         map(function(fruits) { return fruits.sort((a, b) => a.name.localeCompare(b.name)) }),
       );
   }
@@ -72,7 +72,7 @@ export class FruitService {
    * @param loaded - The loaded state to set.
    */
   setLoaded(loaded: boolean): void {
-    this.#loaded.next(loaded);
+    this._loaded.next(loaded);
   }
 
 
@@ -84,8 +84,8 @@ export class FruitService {
    * @param key - The key to be appended to the URL.
    * @returns The composed URL.
    */
-  #composeUrl(key: string = ''): string {
-    const url = this.#baseUrl;
+  _composeUrl(key: string = ''): string {
+    const url = this._baseUrl;
     const keyList = ['all', 'family', 'genus', 'order'];
 
     return keyList.includes(key) ? `${url}/${key}` : url;
@@ -96,11 +96,11 @@ export class FruitService {
    * Updates the existing entities with the provided entities or adds them if they don't exist.
    * @param entities - The entities to be patched.
    */
-  #patchEntities(entities: Fruit[]): void {
-    const currentEntities = this.#entities.value;
+  _patchEntities(entities: Fruit[]): void {
+    const currentEntities = this._entities.value;
 
     for (let entity of entities) {
-      const index = this.#entities.value.findIndex(e => e.id === entity.id);
+      const index = this._entities.value.findIndex(e => e.id === entity.id);
 
       if (index > -1) {
         currentEntities[index] = entity;
@@ -109,6 +109,6 @@ export class FruitService {
       }
     }
 
-    this.#entities.next(currentEntities);
+    this._entities.next(currentEntities);
   }
 }

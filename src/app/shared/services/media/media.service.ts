@@ -17,19 +17,21 @@ export class MediaService implements PhotoFinder {
   /**
    * The media provider used by the media service.
    */
-  #provider!: AbstractMediaProviderService;
+  private _provider!: AbstractMediaProviderService;
   
 
   constructor(
     @Inject(MEDIA_SERVICE_CONFIG_TOKEN) readonly mediaServiceConfig: Signal<MediaServiceConfig | null>,
     private readonly _http: HttpClient
   ) {
-    effect(() => this.#assignProvider(mediaServiceConfig()));
+    effect(() => this._assignProvider(mediaServiceConfig()));
   }
 
 
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
-    return this.#provider.findPhoto(`${query} fruit`, options);
+    if (!this._provider) throw new Error('Media provider not assigned.');
+    
+    return this._provider.findPhoto(`${query} fruit`, options);
   }
 
 
@@ -38,13 +40,13 @@ export class MediaService implements PhotoFinder {
    * @param config The configuration object for the media service.
    * @throws Error if the specified media provider is not supported.
    */
-  #assignProvider(config: MediaServiceConfig | null): void {
+  private _assignProvider(config: MediaServiceConfig | null): void {
     switch (config?.provider) {
       case MediaProvidersEnum.PEXELS:
-        this.#provider = new PexelsService(config, this._http);
+        this._provider = new PexelsService(config, this._http);
         break;
       case MediaProvidersEnum.UNSPLASH:
-        this.#provider = new UnsplashService(config, this._http);
+        this._provider = new UnsplashService(config, this._http);
         break;
       default:
         throw new Error(`Media provider '${config?.provider}' not supported.`);

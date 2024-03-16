@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, Signal, WritableSignal, inject, signal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Fruit, MediaPhoto, MediaSize, Nullable } from '@shared/types';
-import { PhotoStore } from '@shared/store';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { NgIf, NgOptimizedImage } from '@angular/common';
+import { Fruit } from '@shared/types';
+import { FruitPreviewStore } from './fruit-preview.store';
+import { provideComponentStore } from '@ngrx/component-store';
 
 @Component({
   selector: 'app-fruit-preview',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
-  providers: [PhotoStore],
+  imports: [NgIf, NgOptimizedImage],
+  providers: [provideComponentStore(FruitPreviewStore)],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   host: {
@@ -15,19 +16,18 @@ import { PhotoStore } from '@shared/store';
   },
 
   template: `
-    <div class="fruit-preview">
+    <div *ngIf="vm() as vm" class="fruit-preview">
 
-      @if(photo()) {
-
+      @if(vm.imgUrl) {
         <div class="fruit-preview__photo">
-          <img [ngSrc]="photo()?.url ?? ''" fill />
+          <img [ngSrc]="vm.imgUrl" [alt]="vm.imgAlt" fill />
         </div>
-        
       }
 
       <div class="fruit-preview__name">
-        <span class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white">{{ fruit()?.name }}</span>
+        <span class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white">{{ vm.fruitName }}</span>
       </div>
+
     </div>
   `,
 
@@ -65,14 +65,12 @@ import { PhotoStore } from '@shared/store';
   `
 })
 export class FruitPreviewComponent {
-  #photoStore = inject(PhotoStore);
+  private readonly _cs = inject(FruitPreviewStore);
 
   @Input({ alias: 'fruit', required: true })
-  set _fruits(fruit: Fruit) {
-    this.fruit.set(fruit);
-    this.#photoStore.fetchPhoto({ fruit, options: { size: MediaSize.SMALL } });
+  set _fruit(fruit: Fruit) {
+    this._cs.setFruit(fruit);
   }
 
-  protected fruit: WritableSignal<Nullable<Fruit>> = signal(null);
-  protected photo: Signal<Nullable<MediaPhoto>> = this.#photoStore.photo;
+  protected vm = this._cs.vm;
 }

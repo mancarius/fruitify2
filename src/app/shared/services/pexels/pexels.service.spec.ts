@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { PexelsService } from './pexels.service';
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { config, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { PEXELS_API_CONFIG } from '@shared/constants';
-import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
+import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
+import { MediaServiceConfig } from '@shared/types';
+import { signal } from '@angular/core';
 
 describe('PexelsService', () => {
   let service: PexelsService;
@@ -16,8 +18,8 @@ describe('PexelsService', () => {
         PexelsService,
         provideHttpClientTesting(),
         {
-          provide: MEDIA_SERVICE_CONFIG,
-          useValue: PEXELS_API_CONFIG
+          provide: MEDIA_SERVICE_CONFIG_TOKEN,
+          useFactory: () => signal<MediaServiceConfig | null>(PEXELS_API_CONFIG)
         }
       ]
     });

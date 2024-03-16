@@ -10,7 +10,7 @@ import { AbstractMediaProviderService } from '../abstract-media-provider/abstrac
   providedIn: 'root'
 })
 export class PexelsService extends AbstractMediaProviderService {
-  readonly #defaultOptions: MediaOptions & PaginationParams = {
+  private readonly _defaultOptions: MediaOptions & PaginationParams = {
     ...this.defaultQueryOptions,
     page: 1,
     per_page: 1,
@@ -24,9 +24,9 @@ export class PexelsService extends AbstractMediaProviderService {
   }
 
   override findPhoto(query: string, options: Partial<MediaOptions> = {}): Observable<MediaPhoto> {
-    const queryOptions = { ...this.#defaultOptions, ...options };
-    const url = this.#getPhotosUrl();
-    const params = this.#composeQueryParams(query, queryOptions);
+    const queryOptions = { ...this._defaultOptions, ...options };
+    const url = this._getPhotosUrl();
+    const params = this._composeQueryParams(query, queryOptions);
     const context = new HttpContext().set(AUTH_CONFIG_CONTEXT_TOKEN, this._providerConfig.authConfigs);
 
     return this._http.get<Photos>(url, {
@@ -34,7 +34,7 @@ export class PexelsService extends AbstractMediaProviderService {
       context,
       observe: 'response',
     }).pipe(
-      map(response => this.#composePhotoResponse(response.body as Photos))
+      map(response => this._composePhotoResponse(response.body as Photos))
     );
   }
 
@@ -42,7 +42,7 @@ export class PexelsService extends AbstractMediaProviderService {
    * Returns the URL for retrieving photos from the Pexels API.
    * @returns The URL string.
    */
-  #getPhotosUrl(): string {
+  private _getPhotosUrl(): string {
     const url = this.composeUrl('v1/search');
 
     return url.toString();
@@ -54,13 +54,12 @@ export class PexelsService extends AbstractMediaProviderService {
    * @param options - The media options.
    * @returns The composed query parameters.
    */
-  #composeQueryParams(query: string, options: MediaOptions): Record<string, string | number> {
+  private _composeQueryParams(query: string, options: MediaOptions): Record<string, string | number> {
     return {
       query,
       per_page: options.limit.toString(),
       page: options.page.toString(),
-      orientation: options.orientation,
-      size: options.size,
+      orientation: options.orientation
     };
   }
 
@@ -69,11 +68,11 @@ export class PexelsService extends AbstractMediaProviderService {
    * @param response - The response data from the Pexels API.
    * @returns The composed photo response object.
    */
-  #composePhotoResponse(response: Photos): MediaPhoto {
+  private _composePhotoResponse(response: Photos): MediaPhoto {
     const photo = response.photos[0];
 
     return {
-      url: this.#getPhotoUrl(photo),
+      url: this._getPhotoUrl(photo),
       alt: photo.alt,
       avgColor: photo.avg_color,
     };
@@ -84,16 +83,8 @@ export class PexelsService extends AbstractMediaProviderService {
    * @param photo - The photo object.
    * @returns The URL of the photo.
    */
-  #getPhotoUrl(photo: Photo): string {
-    switch (this.#defaultOptions.size) {
-      case 'small':
-        return photo.src.small;
-      case 'medium':
-        return photo.src.medium;
-      case 'large':
-        return photo.src.large;
-      default:
-        return photo.src.medium;
-    }
+  private _getPhotoUrl(photo: Photo): MediaPhoto['url'] {
+    const { small: sm, medium: md, large: lg } = photo.src;
+    return { sm, md, lg };
   }
 }

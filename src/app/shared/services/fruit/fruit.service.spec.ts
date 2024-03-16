@@ -31,29 +31,29 @@ describe('FruitService', () => {
   });
 
   it('should have a base URL', () => {
-    expect(service['#baseUrl']).toBeTruthy();
+    expect(service['_baseUrl']).toBeTruthy();
   });
 
 
 
-  describe('#_composeUrl', () => {
+  describe('_composeUrl', () => {
 
     it('should exists', () => {
-      expect(service['#composeUrl']).toBeTruthy();
+      expect(service['_composeUrl']).toBeTruthy();
     });
 
     it('should return the base URL when the key is not included in the keyList', () => {
       const key = 'key';
-      const url = service['#composeUrl'](key);
-      const expectedUrl = service['#baseUrl'];
+      const url = service['_composeUrl'](key);
+      const expectedUrl = service['_baseUrl'];
 
       expect(url).toEqual(expectedUrl);
     });
 
     it('should return the base URL with the key appended when the key is included in the keyList', () => {
       const key = 'all';
-      const url = service['#composeUrl'](key);
-      const expectedUrl = `${service['#baseUrl']}/${key}`;
+      const url = service['_composeUrl'](key);
+      const expectedUrl = `${service['_baseUrl']}/${key}`;
 
       expect(url).toEqual(expectedUrl);
     });
@@ -62,14 +62,14 @@ describe('FruitService', () => {
 
 
 
-  describe('#getAll', () => {
+  describe('_getAll', () => {
 
     it('should exists', () => {
       expect(service.getAll).toBeTruthy();
     });
 
     it('should make a GET request to the correct URL', () => {
-      const expectedUrl = service['#composeUrl']('all');
+      const expectedUrl = service['_composeUrl']('all');
 
       const fruits$ = service.getAll();
       const fruitsPromise = firstValueFrom(fruits$);
@@ -84,7 +84,7 @@ describe('FruitService', () => {
 
 
 
-  describe('#getById', () => {
+  describe('_getById', () => {
 
     it('should exists', () => {
       expect(service.getById).toBeTruthy();
@@ -92,7 +92,7 @@ describe('FruitService', () => {
 
     it('should make a GET request to the correct URL', () => {
       const id = 1;
-      const expectedUrl = `${service['#composeUrl']()}/${id}`;
+      const expectedUrl = `${service['_composeUrl']()}/${id}`;
 
       const fruit$ = service.getById(id);
       const fruitPromise = firstValueFrom(fruit$);
@@ -107,7 +107,7 @@ describe('FruitService', () => {
 
 
 
-  describe('#getWithQuery', () => {
+  describe('_getWithQuery', () => {
 
     it('should exists', () => {
       expect(service.getWithQuery).toBeTruthy();
@@ -115,7 +115,7 @@ describe('FruitService', () => {
 
     it('should make a single GET request to the correct URL', () => {
       const query = { name: 'banana' };
-      const expectedUrl = `${service['#composeUrl']('key')}/${query.name}`;
+      const expectedUrl = `${service['_composeUrl']('key')}/${query.name}`;
 
       const fruits$ = service.getWithQuery(query);
       const fruitsPromise = firstValueFrom(fruits$);
@@ -128,8 +128,8 @@ describe('FruitService', () => {
 
     it('should make multiple GET requests to the correct URLs', () => {
       const query = { family: 'Musaceae', genus: 'Musa' };
-      const expectedUrl1 = `${service['#composeUrl']('family')}/${query.family}`;
-      const expectedUrl2 = `${service['#composeUrl']('genus')}/${query.genus}`;
+      const expectedUrl1 = `${service['_composeUrl']('family')}/${query.family}`;
+      const expectedUrl2 = `${service['_composeUrl']('genus')}/${query.genus}`;
 
       service.getWithQuery(query).subscribe();
 

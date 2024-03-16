@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { MediaOptions, MediaPhoto, MediaSize, MediaOrientation, MediaServiceConfig, PhotoFinder } from '@shared/types';
+import { MediaOptions, MediaPhoto, MediaOrientation, MediaServiceConfig, PhotoFinder } from '@shared/types';
 import { Injectable } from '@angular/core';
 
 /**
@@ -14,7 +14,6 @@ export abstract class AbstractMediaProviderService implements PhotoFinder {
     page: 1,
     per_page: 10,
     limit: 10,
-    size: MediaSize.MEDIUM,
     orientation: MediaOrientation.LANDSCAPE,
   };
 

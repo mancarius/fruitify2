@@ -2,8 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { UnsplashService } from './unsplash.service';
 import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
-import { MEDIA_SERVICE_CONFIG } from '@tokens/api';
+import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { UNSPLASH_API_CONFIG } from '@shared/constants';
+import { signal } from '@angular/core';
+import { MediaServiceConfig } from '@shared/types';
 
 describe('UnsplashService', () => {
   let service: UnsplashService;
@@ -17,8 +19,8 @@ describe('UnsplashService', () => {
         UnsplashService,
         provideHttpClientTesting(),
         {
-          provide: MEDIA_SERVICE_CONFIG,
-          useValue: UNSPLASH_API_CONFIG
+          provide: MEDIA_SERVICE_CONFIG_TOKEN,
+          useFactory: () => signal<MediaServiceConfig | null>(UNSPLASH_API_CONFIG)
         }
       ]
     });

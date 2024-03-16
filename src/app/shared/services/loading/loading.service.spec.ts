@@ -1,4 +1,4 @@
-import { TestBed, async, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { LoadingService } from './loading.service';
 import { skip, take } from 'rxjs';
@@ -26,9 +26,9 @@ describe('LoadingService', () => {
     });
 
     it('should increase the loading count by 1', () => {
-      const initialLoadingCount = service['#loadingCount'].value;
+      const initialLoadingCount = service['_loadingCount'].value;
       service.start();
-      expect(service['#loadingCount'].value).toEqual(initialLoadingCount + 1);
+      expect(service['_loadingCount'].value).toEqual(initialLoadingCount + 1);
     });
 
   });
@@ -42,9 +42,9 @@ describe('LoadingService', () => {
     });
 
     it('should decrease the loading count by 1', () => {
-      const initialLoadingCount = service['#loadingCount'].value;
+      const initialLoadingCount = service['_loadingCount'].value;
       service.stop();
-      expect(service['#loadingCount'].value).toEqual(initialLoadingCount - 1);
+      expect(service['_loadingCount'].value).toEqual(initialLoadingCount - 1);
     });
 
   });
@@ -63,7 +63,7 @@ describe('LoadingService', () => {
         done();
       });
 
-      service['#loadingCount'].next(1);
+      service['_loadingCount'].next(1);
     });
 
     it('should return false when the loading count is 0', (done: DoneFn) => {
@@ -72,7 +72,7 @@ describe('LoadingService', () => {
         done();
       });
       
-      service['#loadingCount'].next(0);
+      service['_loadingCount'].next(0);
     });
 
   });

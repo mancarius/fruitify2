@@ -7,37 +7,65 @@ type Theme = 'light' | 'dark';
   providedIn: 'root'
 })
 export class ThemeService {
-  readonly #theme = signal<'light' | 'dark'>('light');
-  readonly isDarkTheme = computed(() => this.#theme() === 'dark');
+  private readonly _theme = signal<'light' | 'dark'>('light');
+  /**
+   * Determines whether the current theme is dark.
+   * @returns {boolean} True if the current theme is dark, false otherwise.
+   */
+  readonly isDarkTheme = computed(() => this._theme() === 'dark');
 
   constructor() {
-    const storedTheme = localStorage.getItem('theme') as Nullable<Theme>;
-    const preferColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' as Theme;
-    this.#theme.set(storedTheme || preferColorScheme);
+    this._initializeTheme();
 
     effect(() => {
-      localStorage.setItem('theme', untracked(this.#theme));
-      this.#toggleDarkClass('dark', this.isDarkTheme());
+      this._toStorage(untracked(this._theme));
+      this._toggleDarkClass('dark', this.isDarkTheme());
     });
   }
 
+  /**
+   * Toggles the theme between light and dark.
+   */
   toggleTheme() {
-    this.#theme.set(this.isDarkTheme() ? 'light' : 'dark');
+    this._theme.set(this.isDarkTheme() ? 'light' : 'dark');
   }
 
-  #toggleDarkClass(className: string, isDarkActive: boolean) {
+  /**
+   * Initializes the theme based on the stored value or the preferred color scheme.
+   */
+  private _initializeTheme() {
+    this._theme.set(this._fromStorage() ?? this._getPreferColorScheme());
+  }
+
+  /**
+   * Returns the preferred color scheme based on the user's system settings.
+   * @returns The preferred color scheme ('dark' or 'light').
+   */
+  private _getPreferColorScheme(): Theme {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' as Theme;
+  }
+
+  private _toggleDarkClass(className: string, isDarkActive: boolean) {
     if (isDarkActive) {
-      this.#addClass(className);
+      this._addClass(className);
     } else {
-      this.#removeClass(className);
+      this._removeClass(className);
     }
   }
 
-  #addClass(className: string) {
+  private _addClass(className: string) {
     document.body.classList.add(className);
   }
 
-  #removeClass(className: string) {
+  private _removeClass(className: string) {
     document.body.classList.remove(className);
+  }
+
+  private _fromStorage() {
+    return localStorage.getItem('theme') as Nullable<Theme>;
+  }
+
+  private _toStorage(theme: Theme) {
+    localStorage.setItem('theme', theme);
   }
 }

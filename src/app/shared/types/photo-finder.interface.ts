@@ -6,9 +6,9 @@ export enum MediaType {
 }
 
 export enum MediaSize {
-  SMALL = 'small',
-  MEDIUM = 'medium',
-  LARGE = 'large',
+  SMALL = 'sm',
+  MEDIUM = 'md',
+  LARGE = 'lg',
 }
 
 export enum MediaOrientation {
@@ -17,11 +17,15 @@ export enum MediaOrientation {
   SQUARE = 'square',
 }
 
+export type MediaUrlMap = {
+  [key in MediaSize]: string;
+};
+
 /**
  * Represents the result of a media query.
  */
 export type Media = {
-  url: string,
+  url: MediaUrlMap,
 };
 
 export type MediaPhoto = Media & {
@@ -44,8 +48,6 @@ export type MediaOptions = {
   per_page: number;
   /** The maximum number of results to return. */
   limit: number;
-  /** Size of the media. */
-  size: MediaSize;
   /** The orientation of the media. */
   orientation: MediaOrientation;
 }

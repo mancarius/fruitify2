@@ -17,18 +17,18 @@ export const mediaProviderInitialState: MediaProviderState = {
 
 @Injectable()
 export class MediaProviderStore extends ComponentStore<MediaProviderState> implements OnStateInit {
-  readonly #injector = inject(Injector);
-  readonly #mediaServiceConfig: WritableSignal<Nullable<MediaServiceConfig>> = inject(MEDIA_SERVICE_CONFIG_TOKEN);
+  private readonly _injector = inject(Injector);
+  private readonly _mediaServiceConfig: WritableSignal<Nullable<MediaServiceConfig>> = inject(MEDIA_SERVICE_CONFIG_TOKEN);
 
   constructor() { super(mediaProviderInitialState) }
 
   ngrxOnStateInit(): void {
     effect(() => {
-      const provider = this.#mediaServiceConfig()?.provider;
+      const provider = this._mediaServiceConfig()?.provider;
       if (provider) {
         this.patchState({ provider: this.get().providers[provider] });
       }
-    }, { injector: this.#injector, allowSignalWrites: true });
+    }, { injector: this._injector, allowSignalWrites: true });
   }
 
 
@@ -46,7 +46,7 @@ export class MediaProviderStore extends ComponentStore<MediaProviderState> imple
    */
   readonly selectProvider = this.effect((providerName$: Observable<MediaServiceProvider['name']>) => {
     return providerName$.pipe(
-      tap(providerName => this.#mediaServiceConfig.set(this.#getMediaConfigByProvider(providerName))),
+      tap(providerName => this._mediaServiceConfig.set(this._getMediaConfigByProvider(providerName))),
     );
   });
 
@@ -58,7 +58,7 @@ export class MediaProviderStore extends ComponentStore<MediaProviderState> imple
    * @param provider - The media provider.
    * @returns The media service configuration.
    */
-  #getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
+  private _getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
     return API_CONFIGS.find(config => config.provider === provider) as MediaServiceConfig;
   }
 }

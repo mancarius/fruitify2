@@ -1,11 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, computed, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, computed, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Data } from '@angular/router';
-import { PhotoStore } from '@shared/store';
-import { provideComponentStore } from '@ngrx/component-store';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Fruit, MediaPhoto, Nullable } from '@shared/types';
-import { Observable, filter, map } from 'rxjs';
 import { FruitPreviewComponent } from '@shared/components/fruit-preview/fruit-preview.component';
 import { FruitDetailComponent } from './components/fruit-detail/fruit-detail.component';
 import { RelatedFruitsComponent, RelatedFruitsContentDirective } from '@shared/components/related-fruits/related-fruits.component';
@@ -17,14 +12,13 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FruitPreviewComponent, FruitDetailComponent, RelatedFruitsComponent, RelatedFruitsContentDirective, FruitListComponent, MatCardModule],
-  providers: [provideComponentStore(PhotoStore)],
   host: {
     class: 'w-full min-h-screen flex flex-col justify-center items-center relative'
   },
   template: `
     <article class="w-full dark:text-slate-200 flex flex-col gap-4 grow">
       <header class="relative w-full h-64 sm:h-96 flex flex-col justify-end items-center bg-center bg-no-repeat bg-cover"
-        [ngStyle]="{'background-image': headerBackgroundImage()}">
+        [ngStyle]="{'background-image': heroBackgroundImage()}">
         <span id="blackOverlay" class="w-full h-full absolute opacity-60 bg-black z-0 dark:bg-black bg-white"></span>
         <h2
           class="text-4xl sm:text-6xl font-bold text-black dark:text-white z-10 pl-4 md:pl-0 pb-4 md:pb-2 w-full max-w-screen-sm">
@@ -45,7 +39,7 @@ import { MatCardModule } from '@angular/material/card';
           <mat-card-content>
             @defer (on viewport) {
               <nav class="w-full">
-                <app-related-fruits [fruit]="fruit()" [maxSuggestions]="4">
+                <app-related-fruits [fruit]="fruit()" [maxSuggestions]="maxSuggestions">
                   <ng-template appRelatedFruitsContent let-fruits>
                     <app-fruit-list [fruits]="fruits"></app-fruit-list>
                   </ng-template>
@@ -62,34 +56,25 @@ import { MatCardModule } from '@angular/material/card';
     }
   `,
 })
-export class FruitComponent implements AfterViewInit {
-  readonly #injector = inject(Injector);
+export class FruitComponent {
+  maxSuggestions = 4;
 
-  readonly #activatedRoute = inject(ActivatedRoute);
+  private readonly _photo = input.required<Nullable<MediaPhoto>>({ alias: 'photo' });
 
-  readonly #routeData$: Observable<Data | { fruit: Nullable<Fruit>, photo: Nullable<MediaPhoto> }> = this.#activatedRoute.data;
+  readonly fruit = signal<Nullable<Fruit>>(null);
 
-  readonly #fruit$: Observable<NonNullable<Fruit>> = this.#routeData$.pipe(
-    filter((data) => 'fruit' in data),
-    map((data) => data.fruit)
-  );
+  readonly heroBackgroundImage = computed(() => `url(${this._photo()?.url.lg})`);
 
-  readonly #photo$: Observable<MediaPhoto> = this.#routeData$.pipe(
-    filter((data) => 'photo' in data),
-    map((data) => data.photo)
-  );
+  @Input({ alias: 'fruit', required: true })
+  set _fruit(value: Nullable<Fruit>) {
+    this.fruit.set(value);
+    this._scrollToTop();
+  }
 
-  readonly #photo = toSignal(this.#photo$, { initialValue: null });
-  
-  /* Public properties */
-  readonly fruit = toSignal(this.#fruit$, { initialValue: null });
-
-  readonly headerBackgroundImage = computed(() => `url(${this.#photo()?.url})`);
-
-  ngAfterViewInit(): void {
-    effect(() => {
-      this.fruit();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, { injector: this.#injector });
+  /**
+   * Scrolls the window to the top with a smooth behavior.
+   */
+  private _scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

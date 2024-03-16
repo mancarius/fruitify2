@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { catchError, defer, finalize, of } from 'rxjs';
 import { LoadingService } from '@shared/services/loading/loading.service';
-import { MediaOrientation, MediaPhoto, MediaSize } from '@shared/types';
+import { MediaOrientation, MediaPhoto } from '@shared/types';
 import { MediaService } from '@shared/services/media/media.service';
 
 export const photoResolver: ResolveFn<MediaPhoto | null> = (route, state) => {
@@ -16,7 +16,6 @@ export const photoResolver: ResolveFn<MediaPhoto | null> = (route, state) => {
     ? service.findPhoto(fruitName, {
       limit: 1,
       orientation: MediaOrientation.LANDSCAPE,
-      size: MediaSize.SMALL,
     })
     : of(null)
   ).pipe(
