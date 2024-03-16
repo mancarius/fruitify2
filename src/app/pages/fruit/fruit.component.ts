@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, computed, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Fruit, MediaPhoto, Nullable } from '@shared/types';
 import { FruitPreviewComponent } from '@shared/components/fruit-preview/fruit-preview.component';
@@ -61,20 +61,14 @@ export class FruitComponent {
 
   private readonly _photo = input.required<Nullable<MediaPhoto>>({ alias: 'photo' });
 
-  readonly fruit = signal<Nullable<Fruit>>(null);
-
   readonly heroBackgroundImage = computed(() => `url(${this._photo()?.url.lg})`);
 
-  @Input({ alias: 'fruit', required: true })
-  set _fruit(value: Nullable<Fruit>) {
-    this.fruit.set(value);
-    this._scrollToTop();
-  }
+  readonly fruit = input.required<Nullable<Fruit>>();
 
-  /**
-   * Scrolls the window to the top with a smooth behavior.
-   */
-  private _scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  constructor() {
+    effect(() => {
+      this.fruit();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 }
