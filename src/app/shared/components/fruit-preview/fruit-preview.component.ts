@@ -67,8 +67,8 @@ import { provideComponentStore } from '@ngrx/component-store';
 export class FruitPreviewComponent {
   private readonly _cs = inject(FruitPreviewStore);
 
-  @Input({ alias: 'fruit', required: true })
-  set _fruit(fruit: Fruit) {
+  @Input({ required: true })
+  set fruit(fruit: Fruit) {
     this._cs.setFruit(fruit);
   }
 
