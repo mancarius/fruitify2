@@ -1,5 +1,5 @@
 import { ComponentStore, OnStateInit } from "@ngrx/component-store";
-import { Inject, Injectable, Injector, WritableSignal, effect, inject } from "@angular/core";
+import { Injectable, Injector, WritableSignal, effect, inject } from "@angular/core";
 import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProvider, MediaServiceProviderCollection, Nullable } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
 import { Observable, tap } from "rxjs";
