@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Fruit } from '@shared/types';
 import { FruitPreviewComponent } from '../fruit-preview/fruit-preview.component';
@@ -57,8 +57,5 @@ import { EncodeToPathSegmentPipe } from '@pipes';
   `
 })
 export class FruitListComponent {
-  @Input({ alias: `fruits`, required: true })
-  set _fruits(value: Fruit[]) { this.fruits.set(value) }
-
-  fruits = signal<Fruit[]>([]);
+  fruits = input.required<Fruit[]>();
 }
