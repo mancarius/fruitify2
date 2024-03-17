@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { Nutritions } from '@shared/types';
 import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutrition-view.component';
 
-
 /**
- * Transforms the given Nutritions object into an array of objects with name-value pairs.
- * @param value The Nutritions object to transform.
- * @returns An array of objects with name-value pairs.
+ * Component for displaying the nutritions of a fruit.
+ * @example
+ * <app-fruit-nutritions
+ *   [nutritions]="[
+ *    { name: 'calories', value: 50 },
+ *    { name: 'carbs', value: 10 },
+ *    { name: 'fat', value: 5 },
+ *    { name: 'protein', value: 2 }
+ *   ]">
+ * </app-fruit-nutritions>
  */
-function transformNutritions(value: Nutritions): Array<{ name: keyof Nutritions, value: number }> {
-  return Object.entries(value).reduce((acc: any[], [name, value]) => [...acc, { name, value }], []);
-}
-
-
 @Component({
   selector: 'app-fruit-nutritions',
   standalone: true,
@@ -37,4 +38,15 @@ export class FruitNutritionsComponent {
   trackByNutritionName(index: number, item: { name: keyof Nutritions, value: number }) {
     return item.name;
   }
+}
+
+
+
+/**
+ * Transforms the given Nutritions object into an array of objects with name-value pairs.
+ * @param value The Nutritions object to transform.
+ * @returns An array of objects with name-value pairs.
+ */
+function transformNutritions(value: Nutritions): Array<{ name: keyof Nutritions, value: number }> {
+  return Object.entries(value).reduce((acc: any[], [name, value]) => [...acc, { name, value }], []);
 }
