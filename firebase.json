@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -8,14 +8,13 @@
     ],
     "rewrites": [
       {
-        "source": "/api/**",
+        "source": "/api/*",
         "function": "api",
-        "destination": "https://www.fruityvice.com/**"
+        "destination": "https://www.fruityvice.com/*"
       },
       {
         "source": "**",
-        "destination": "/index.html",
-        "function": "app"
+        "destination": "/index.html"
       }
     ]
   }
