@@ -1,5 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+/**
+ * Component for a circular progress bar.
+ * @example
+ * <app-circle-progress
+ *    [progress]="50"
+ *    [color]="'#ff0000'"
+ *    [strokeWidth]="10"
+ *    [radius]="50">
+ * </app-circle-progress>
+ */
 @Component({
   selector: 'app-circle-progress',
   standalone: true,
@@ -41,23 +51,25 @@ export class CircleProgressComponent {
   
   /** Raggio del cerchio */
   protected readonly strokeDashoffset = computed(() =>
-    this._calculateStrokeDashoffset(this.strokeDasharray(), this.progress()));
+    calculateStrokeDashoffset(this.strokeDasharray(), this.progress()));
 
   /** Lunghezza della traccia */
   protected readonly strokeDasharray = computed<number>(() =>
-    this._calculateStrokeDasharray(this.radius()));
+    calculateStrokeDasharray(this.radius()));
 
   /** Colore della traccia */
   protected readonly traceColor = computed(() => this.color() + '33');
 
   /** Larghezza della traccia */
   protected readonly traceStrokeWidth = computed(() => this.strokeWidth() * 1.5);
+}
 
-  private _calculateStrokeDashoffset(strokeDasharray: number, progress: number): number {
-    return strokeDasharray - (strokeDasharray * (progress < 100 ? progress : 100)) / 100;
-  }
 
-  private _calculateStrokeDasharray(radius: number): number {
-    return 2 * Math.PI * radius;
-  }
+
+function calculateStrokeDashoffset(strokeDasharray: number, progress: number): number {
+  return strokeDasharray - (strokeDasharray * (progress < 100 ? progress : 100)) / 100;
+}
+
+function calculateStrokeDasharray(radius: number): number {
+  return 2 * Math.PI * radius;
 }
