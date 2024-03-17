@@ -40,14 +40,24 @@ export class CircleProgressComponent {
   protected readonly radiusPercent = computed(() => `${this.radius()}%`);
   
   /** Raggio del cerchio */
-  protected readonly strokeDashoffset = computed(() => this.strokeDasharray() - (this.strokeDasharray() * this.progress()) / 100);
+  protected readonly strokeDashoffset = computed(() =>
+    this._calculateStrokeDashoffset(this.strokeDasharray(), this.progress()));
 
   /** Lunghezza della traccia */
-  protected readonly strokeDasharray = computed(() => 2 * Math.PI * this.radius());
+  protected readonly strokeDasharray = computed<number>(() =>
+    this._calculateStrokeDasharray(this.radius()));
 
   /** Colore della traccia */
   protected readonly traceColor = computed(() => this.color() + '33');
 
   /** Larghezza della traccia */
   protected readonly traceStrokeWidth = computed(() => this.strokeWidth() * 1.5);
+
+  private _calculateStrokeDashoffset(strokeDasharray: number, progress: number): number {
+    return strokeDasharray - (strokeDasharray * (progress < 100 ? progress : 100)) / 100;
+  }
+
+  private _calculateStrokeDasharray(radius: number): number {
+    return 2 * Math.PI * radius;
+  }
 }
