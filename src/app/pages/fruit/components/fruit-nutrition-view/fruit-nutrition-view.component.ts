@@ -25,7 +25,7 @@ import { NUTRITION_COLORS, NUTRITION_DEFAULT_COLOR } from '@shared/constants';
 
     <div class="flex flex-col gap-2 grow-1">
       <h3 class="text-sm font-medium text-left capitalize m-0">{{nutrition().name}}</h3>
-      <p class="m-0">Fits the {{recommendedDailyIntakePercentage()}}% of the recommended daily intake.</p>
+      <p class="m-0">Fits the <strong>{{recommendedDailyIntakePercentage()}}%</strong> of the recommended daily intake.</p>
     </div>
   `,
 })
