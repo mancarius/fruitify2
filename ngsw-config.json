@@ -73,7 +73,7 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 100,
-        "maxAge": "1w"
+        "maxAge": "7d"
       }
     },
     {
@@ -85,7 +85,7 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 100,
-        "maxAge": "1m"
+        "maxAge": "30d"
       }
     },
     {
@@ -99,7 +99,7 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 100,
-        "maxAge": "1m"
+        "maxAge": "30d"
       }
     }
   ]

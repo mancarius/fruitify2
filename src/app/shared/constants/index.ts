@@ -6,11 +6,6 @@ import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProviderCollection,
  */
 export const API_BASE_PATHNAME = '/api/fruit';
 
-/**
- * The base URL for the Fruityvice proxy.
- */
-export const FRUITYVICE_PROXY_BASE_URL = environment.fruityviceProxy;
-
 export const MEDIA_SERVICE_PROVIDERS: MediaServiceProviderCollection = {
   [MediaProvidersEnum.PEXELS]: {
     name: MediaProvidersEnum.PEXELS,
