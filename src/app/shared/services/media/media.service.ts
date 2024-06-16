@@ -14,23 +14,31 @@ import { UnsplashService } from '../unsplash/unsplash.service';
   providedIn: 'root'
 })
 export class MediaService implements PhotoFinder {
+  private _providerMap = new Map<MediaProvidersEnum, AbstractMediaProviderService>();
   /**
    * The media provider used by the media service.
    */
-  private _provider!: AbstractMediaProviderService;
-  
+  private _provider: AbstractMediaProviderService | null = null;
+
+
 
   constructor(
     @Inject(MEDIA_SERVICE_CONFIG_TOKEN) readonly mediaServiceConfig: Signal<MediaServiceConfig | null>,
     private readonly _http: HttpClient
   ) {
-    effect(() => this._assignProvider(mediaServiceConfig()));
+    this._assignProvider(mediaServiceConfig());
+
+    effect(() => {
+      if (this._provider?.providerName !== mediaServiceConfig()?.provider) {
+        this._assignProvider(mediaServiceConfig())
+      }
+    });
   }
 
 
   findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto> {
     if (!this._provider) throw new Error('Media provider not assigned.');
-    
+
     return this._provider.findPhoto(`${query} fruit`, options);
   }
 
@@ -41,15 +49,44 @@ export class MediaService implements PhotoFinder {
    * @throws Error if the specified media provider is not supported.
    */
   private _assignProvider(config: MediaServiceConfig | null): void {
-    switch (config?.provider) {
-      case MediaProvidersEnum.PEXELS:
-        this._provider = new PexelsService(config, this._http);
-        break;
-      case MediaProvidersEnum.UNSPLASH:
-        this._provider = new UnsplashService(config, this._http);
-        break;
-      default:
-        throw new Error(`Media provider '${config?.provider}' not supported.`);
+    if (!config) {
+      this._provider = null;
+      throw new Error('Media provider configuration not found.');
+    }
+
+    this._provider = this._getProvider(config);
+  }
+
+  /**
+   * Retrieves the media provider based on the provided configuration.
+   * If the configuration is null, returns null.
+   * If the provider does not exist, creates a new one and returns it.
+   *
+   * @param config - The configuration object for the media service.
+   * @returns The media provider service instance or null if the configuration is null.
+   */
+  private _getProvider(config: MediaServiceConfig | null): AbstractMediaProviderService | null {
+    if (!config) {
+      return null;
+    }
+
+    this._createProviderIfNotExists(config);
+
+    return this._providerMap.get(config.provider)!;
+  }
+
+  private _createProviderIfNotExists(config: MediaServiceConfig): void {
+    if (!this._providerMap.has(config.provider)) {
+      switch (config.provider) {
+        case MediaProvidersEnum.PEXELS:
+          this._providerMap.set(config.provider, new PexelsService(config, this._http));
+          break;
+        case MediaProvidersEnum.UNSPLASH:
+          this._providerMap.set(config.provider, new UnsplashService(config, this._http));
+          break;
+        default:
+          throw new Error(`Media provider '${config.provider}' not supported.`);
+      }
     }
   }
 }

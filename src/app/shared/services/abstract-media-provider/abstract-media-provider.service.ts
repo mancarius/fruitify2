@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { MediaOptions, MediaPhoto, MediaOrientation, MediaServiceConfig, PhotoFinder } from '@shared/types';
+import { Observable } from 'rxjs/internal/Observable';
+import { MediaOptions, MediaPhoto, MediaOrientation, MediaServiceConfig, PhotoFinder, MediaProvidersEnum } from '@shared/types';
 import { Injectable } from '@angular/core';
 
 /**
@@ -18,6 +18,13 @@ export abstract class AbstractMediaProviderService implements PhotoFinder {
   };
 
   constructor(protected readonly _providerConfig: MediaServiceConfig) { }
+
+  /**
+   * The name of the media provider.
+   */
+  get providerName(): MediaProvidersEnum {
+    return this._providerConfig.provider;
+  }
 
   abstract findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto>;
 
