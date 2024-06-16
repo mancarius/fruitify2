@@ -26,7 +26,7 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
           <button mat-icon-button
             class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none text-white"
             type="button" (click)="toggleNavbar()">
-            <mat-icon class="opacity-80">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
+            <mat-icon class="opacity-80 text-gray-900 dark:text-gray-100 ">{{ showMenu ? 'menu_open' : 'menu' }}</mat-icon>
           </button>
         </div>
 
