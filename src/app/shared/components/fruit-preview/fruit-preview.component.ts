@@ -1,33 +1,40 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
-import { NgIf, NgOptimizedImage } from '@angular/common';
-import { Fruit } from '@shared/types';
-import { FruitPreviewStore } from './fruit-preview.store';
-import { provideComponentStore } from '@ngrx/component-store';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  inject,
+  effect,
+  untracked,
+} from "@angular/core";
+import { NgIf, NgOptimizedImage } from "@angular/common";
+import { Fruit, Nullable } from "@shared/types";
+import { FruitPreviewStore } from "./fruit-preview.store";
 
 @Component({
-  selector: 'app-fruit-preview',
+  selector: "app-fruit-preview",
   standalone: true,
   imports: [NgIf, NgOptimizedImage],
-  providers: [provideComponentStore(FruitPreviewStore)],
+  providers: [FruitPreviewStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   host: {
-    class: 'bg-gray-500/10 relative overflow-hidden p-4',
+    class: "bg-gray-500/10 relative overflow-hidden p-4",
   },
 
   template: `
-    <div *ngIf="vm() as vm" class="fruit-preview">
-
-      @if(vm.imgUrl) {
+    <div class="fruit-preview">
+      @if (cs.imgUrl()) {
         <div class="fruit-preview__photo">
-          <img [ngSrc]="vm.imgUrl" [alt]="vm.imgAlt" fill />
+          <img [ngSrc]="cs.imgUrl()!" [alt]="cs.imgAlt()" fill />
         </div>
       }
 
       <div class="fruit-preview__name">
-        <span class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white">{{ vm.fruitName }}</span>
+        <span
+          class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white"
+          >{{ cs.fruitName() }}</span
+        >
       </div>
-
     </div>
   `,
 
@@ -62,15 +69,18 @@ import { provideComponentStore } from '@ngrx/component-store';
         width: min-content;
       }
     }
-  `
+  `,
 })
 export class FruitPreviewComponent {
-  private readonly _cs = inject(FruitPreviewStore);
+  protected readonly cs = inject(FruitPreviewStore);
 
-  @Input({ required: true })
-  set fruit(fruit: Fruit) {
-    this._cs.setFruit(fruit);
-  }
+  readonly fruit = input.required<Nullable<Fruit>>();
 
-  protected readonly vm = this._cs.vm;
+  readonly setFruitEffect = effect(() => {
+    const fruit = this.fruit();
+
+    untracked(() => {
+      this.cs.setFruit(fruit);
+    });
+  });
 }
