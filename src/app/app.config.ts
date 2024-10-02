@@ -1,4 +1,4 @@
-import { ApplicationConfig, isDevMode, signal } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withRouterConfig, withViewTransitions } from '@angular/router';
 import routes from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -11,7 +11,9 @@ import { authenticationInterceptor } from '@core/interceptors';
 import { PEXELS_API_CONFIG } from '@shared/constants';
 
 export const appConfig: ApplicationConfig = {
-    providers: [
+  providers: [
+        provideExperimentalZonelessChangeDetection(),
+
         provideRouter(routes,
             withComponentInputBinding(),
             withViewTransitions(),
