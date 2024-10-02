@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Fruit, MediaPhoto, Nullable } from '@shared/types';
 import { FruitPreviewComponent } from '@shared/components/fruit-preview/fruit-preview.component';
@@ -6,6 +6,7 @@ import { FruitDetailComponent } from './components/fruit-detail/fruit-detail.com
 import { RelatedFruitsComponent, RelatedFruitsContentDirective } from '@shared/components/related-fruits/related-fruits.component';
 import { FruitListComponent } from '@shared/components/fruit-list/fruit-list.component';
 import { MatCardModule } from '@angular/material/card';
+import { MAX_SUGGESTIONS_PREVIEW_OPTION } from '@tokens';
 
 @Component({
   selector: 'app-fruit',
@@ -34,7 +35,7 @@ import { MatCardModule } from '@angular/material/card';
     @if(fruit()) {
       <aside class="w-full flex flex-col gap-4 p-4 pt-0">
         <h3 class="font-bold text-sm text-black dark:text-white m-0 w-full max-w-screen-sm mx-auto">Related fruits</h3>
-      
+
         <mat-card class="w-full bg-white dark:bg-slate-50/10 mx-4 w-full max-w-screen-sm mx-auto">
           <mat-card-content>
             @defer (on viewport) {
@@ -57,18 +58,16 @@ import { MatCardModule } from '@angular/material/card';
   `,
 })
 export class FruitComponent {
-  maxSuggestions = 4;
+  maxSuggestions = inject(MAX_SUGGESTIONS_PREVIEW_OPTION);
 
-  private readonly _photo = input.required<Nullable<MediaPhoto>>({ alias: 'photo' });
+  readonly photo = input.required<Nullable<MediaPhoto>>();
 
-  readonly heroBackgroundImage = computed(() => `url(${this._photo()?.url.lg})`);
+  readonly heroBackgroundImage = computed(() => `url(${this.photo()?.url.lg})`);
 
   readonly fruit = input.required<Nullable<Fruit>>();
 
-  constructor() {
-    effect(() => {
-      this.fruit();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
+  readonly scrollOnTopEffect = effect(() => {
+    this.fruit();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
