@@ -1,5 +1,6 @@
 import { Fruit, Nullable } from '@shared/types';
-import { ComponentStore, OnStateInit, tapResponse } from '@ngrx/component-store';
+import { ComponentStore, OnStateInit } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 import { FruitService } from '@shared/services/fruit/fruit.service';
 import { Observable, defer, distinctUntilChanged, of, shareReplay, switchMap, tap } from 'rxjs';
 import { Injectable, inject } from '@angular/core';

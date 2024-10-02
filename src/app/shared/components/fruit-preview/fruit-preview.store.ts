@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { ComponentStore, OnStateInit, tapResponse } from '@ngrx/component-store';
+import { ComponentStore, OnStateInit } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 import { MediaService } from '@shared/services/media/media.service';
 import { Fruit, MediaOptions, MediaOrientation, MediaPhoto, MediaSize, Nullable } from '@shared/types';
 import { Observable, lastValueFrom, switchMap, tap } from 'rxjs';
