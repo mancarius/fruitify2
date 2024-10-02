@@ -39,7 +39,11 @@ export class RelatedFruitsContentDirective {
     class: 'flex flex-col gap-4'
   },
   template: `
-    @if (!cs.loading()) {
+    @if (cs.loading()) {
+      <p class="text-slate-400 dark:text-slate-500 center">Loading...</p>
+    } @else if (cs.error()) {
+      <p class="text-red-400 dark:text-red-500 center">{{ cs.error() }}</p>
+    } @else {
       <ng-container [ngTemplateOutlet]="content.templateRef" [ngTemplateOutletContext]="{ $implicit: cs.slicedFruits() }"></ng-container>
 
       @if (cs.showLoadMoreBtn()){
@@ -50,8 +54,6 @@ export class RelatedFruitsContentDirective {
           >{{ cs.showAll() ? "Show less" : "Show more" }}</a>
         </div>
       }
-    } @else {
-      <p class="text-slate-400 dark:text-slate-500 center">Loading...</p>
     }
   `
 })

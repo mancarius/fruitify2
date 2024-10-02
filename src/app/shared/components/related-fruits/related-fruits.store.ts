@@ -12,14 +12,16 @@ export type RelatedFruitsState = {
   maxSuggestions: number;
   loading: boolean;
   showAll: boolean;
+  error: Nullable<string>;
 }
 
 const relatedFruitsInitialState: RelatedFruitsState = {
   fruits: [],
   fruit: null,
-  maxSuggestions: -1,
+  maxSuggestions: 0,
   loading: false,
-  showAll: false
+  showAll: false,
+  error: null
 }
 
 
@@ -55,13 +57,17 @@ export const RelatedFruitsStore = signalStore(
         tap((fruit) => patchState(store, {
           fruits: [],
           loading: true,
-          fruit
+          fruit,
+          error: null
         })),
         map(fruit => fruit?.family),
         switchMap(family => defer(() => family ? fruitService.getWithQuery({ family }) : of([])).pipe(
           tapResponse({
             next: fruits => patchState(store, { fruits }),
-            error: error => console.error(error),
+            error: (error: any) => {
+              patchState(store, { error: "Errore nel caricamento dei suggerimenti" });
+              console.error(error);
+            },
             complete: () => patchState(store, { loading: false })
           })
         ))
