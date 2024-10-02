@@ -15,7 +15,7 @@ export type RelatedFruitsState = {
   error: Nullable<string>;
 }
 
-const relatedFruitsInitialState: RelatedFruitsState = {
+const initialState: RelatedFruitsState = {
   fruits: [],
   fruit: null,
   maxSuggestions: 0,
@@ -26,7 +26,7 @@ const relatedFruitsInitialState: RelatedFruitsState = {
 
 
 export const RelatedFruitsStore = signalStore(
-  withState(relatedFruitsInitialState),
+  withState(initialState),
 
   withComputed(state => {
     const filteredFruits = computed(() => state.fruits().filter(fruit => fruit.id !== state.fruit()?.id));
