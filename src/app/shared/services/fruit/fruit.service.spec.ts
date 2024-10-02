@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FruitService } from './fruit.service';
 import { firstValueFrom } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('FruitService', () => {
   let service: FruitService;
@@ -9,12 +10,14 @@ describe('FruitService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         FruitService,
         provideHttpClientTesting(),
-      ]
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(FruitService);
     httpTesting = TestBed.inject(HttpTestingController);
   });

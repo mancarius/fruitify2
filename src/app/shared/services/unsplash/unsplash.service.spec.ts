@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { UnsplashService } from './unsplash.service';
-import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { UNSPLASH_API_CONFIG } from '@shared/constants';
 import { signal } from '@angular/core';
 import { MediaServiceConfig } from '@shared/types';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('UnsplashService', () => {
   let service: UnsplashService;
@@ -14,16 +15,18 @@ describe('UnsplashService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         UnsplashService,
         provideHttpClientTesting(),
         {
-          provide: MEDIA_SERVICE_CONFIG_TOKEN,
-          useFactory: () => signal<MediaServiceConfig | null>(UNSPLASH_API_CONFIG)
-        }
-      ]
-    });
+            provide: MEDIA_SERVICE_CONFIG_TOKEN,
+            useFactory: () => signal<MediaServiceConfig | null>(UNSPLASH_API_CONFIG)
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(UnsplashService);
   });
 

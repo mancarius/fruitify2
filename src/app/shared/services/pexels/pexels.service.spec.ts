@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { PexelsService } from './pexels.service';
-import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { PEXELS_API_CONFIG } from '@shared/constants';
 import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { MediaServiceConfig } from '@shared/types';
 import { signal } from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PexelsService', () => {
   let service: PexelsService;
@@ -13,16 +14,18 @@ describe('PexelsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         PexelsService,
         provideHttpClientTesting(),
         {
-          provide: MEDIA_SERVICE_CONFIG_TOKEN,
-          useFactory: () => signal<MediaServiceConfig | null>(PEXELS_API_CONFIG)
-        }
-      ]
-    });
+            provide: MEDIA_SERVICE_CONFIG_TOKEN,
+            useFactory: () => signal<MediaServiceConfig | null>(PEXELS_API_CONFIG)
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     service = TestBed.inject(PexelsService);
     httpTesting = TestBed.inject(HttpTestingController);
   });
