@@ -1,80 +1,71 @@
 import { Fruit, Nullable } from '@shared/types';
-import { ComponentStore, OnStateInit } from '@ngrx/component-store';
 import { tapResponse } from '@ngrx/operators';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { Observable, defer, distinctUntilChanged, of, shareReplay, switchMap, tap } from 'rxjs';
-import { Injectable, inject } from '@angular/core';
+import { defer, map, of, pipe, switchMap, tap } from 'rxjs';
+import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 export type RelatedFruitsState = {
   fruits: Fruit[];
   fruit: Nullable<Fruit>;
   maxSuggestions: number;
   loading: boolean;
+  showAll: boolean;
 }
 
 const relatedFruitsInitialState: RelatedFruitsState = {
   fruits: [],
   fruit: null,
   maxSuggestions: -1,
-  loading: false
+  loading: false,
+  showAll: false
 }
 
 
-@Injectable()
-export class RelatedFruitsStore extends ComponentStore<RelatedFruitsState> implements OnStateInit {
-  readonly #fruitService = inject(FruitService);
+export const RelatedFruitsStore = signalStore(
+  withState(relatedFruitsInitialState),
 
-  constructor() { super(relatedFruitsInitialState) }
+  withComputed(state => {
+    const filteredFruits = computed(() => state.fruits().filter(fruit => fruit.id !== state.fruit()?.id));
 
-  readonly fruits$ = this.select(state => state.fruits
-    .filter(fruit => fruit.id !== state.fruit?.id)
-    .slice(0, state.maxSuggestions)
-  ).pipe(shareReplay(1));
-  readonly loading$ = this.select(state => state.loading);
-  readonly family$ = this.select(state => state.fruit?.family ?? null).pipe(distinctUntilChanged(), shareReplay(1));
+    const slicedFruits = computed(() => state.showAll() ? filteredFruits() : filteredFruits().slice(0, state.maxSuggestions()))
 
-  ngrxOnStateInit() {
-    this.fetchFruits(this.family$);
-  }
+    const showLoadMoreBtn = computed(() => state.maxSuggestions() < filteredFruits().length);
 
-  /* ========== Updaters ========== */
+    return { slicedFruits, showLoadMoreBtn };
+  }),
 
-  readonly setFruits = this.updater((state, fruits: RelatedFruitsState['fruits']) => ({
-    ...state,
-    fruits: fruits.filter(fruit => fruit.id !== state.fruit?.id)
-  }));
-
-  readonly setFruit = this.updater((state, fruit: RelatedFruitsState['fruit']) => ({
-    ...state,
-    fruit
-  }));
-
-  readonly setMaxSuggestions = this.updater((state, maxSuggestions: RelatedFruitsState['maxSuggestions']) => ({
-    ...state,
-    maxSuggestions
-  }));
-
-  /** Show all suggestions */
-  readonly showAll = this.updater((state) => ({
-    ...state,
-    maxSuggestions: state.fruits.length
-  }));
-
-  /* ========== Effects ========== */
-
-  readonly fetchFruits = this.effect((family$: Observable<Nullable<Fruit['family']>>) => {
-    return family$.pipe(
-      tap(() => this.patchState({
-        fruits: [],
-        loading: true
-      })),
-      switchMap(family => defer(() => family ? this.#fruitService.getWithQuery({ family }) : of([])).pipe(
-        tapResponse(
-          fruits => this.setFruits(fruits),
-          error => console.error(error),
-          () => this.patchState({ loading: false })
-        )
-      ))
-    );
-  });
-}
+  withMethods(store => ({
+    setFruits(fruits: RelatedFruitsState['fruits']): void {
+      patchState(store, { fruits })
+    },
+    setMaxSuggestion: rxMethod<RelatedFruitsState['maxSuggestions']>(
+      pipe(
+        tap(value => { patchState(store, { maxSuggestions: value }) })
+      )
+    ),
+    toggleShowAll(): void {
+      patchState(store, state => ({ showAll: !state.showAll }))
+    },
+  })),
+  withMethods((store, fruitService = inject(FruitService)) => ({
+    fetchFruits: rxMethod<Nullable<RelatedFruitsState['fruit']>>(
+      pipe(
+        tap((fruit) => patchState(store, {
+          fruits: [],
+          loading: true,
+          fruit
+        })),
+        map(fruit => fruit?.family),
+        switchMap(family => defer(() => family ? fruitService.getWithQuery({ family }) : of([])).pipe(
+          tapResponse({
+            next: fruits => patchState(store, { fruits }),
+            error: error => console.error(error),
+            complete: () => patchState(store, { loading: false })
+          })
+        ))
+      )
+    )
+  }))
+);
