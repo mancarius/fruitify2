@@ -1,20 +1,20 @@
-import { Observable } from 'rxjs';
-import { Nullable } from '.';
+import { Observable } from "rxjs";
+import { Nullable } from ".";
 
 export enum MediaType {
-  PHOTO = 'photo'
+  PHOTO = "photo",
 }
 
 export enum MediaSize {
-  SMALL = 'sm',
-  MEDIUM = 'md',
-  LARGE = 'lg',
+  SMALL = "sm",
+  MEDIUM = "md",
+  LARGE = "lg",
 }
 
 export enum MediaOrientation {
-  LANDSCAPE = 'landscape',
-  PORTRAIT = 'portrait',
-  SQUARE = 'square',
+  LANDSCAPE = "landscape",
+  PORTRAIT = "portrait",
+  SQUARE = "square",
 }
 
 export type MediaUrlMap = {
@@ -25,17 +25,17 @@ export type MediaUrlMap = {
  * Represents the result of a media query.
  */
 export type Media = {
-  url: MediaUrlMap,
+  url: MediaUrlMap;
 };
 
 export type MediaPhoto = Media & {
-  alt: Nullable<string>,
-  avgColor: Nullable<string>,
+  alt: Nullable<string>;
+  avgColor: Nullable<string>;
 };
 
 export type MediaVideo = Media & {
-  picture: string,
-  fileType: string,
+  picture: string;
+  fileType: string;
 };
 
 /**
@@ -49,10 +49,8 @@ export type MediaOptions = {
   /** The maximum number of results to return. */
   limit: number;
   /** The orientation of the media. */
-  orientation: MediaOrientation;
-}
-
-
+  orientation: `${MediaOrientation}`;
+};
 
 /**
  * Represents a photo finder interface.
@@ -64,5 +62,8 @@ export interface PhotoFinder {
    * @param options The optional query options.
    * @returns An Observable that emits the found photo.
    */
-  findPhoto(query: string, options?: Partial<MediaOptions>): Observable<MediaPhoto>;
+  findPhoto(
+    query: string,
+    options?: Partial<MediaOptions>,
+  ): Observable<MediaPhoto>;
 }
