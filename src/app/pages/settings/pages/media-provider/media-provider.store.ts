@@ -1,64 +1,80 @@
-import { ComponentStore, OnStateInit } from "@ngrx/component-store";
-import { Injectable, Injector, WritableSignal, effect, inject } from "@angular/core";
-import { MediaProvidersEnum, MediaServiceConfig, MediaServiceProvider, MediaServiceProviderCollection, Nullable } from "@shared/types";
+import { inject, computed, signal } from "@angular/core";
+import {
+  MediaProvidersEnum,
+  MediaServiceConfig,
+  MediaServiceProvider,
+  MediaServiceProviderCollection,
+  Nullable,
+} from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
-import { Observable, tap } from "rxjs";
 import { API_CONFIGS, MEDIA_SERVICE_PROVIDERS } from "@shared/constants";
+import {
+  signalStore,
+  withMethods,
+  withState,
+  patchState,
+  withComputed,
+} from "@ngrx/signals";
 
 export type MediaProviderState = {
-  providers: MediaServiceProviderCollection;
-  provider: Nullable<MediaServiceProvider>;
-}
-
-export const mediaProviderInitialState: MediaProviderState = {
-  providers: MEDIA_SERVICE_PROVIDERS,
-  provider: null,
+  providers: Nullable<MediaServiceProviderCollection>;
 };
 
-@Injectable()
-export class MediaProviderStore extends ComponentStore<MediaProviderState> implements OnStateInit {
-  private readonly _injector = inject(Injector);
-  private readonly _mediaServiceConfig: WritableSignal<Nullable<MediaServiceConfig>> = inject(MEDIA_SERVICE_CONFIG_TOKEN);
+export const mediaProviderInitialState: MediaProviderState = {
+  providers: null,
+};
 
-  constructor() { super(mediaProviderInitialState) }
+export const mediaProviderStore = signalStore(
+  withState(mediaProviderInitialState),
 
-  ngrxOnStateInit(): void {
-    effect(() => {
-      const provider = this._mediaServiceConfig()?.provider;
-      if (provider) {
-        this.patchState({ provider: this.get().providers[provider] });
-      }
-    }, { injector: this._injector, allowSignalWrites: true });
-  }
+  withComputed(
+    (
+      _state,
+      mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN),
+      mediaServiceProviders = inject(MEDIA_SERVICE_PROVIDERS),
+    ) => {
+      const providers = signal<MediaServiceProviderCollection | null>(
+        mediaServiceProviders,
+      ).asReadonly();
 
+      const provider = computed(() => {
+        const provider = mediaServiceConfig()?.provider;
+        return provider ? (providers()?.[provider] ?? null) : null;
+      });
 
-  /* ===== Selectors ===== */
+      return { provider, providers };
+    },
+  ),
 
-  readonly provider$ = this.select(state => state.provider);
-  readonly vm$ = this.select(({ providers }) => ({ providers }));
+  withMethods(
+    (
+      store,
+      mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN),
+      apiConfigs = inject(API_CONFIGS),
+    ) => ({
+      setProviders: (providers: MediaServiceProviderCollection) => {
+        patchState(store, { providers });
+      },
 
+      selectProvider: (providerName: MediaServiceProvider["name"]) => {
+        mediaServiceConfig.set(
+          getMediaConfigByProvider(apiConfigs, providerName),
+        );
+      },
+    }),
+  ),
+);
 
-  /* ===== Effects ===== */
-
-  /**
-   * Selects a media provider and updates the media service configuration accordingly.
-   * @param provider$ An observable that emits the selected media provider.
-   */
-  readonly selectProvider = this.effect((providerName$: Observable<MediaServiceProvider['name']>) => {
-    return providerName$.pipe(
-      tap(providerName => this._mediaServiceConfig.set(this._getMediaConfigByProvider(providerName))),
-    );
-  });
-
-
-  /* ===== Private methods ===== */
-
-  /**
-   * Retrieves the media service configuration based on the specified provider.
-   * @param provider - The media provider.
-   * @returns The media service configuration.
-   */
-  private _getMediaConfigByProvider(provider: MediaProvidersEnum): MediaServiceConfig {
-    return API_CONFIGS.find(config => config.provider === provider) as MediaServiceConfig;
-  }
+/**
+ * Retrieves the media service configuration based on the specified provider.
+ * @param provider - The media provider.
+ * @returns The media service configuration.
+ */
+function getMediaConfigByProvider(
+  apiConfigs: MediaServiceConfig[],
+  provider: MediaProvidersEnum,
+): MediaServiceConfig {
+  return apiConfigs.find(
+    (config) => config.provider === provider,
+  ) as MediaServiceConfig;
 }
