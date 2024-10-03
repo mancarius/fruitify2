@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   ContentChild,
   Directive,
@@ -39,7 +38,6 @@ export class RelatedFruitsContentDirective {
   standalone: true,
   imports: [CommonModule, MatButtonModule, RouterLink],
   providers: [RelatedFruitsStore],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: "flex flex-col gap-4",
   },
