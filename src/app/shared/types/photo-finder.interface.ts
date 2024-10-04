@@ -18,7 +18,7 @@ export enum MediaOrientation {
 }
 
 export type MediaUrlMap = {
-  [key in MediaSize]: string;
+  [key in MediaSize]?: string;
 };
 
 /**
