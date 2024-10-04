@@ -43,3 +43,17 @@ export const PHOTO_DEFAULT_OPTIONS = new InjectionToken<Partial<MediaOptions>>(
     }),
   },
 );
+
+/**
+ * Injection token for the text of the show more button.
+ */
+export const SHOW_MORE_BUTTON_TEXT = new InjectionToken<{
+  openText: string;
+  closeText: string;
+}>("SHOW_MORE_BUTTON_TEXT", {
+  providedIn: "root",
+  factory: () => ({
+    openText: "Show more",
+    closeText: "Show less",
+  })
+});
