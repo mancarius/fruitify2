@@ -8,13 +8,13 @@ import {
 } from "@angular/core";
 import { NgIf, NgOptimizedImage } from "@angular/common";
 import { Fruit, Nullable } from "@shared/types";
-import { FruitPreviewStore } from "./fruit-preview.store";
+import { fruitPreviewStore } from "./fruit-preview.store";
 
 @Component({
   selector: "app-fruit-preview",
   standalone: true,
   imports: [NgIf, NgOptimizedImage],
-  providers: [FruitPreviewStore],
+  providers: [fruitPreviewStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   host: {
@@ -72,7 +72,7 @@ import { FruitPreviewStore } from "./fruit-preview.store";
   `,
 })
 export class FruitPreviewComponent {
-  protected readonly cs = inject(FruitPreviewStore);
+  protected readonly cs = inject(fruitPreviewStore);
 
   readonly fruit = input.required<Nullable<Fruit>>();
 

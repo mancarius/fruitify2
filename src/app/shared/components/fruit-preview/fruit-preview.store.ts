@@ -28,7 +28,7 @@ const initialState: FruitPreviewState = {
   loaded: false,
 };
 
-export const FruitPreviewStore = signalStore(
+export const fruitPreviewStore = signalStore(
   withState(initialState),
 
   withComputed((state) => ({
