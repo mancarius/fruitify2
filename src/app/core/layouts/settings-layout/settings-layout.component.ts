@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,6 @@ import { injectRouteTitle } from '@shared/helpers';
   selector: 'app-settings-layout',
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule, RouterOutlet, NavbarComponent, FooterComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'flex flex-col w-full grow',
   },
