@@ -42,7 +42,11 @@ export class RelatedFruitsContentDirective {
     class: "flex flex-col gap-4",
   },
   template: `
-    @if (cs.loading()) {
+    @if (!content) {
+      <p class="text-slate-400 dark:text-slate-500 center" data-test-id="no-content-provided-error-message">
+        No content provided
+      </p>
+    } @else if (cs.loading()) {
       <p
         class="text-slate-400 dark:text-slate-500 center"
         data-test-id="loading"
@@ -68,7 +72,7 @@ export class RelatedFruitsContentDirective {
             mat-button
             class="text-slate-900 dark:text-slate-200"
             (click)="cs.toggleShowAll()"
-            >{{ cs.showAll() ? "Show less" : "Show more" }}</a
+            >{{ cs.buttonText() }}</a
           >
         </div>
       }
