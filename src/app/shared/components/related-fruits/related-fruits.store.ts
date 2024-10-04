@@ -5,6 +5,7 @@ import { defer, map, of, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { SHOW_MORE_BUTTON_TEXT } from '@tokens';
 
 export type RelatedFruitsState = {
   fruits: Fruit[];
@@ -28,14 +29,16 @@ const initialState: RelatedFruitsState = {
 export const RelatedFruitsStore = signalStore(
   withState(initialState),
 
-  withComputed(state => {
+  withComputed((state, buttonTextMap = inject(SHOW_MORE_BUTTON_TEXT)) => {
     const filteredFruits = computed(() => state.fruits().filter(fruit => fruit.id !== state.fruit()?.id));
 
     const slicedFruits = computed(() => state.showAll() ? filteredFruits() : filteredFruits().slice(0, state.maxSuggestions()))
 
     const showLoadMoreBtn = computed(() => state.maxSuggestions() < filteredFruits().length);
 
-    return { slicedFruits, showLoadMoreBtn };
+    const buttonText = computed(() => state.showAll() ? buttonTextMap.closeText : buttonTextMap.openText);
+
+    return { slicedFruits, showLoadMoreBtn, buttonText };
   }),
 
   withMethods(store => ({
@@ -52,7 +55,7 @@ export const RelatedFruitsStore = signalStore(
     },
   })),
   withMethods((store, fruitService = inject(FruitService)) => ({
-    fetchFruits: rxMethod<Nullable<RelatedFruitsState['fruit']>>(
+    fetchFruits: rxMethod<RelatedFruitsState['fruit']>(
       pipe(
         tap((fruit) => patchState(store, {
           fruits: [],
@@ -66,7 +69,7 @@ export const RelatedFruitsStore = signalStore(
             next: fruits => patchState(store, { fruits }),
             error: (error: any) => {
               patchState(store, { error: "Errore nel caricamento dei suggerimenti" });
-              console.error(error);
+              console.error("Errore nel caricamento dei suggerimenti", error);
             },
             complete: () => patchState(store, { loading: false })
           })
