@@ -5,8 +5,9 @@ import {
   input,
   TemplateRef,
   inject,
+  OnInit,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import { RelatedFruitsStore } from "./related-fruits.store";
 import { Fruit, Nullable } from "@shared/types";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,27 +37,27 @@ export class RelatedFruitsContentDirective {
 @Component({
   selector: "app-related-fruits",
   standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterLink],
+  imports: [NgTemplateOutlet, MatButtonModule, RouterLink],
   providers: [RelatedFruitsStore],
   host: {
     class: "flex flex-col gap-4",
   },
   template: `
     @if (!content) {
-      <p class="text-slate-400 dark:text-slate-500 center" data-test-id="no-content-provided-error-message">
+      <p class="text-slate-400 dark:text-slate-500 center" data-testid="no-content-provided-error-message">
         No content provided
       </p>
     } @else if (cs.loading()) {
       <p
         class="text-slate-400 dark:text-slate-500 center"
-        data-test-id="loading"
+        data-testid="loading"
       >
         Loading...
       </p>
     } @else if (cs.error()) {
       <p
         class="text-red-400 dark:text-red-500 center"
-        data-test-id="error-message"
+        data-testid="error-message"
       >
         {{ cs.error() }}
       </p>
@@ -67,7 +68,7 @@ export class RelatedFruitsContentDirective {
       ></ng-container>
 
       @if (cs.showLoadMoreBtn()) {
-        <div class="flex justify-center" data-test-id="btn-container">
+        <div class="flex justify-center" data-testid="btn-container">
           <a
             mat-button
             class="text-slate-900 dark:text-slate-200"
@@ -79,7 +80,7 @@ export class RelatedFruitsContentDirective {
     }
   `,
 })
-export class RelatedFruitsComponent {
+export class RelatedFruitsComponent implements OnInit {
   protected readonly cs = inject(RelatedFruitsStore);
 
   @ContentChild(RelatedFruitsContentDirective)
@@ -91,7 +92,7 @@ export class RelatedFruitsComponent {
     inject(MAX_SUGGESTIONS_PREVIEW_OPTION),
   );
 
-  constructor() {
+  ngOnInit() {
     this.cs.fetchFruits(this.fruit);
 
     this.cs.setMaxSuggestion(this.maxSuggestions);

@@ -1,7 +1,6 @@
 import { Fruit, Nullable } from '@shared/types';
-import { tapResponse } from '@ngrx/operators';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { defer, map, of, pipe, switchMap, tap } from 'rxjs';
+import { catchError, defer, distinctUntilChanged, map, of, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
@@ -57,6 +56,7 @@ export const RelatedFruitsStore = signalStore(
   withMethods((store, fruitService = inject(FruitService)) => ({
     fetchFruits: rxMethod<RelatedFruitsState['fruit']>(
       pipe(
+        distinctUntilChanged((prev, next) => prev?.id === next?.id),
         tap((fruit) => patchState(store, {
           fruits: [],
           loading: true,
@@ -65,15 +65,14 @@ export const RelatedFruitsStore = signalStore(
         })),
         map(fruit => fruit?.family),
         switchMap(family => defer(() => family ? fruitService.getWithQuery({ family }) : of([])).pipe(
-          tapResponse({
-            next: fruits => patchState(store, { fruits }),
-            error: (error: any) => {
-              patchState(store, { error: "Errore nel caricamento dei suggerimenti" });
-              console.error("Errore nel caricamento dei suggerimenti", error);
-            },
-            complete: () => patchState(store, { loading: false })
-          })
-        ))
+          catchError((error) => {
+            patchState(store, { error: "Errore nel caricamento dei suggerimenti" });
+            console.error("Errore nel caricamento dei suggerimenti", error);
+            return of([]);
+          }),
+          tap(fruits => patchState(store, { fruits })),
+          tap(() => patchState(store, { loading: false }))
+        )),
       )
     )
   }))
