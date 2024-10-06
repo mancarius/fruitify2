@@ -3,13 +3,13 @@ import { PexelsService } from './pexels.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { PEXELS_API_CONFIG } from '@shared/constants';
-import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
+import { AUTH_CONFIG_CONTEXT_TOKEN, MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { MediaServiceConfig } from '@shared/types';
 import { Photos } from 'pexels';
 
-fdescribe('PexelsService', () => {
+describe('PexelsService', () => {
   let service: PexelsService;
   let httpTesting: HttpTestingController;
   let pexelsApiConfig: MediaServiceConfig;
@@ -20,7 +20,7 @@ fdescribe('PexelsService', () => {
       providers: [
         PexelsService,
         provideHttpClientTesting(),
-        PEXELS_API_CONFIG,
+        provideExperimentalZonelessChangeDetection(),
         {
           provide: MEDIA_SERVICE_CONFIG_TOKEN,
           useFactory: () => inject(PEXELS_API_CONFIG)
@@ -77,16 +77,18 @@ fdescribe('PexelsService', () => {
       const photoPromise = firstValueFrom(photo$);
 
       const req = httpTesting.expectOne((request) => {
-        const expectedHeaders = pexelsApiConfig.authConfigs.filter(config => config.addTo === 'headers');
+        const expectedContext = pexelsApiConfig.authConfigs;
         const expectedParams = pexelsApiConfig.authConfigs.filter(config => config.addTo === 'params');
+        const expectedUrl = `${pexelsApiConfig.baseUrl}/v1/search`;
+        const requestContext = request.context.get(AUTH_CONFIG_CONTEXT_TOKEN);
 
         return (
           request.method === 'GET' &&
-          request.url === 'https://api.pexels.com/v1/search' &&
+          request.url === expectedUrl &&
           request.params.get('query') == query &&
           request.params.get('per_page') == options.limit.toString() &&
           // check authentication headers and params if they exist
-          (!expectedHeaders.length || expectedHeaders.every(header => request.headers.get(header.key) == header.value)) &&
+          (!expectedContext.length || expectedContext.every(ctx => requestContext.some(rCtx => rCtx.key == ctx.key && rCtx.value == ctx.value))) &&
           (!expectedParams.length || expectedParams.every(param => request.params.get(param.key) == param.value))
         );
       });
@@ -95,7 +97,11 @@ fdescribe('PexelsService', () => {
 
       const photo = await photoPromise;
 
-      expect(photo.url).toBe({ sm: 'https://example.com/photo.jpg' });
+      expect(photo.url).toEqual({
+        sm: 'https://example.com/photo.jpg',
+        md: 'https://example.com/photo.jpg',
+        lg: 'https://example.com/photo.jpg',
+      });
       expect(photo.alt).toBe('Nature');
       expect(photo.avgColor).toBe('#abcdef');
     });

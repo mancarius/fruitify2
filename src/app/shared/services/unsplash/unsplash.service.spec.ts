@@ -8,7 +8,7 @@ import { inject, provideExperimentalZonelessChangeDetection } from '@angular/cor
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MediaServiceConfig, Unsplash } from '@shared/types';
 
-fdescribe('UnsplashService', () => {
+describe('UnsplashService', () => {
   let service: UnsplashService;
   let httpTesting: HttpTestingController;
   let unsplashApiConfig: MediaServiceConfig;
@@ -68,7 +68,7 @@ fdescribe('UnsplashService', () => {
       const req = httpTesting.expectOne((request) => {
         const expectedContext = unsplashApiConfig.authConfigs.filter(config => config.addTo === 'headers');
         const expectedParams = unsplashApiConfig.authConfigs.filter(config => config.addTo === 'params');
-        const expectedUrl = unsplashApiConfig.baseUrl + '/search/photos';
+        const expectedUrl = `${unsplashApiConfig.baseUrl}/search/photos`;
         const requestContext = request.context.get(AUTH_CONFIG_CONTEXT_TOKEN);
 
         return (

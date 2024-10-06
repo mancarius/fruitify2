@@ -59,7 +59,7 @@ export const PEXELS_API_CONFIG = new InjectionToken<MediaServiceConfig>(
     providedIn: "root",
     factory: () => ({
       provider: MediaProvidersEnum.PEXELS,
-      baseUrl: "https://api.pexels.com/v1",
+      baseUrl: "https://api.pexels.com",
       authConfigs: [
         {
           addTo: "headers",

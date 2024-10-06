@@ -3,7 +3,7 @@ import { MediaOptions, MediaPhoto, MediaServiceConfig } from '../../types';
 import { Observable, map } from 'rxjs';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { PaginationParams, Photos, Photo } from 'pexels';
-import { AUTH_CONFIG_CONTEXT_TOKEN } from '@tokens';
+import { AUTH_CONFIG_CONTEXT_TOKEN, MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { AbstractMediaProviderService } from '../abstract-media-provider/abstract-media-provider.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class PexelsService extends AbstractMediaProviderService {
   };
 
   constructor(
-    @Inject('MEDIA_SERVICE_CONFIG') _providerConfig: MediaServiceConfig,
+    @Inject(MEDIA_SERVICE_CONFIG_TOKEN) _providerConfig: MediaServiceConfig,
     private readonly _http: HttpClient
   ) {
     super(_providerConfig);
@@ -43,7 +43,7 @@ export class PexelsService extends AbstractMediaProviderService {
    * @returns The URL string.
    */
   private _getPhotosUrl(): string {
-    const url = this.composeUrl('v1/search');
+    const url = this.composeUrl('/v1/search');
 
     return url.toString();
   }
