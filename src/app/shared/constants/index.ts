@@ -37,13 +37,13 @@ export const MEDIA_SERVICE_PROVIDERS =
       factory: () => ({
         [MediaProvidersEnum.PEXELS]: {
           name: MediaProvidersEnum.PEXELS,
-          link: "https://www.pexels.com/v1/",
+          link: "https://www.pexels.com",
           description:
             "The best free stock photos & videos shared by talented creators.",
         },
         [MediaProvidersEnum.UNSPLASH]: {
           name: MediaProvidersEnum.UNSPLASH,
-          link: "https://www.unsplash.com/",
+          link: "https://www.unsplash.com",
           description: "The internet's source of freely-usable images.",
         },
       }),
