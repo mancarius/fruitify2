@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingService } from '@shared/services/loading/loading.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -28,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   template: `
     <router-outlet></router-outlet>
 
-  @if (loading()) {
+  @if (isLoading()) {
     <div class="page-loader fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-white/50 dark:bg-gray-900/50" @fade>
       <mat-spinner diameter="80" color="primary"></mat-spinner>
     </div>
@@ -36,6 +35,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   `,
 })
 export class AppComponent {
-  private readonly _loadingSrv = inject(LoadingService);
-  readonly loading = toSignal(this._loadingSrv.loading$, { initialValue: false });
+  readonly isLoading = inject(LoadingService).loading;
 }
