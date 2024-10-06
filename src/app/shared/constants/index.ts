@@ -37,7 +37,7 @@ export const MEDIA_SERVICE_PROVIDERS =
       factory: () => ({
         [MediaProvidersEnum.PEXELS]: {
           name: MediaProvidersEnum.PEXELS,
-          link: "https://www.pexels.com/",
+          link: "https://www.pexels.com/v1/",
           description:
             "The best free stock photos & videos shared by talented creators.",
         },
@@ -59,7 +59,7 @@ export const PEXELS_API_CONFIG = new InjectionToken<MediaServiceConfig>(
     providedIn: "root",
     factory: () => ({
       provider: MediaProvidersEnum.PEXELS,
-      baseUrl: "https://api.pexels.com",
+      baseUrl: "https://api.pexels.com/v1",
       authConfigs: [
         {
           addTo: "headers",
