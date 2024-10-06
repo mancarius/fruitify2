@@ -1,6 +1,29 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, shareReplay } from 'rxjs';
+import { computed, Injectable, signal } from '@angular/core';
 
+/**
+ * Service to manage the loading state of the application.
+ *
+ * This service keeps track of the number of active loading operations and provides
+ * a signal to indicate whether there are any ongoing loading processes.
+ *
+ * @remarks
+ * The service uses a private signal `_loadingCount` to maintain the count of active
+ * loading operations. The `loading$` signal emits `true` when there is at least one
+ * active loading operation and `false` otherwise.
+ *
+ * @example
+ * ```typescript
+ * constructor(private loadingService: LoadingService) {}
+ *
+ * someMethod() {
+ *   this.loadingService.start();
+ *   // Perform some async operation
+ *   this.loadingService.stop();
+ * }
+ * ```
+ *
+ * @public
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -8,25 +31,25 @@ export class LoadingService {
   /**
    * The count of active loading operations.
    */
-  private readonly _loadingCount = new BehaviorSubject<number>(0);
+  private readonly _loadingCount = signal(0);
 
   /**
-   * Observable that emits a boolean value indicating whether the loading state is active or not.
-   * Use this property to subscribe to loading state changes.
+   * A signal that emits `true` when there is at least one active loading operation
+   * and `false` otherwise.
    */
-  readonly loading$ = this._loadingCount.pipe(map(loadingCount => loadingCount > 0), shareReplay(1));
+  readonly loading = computed(() => this._loadingCount() > 0);
 
   /**
    * Increases the loading count by 1, indicating that a loading operation has started.
    */
   start(): void {
-    this._loadingCount.next(this._loadingCount.value + 1);
+    this._loadingCount.update((count) => count + 1);
   }
 
   /**
    * Stops the loading process by decrementing the loading count.
    */
   stop(): void {
-    this._loadingCount.next(this._loadingCount.value - 1);
+    this._loadingCount.update((count) => Math.max(0, count - 1));
   }
 }
