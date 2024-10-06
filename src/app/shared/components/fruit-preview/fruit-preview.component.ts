@@ -24,12 +24,12 @@ import { fruitPreviewStore } from "./fruit-preview.store";
   template: `
     <div class="fruit-preview">
       @if (cs.imgUrl()) {
-        <div class="fruit-preview__photo">
+        <div class="fruit-preview__photo" data-testid="photo-container">
           <img [ngSrc]="cs.imgUrl()!" [alt]="cs.imgAlt()" fill />
         </div>
       }
 
-      <div class="fruit-preview__name">
+      <div class="fruit-preview__name" data-testid="name-container">
         <span
           class="block leading-[1em] p-2 bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 dark:text-white"
           >{{ cs.fruitName() }}</span

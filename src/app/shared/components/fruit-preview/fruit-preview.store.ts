@@ -1,4 +1,4 @@
-import { inject, computed, effect, untracked } from "@angular/core";
+import { inject, computed } from "@angular/core";
 import { tapResponse } from "@ngrx/operators";
 import {
   signalStore,
@@ -11,7 +11,7 @@ import {
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
 import { MediaService } from "@shared/services/media/media.service";
 import { Fruit, MediaPhoto, MediaSize, Nullable } from "@shared/types";
-import { lastValueFrom, pipe, switchMap, tap } from "rxjs";
+import { of, pipe, switchMap, tap } from "rxjs";
 import { PHOTO_DEFAULT_OPTIONS } from "@tokens";
 
 type FruitPreviewState = {
@@ -33,8 +33,8 @@ export const fruitPreviewStore = signalStore(
 
   withComputed((state) => ({
     fruitName: computed(() => state.fruit()?.name ?? null),
-    imgUrl: computed(() => state.photo()?.url[MediaSize.SMALL]),
-    imgAlt: computed(() => state.photo()?.alt),
+    imgUrl: computed(() => state.photo()?.url[MediaSize.SMALL] ?? null),
+    imgAlt: computed(() => state.photo()?.alt ?? ""),
   })),
 
   withMethods((store) => ({
@@ -50,16 +50,14 @@ export const fruitPreviewStore = signalStore(
       fetchPhoto: rxMethod<Nullable<Fruit["name"]>>(
         pipe(
           tap(() => patchState(store, { photo: null })),
-          switchMap(async (fruitName) => {
-            if (!fruitName) return null;
-            return lastValueFrom(
-              mediaService.findPhoto(fruitName, photoDefaultOptions),
-            );
+          switchMap((fruitName) => {
+            if (!fruitName) return of(null);
+            return mediaService.findPhoto(fruitName, photoDefaultOptions);
           }),
           tapResponse(
             (photo) => patchState(store, { photo, loaded: true }),
             (error: any) => {
-              console.error(error);
+              console.error("Errore nel caricamento della foto", error);
               patchState(store, {
                 error: "Errore nel caricamento della foto",
                 loaded: false,
@@ -73,10 +71,7 @@ export const fruitPreviewStore = signalStore(
 
   withHooks({
     onInit(store) {
-      effect(() => {
-        const fruitName = store.fruitName();
-        untracked(() => store.fetchPhoto(fruitName));
-      });
+      store.fetchPhoto(store.fruitName);
     },
   }),
 );

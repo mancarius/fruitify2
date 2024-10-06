@@ -1,86 +1,83 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FruitPreviewComponent } from './fruit-preview.component';
-import { FruitPreviewStore } from './fruit-preview.store';
-import { signal } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { DebugElement, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Fruit, MediaPhoto, MediaSize } from '@shared/types';
+import { of } from 'rxjs';
+import { MediaService } from '@shared/services';
+import { PHOTO_DEFAULT_OPTIONS } from '@tokens';
 
-fdescribe(FruitPreviewComponent.name, () => {
-  let component: FruitPreviewComponent;
+describe('FruitPreviewComponent', () => {
   let fixture: ComponentFixture<FruitPreviewComponent>;
-  const mockComponentStore = { vm: () => {}, setFruit: () => {} } as any;
+  let debugElement: DebugElement;
+  let mediaService: jasmine.SpyObj<MediaService>;
 
-  beforeEach(() => {
-    TestBed.overrideComponent(FruitPreviewComponent, {
-      add: {
-        providers: [{ provide: FruitPreviewStore, useValue: mockComponentStore }],
-      },
-      remove: {
-        providers: [FruitPreviewStore],
-      },
-    });
+  const mockFruit = { name: 'Apple' } as Fruit;
+  const mockPhoto = {
+    url: { [MediaSize.SMALL]: 'http://example.com/apple.jpg' },
+    alt: 'Apple photo',
+  } as MediaPhoto;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FruitPreviewComponent],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        {
+          provide: MediaService,
+          useValue: jasmine.createSpyObj("MediaService", ['findPhoto']),
+        },
+        {
+          provide: PHOTO_DEFAULT_OPTIONS,
+          useValue: { width: 100, height: 100 },
+        }
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FruitPreviewComponent);
-    component = fixture.componentInstance;
-    component['vm'] = signal({ fruitName: '', imgUrl: "image.jpg", imgAlt: "example", error: null, loaded: true });
-    fixture.autoDetectChanges();
+    debugElement = fixture.debugElement;
+    mediaService = TestBed.inject(MediaService) as jasmine.SpyObj<MediaService>;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('should display the fruit name', async () => {
+    mediaService.findPhoto.and.returnValue(of(mockPhoto));
 
-  it('should not display the image if not loaded', () => {
-    // Arrange
-    component['vm'] = signal({ fruitName: '', imgUrl: '', imgAlt: "example", error: null, loaded: false });
-    // Act
+    fixture.componentRef.setInput('fruit', mockFruit);
     fixture.detectChanges();
-    // Assert
-    const img = fixture.nativeElement.querySelector('img');
-    expect(img).toBeNull();
+
+    await fixture.whenStable();
+
+    const nameContainer = debugElement.query(By.css('[data-testid=name-container] span'));
+    expect(nameContainer.nativeElement.textContent).toContain(mockFruit.name);
   });
 
-  it('should set the fruit img url and alt', () => {
-    // Arrange
-    const fruitName = 'Apple';
-    const imgUrl = 'apple.jpg';
-    component['vm'] = signal({ fruitName, imgUrl, imgAlt: "example", error: null, loaded: true });
-    // Act
+  it('should display the fruit photo', async () => {
+    mediaService.findPhoto.and.returnValue(of(mockPhoto));
+
+    fixture.componentRef.setInput('fruit', mockFruit);
     fixture.detectChanges();
-    // Assert
-    const img = fixture.nativeElement.querySelector('img');
-    console.log(fixture.nativeElement);
-    expect(img.src).toContain(imgUrl);
-    expect(img.alt).toEqual('example');
+
+    await fixture.whenStable();
+
+    const photoContainer = debugElement.query(By.css('[data-testid=photo-container] img'));
+    expect(photoContainer.nativeElement.src).toContain(mockPhoto.url[MediaSize.SMALL]);
+    expect(photoContainer.nativeElement.alt).toBe(mockPhoto.alt);
   });
 
-  it('should set the fruit name', () => {
-    // Arrange
-    const fruitName = 'Apple';
-    component['vm'] = signal({ fruitName, imgUrl: "image.jpg", imgAlt: "example", error: null, loaded: true });
-    // Act
-    fixture.detectChanges();
-    // Assert
-    const name = fixture.nativeElement.querySelector('.fruit-preview__name');
-    expect(name.textContent).toContain(fruitName);
-  });
+  it('should not display the photo container if imgUrl is null', async () => {
+    mediaService.findPhoto.and.returnValue(of({
+      url: {
+        [MediaSize.SMALL]: undefined,
+      },
+      alt: 'Apple photo',
+    } as MediaPhoto));
 
-  it('should scale the image on hover', () => {
-    // Arrange
-    const img = fixture.nativeElement.querySelector('img');
-    // Act
-    img.dispatchEvent(new Event('mouseover'));
+    fixture.componentRef.setInput('fruit', mockFruit);
     fixture.detectChanges();
-    // Assert
-    expect(img.style.transform).toContain('scale(1.2)');
-  });
 
-  it('should reset the image scale on mouseout', () => {
-    // Arrange
-    const img = fixture.nativeElement.querySelector('img');
-    img.style.transform = 'scale(1.2)';
-    // Act
-    img.dispatchEvent(new Event('mouseout'));
-    fixture.detectChanges();
-    // Assert
-    expect(img.style.transform).toEqual('');
+    await fixture.whenStable();
+
+    const photoContainer = debugElement.query(By.css('[data-testid=photo-container]'));
+    expect(photoContainer).toBeNull();
   });
 });

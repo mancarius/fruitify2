@@ -7,7 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-fdescribe('FruitService', () => {
+describe('FruitService', () => {
   let service: FruitService;
   let httpMock: HttpTestingController;
 
