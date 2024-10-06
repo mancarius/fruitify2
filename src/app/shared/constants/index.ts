@@ -59,7 +59,7 @@ export const PEXELS_API_CONFIG = new InjectionToken<MediaServiceConfig>(
     providedIn: "root",
     factory: () => ({
       provider: MediaProvidersEnum.PEXELS,
-      baseUrl: environment.pexelsApi,
+      baseUrl: "https://api.pexels.com",
       authConfigs: [
         {
           addTo: "headers",
@@ -81,7 +81,7 @@ export const UNSPLASH_API_CONFIG = new InjectionToken<MediaServiceConfig>(
     providedIn: "root",
     factory: () => ({
       provider: MediaProvidersEnum.UNSPLASH,
-      baseUrl: environment.unsplashApi,
+      baseUrl: "https://api.unsplash.com",
       authConfigs: [
         {
           addTo: "headers",

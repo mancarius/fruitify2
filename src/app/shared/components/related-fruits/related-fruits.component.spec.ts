@@ -35,7 +35,7 @@ class TestWrapperComponent {
   fruit = signal<Fruit | null>(null);
 }
 
-fdescribe("RelatedFruitsComponent", () => {
+describe("RelatedFruitsComponent", () => {
   let wrapperCmp: TestWrapperComponent;
   let fixture: ComponentFixture<TestWrapperComponent>;
   let fruitService: jasmine.SpyObj<FruitService>;

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { MediaOptions, MediaPhoto, MediaServiceConfig, Unsplash } from '@shared/types';
 import { Observable, map } from 'rxjs';
-import { AUTH_CONFIG_CONTEXT_TOKEN } from '@tokens';
+import { AUTH_CONFIG_CONTEXT_TOKEN, MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { AbstractMediaProviderService } from '../abstract-media-provider/abstract-media-provider.service';
 
 
@@ -17,12 +17,12 @@ export class UnsplashService extends AbstractMediaProviderService {
   };
 
   constructor(
-    @Inject('MEDIA_SERVICE_CONFIG') _providerConfig: MediaServiceConfig,
+    @Inject(MEDIA_SERVICE_CONFIG_TOKEN) _providerConfig: MediaServiceConfig,
     private readonly _http: HttpClient
   ) {
     super(_providerConfig);
   }
-  
+
   override findPhoto(query: string, options: Partial<MediaOptions> = {}): Observable<MediaPhoto> {
     const queryOptions = { ...this._defaultOptions, ...options };
     const url = this._getPhotosUrl();

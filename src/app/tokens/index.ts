@@ -13,7 +13,7 @@ import {
  */
 export const MEDIA_SERVICE_CONFIG_TOKEN = new InjectionToken<
   WritableSignal<Nullable<MediaServiceConfig>>
->("MEDIA_SERVICE_CONFIG");
+>("MEDIA_SERVICE_CONFIG_TOKEN");
 
 /**
  * Context token for the authentication configuration.
