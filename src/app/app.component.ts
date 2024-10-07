@@ -28,7 +28,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     <router-outlet></router-outlet>
 
   @if (isLoading()) {
-    <div class="page-loader fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-white/50 dark:bg-gray-900/50" @fade>
+    <div
+      class="page-loader fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-white/50 dark:bg-gray-900/50"
+      @fade
+      data-testid="loading-frame">
       <mat-spinner diameter="80" color="primary"></mat-spinner>
     </div>
   }
