@@ -1,14 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-
 import { LoadingService } from './loading.service';
-import { skip, take } from 'rxjs';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+
 
 describe('LoadingService', () => {
   let service: LoadingService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LoadingService]
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        LoadingService,
+      ]
     });
     service = TestBed.inject(LoadingService);
   });
@@ -26,9 +29,9 @@ describe('LoadingService', () => {
     });
 
     it('should increase the loading count by 1', () => {
-      const initialLoadingCount = service['_loadingCount'].value;
+      const initialLoadingCount = service['_loadingCount']();
       service.start();
-      expect(service['_loadingCount'].value).toEqual(initialLoadingCount + 1);
+      expect(service['_loadingCount']()).toEqual(initialLoadingCount + 1);
     });
 
   });
@@ -42,9 +45,10 @@ describe('LoadingService', () => {
     });
 
     it('should decrease the loading count by 1', () => {
-      const initialLoadingCount = service['_loadingCount'].value;
+      const initialLoadingCount = 2;
+      service['_loadingCount'].set(initialLoadingCount);
       service.stop();
-      expect(service['_loadingCount'].value).toEqual(initialLoadingCount - 1);
+      expect(service['_loadingCount']()).toEqual(initialLoadingCount - 1);
     });
 
   });
@@ -54,25 +58,17 @@ describe('LoadingService', () => {
   describe('#isLoading', () => {
 
     it('should exists', () => {
-      expect(service.loading$).toBeTruthy();
+      expect(service.loading).toBeTruthy();
     });
 
-    it('should return true when the loading count is greater than 0', (done: DoneFn) => {
-      service.loading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
-        expect(isLoading).toEqual(true);
-        done();
-      });
+    it('should return true when start() is called and false when stopped', () => {
+      service.start();
 
-      service['_loadingCount'].next(1);
-    });
+      expect(service.loading()).toEqual(true);
 
-    it('should return false when the loading count is 0', (done: DoneFn) => {
-      service.loading$.pipe(skip(1), take(1)).subscribe((isLoading) => {
-        expect(isLoading).toEqual(false);
-        done();
-      });
-      
-      service['_loadingCount'].next(0);
+      service.stop();
+
+      expect(service.loading()).toEqual(false);
     });
 
   });
