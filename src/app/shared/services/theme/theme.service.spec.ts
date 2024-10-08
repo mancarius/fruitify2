@@ -1,13 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { ThemeService } from './theme.service';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('ThemeService', () => {
   let service: ThemeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ThemeService],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        ThemeService
+      ],
     });
+
     service = TestBed.inject(ThemeService);
   });
 
@@ -17,12 +22,12 @@ describe('ThemeService', () => {
 
   it('should toggle theme', () => {
     // Arrange
-    const isDarkTheme = service.isDarkTheme();
+    const isDarkTheme = service.isDarkActive();
     // Act
     service.toggleTheme();
     TestBed.flushEffects();
     // Assert
-    expect(service.isDarkTheme()).toBe(!isDarkTheme);
+    expect(service.isDarkActive()).toBe(!isDarkTheme);
   });
 
   it('should add dark class', () => {
