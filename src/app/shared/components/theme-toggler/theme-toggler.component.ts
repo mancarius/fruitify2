@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,10 +8,14 @@ import { ThemeService } from '@shared/services/theme/theme.service';
 @Component({
   selector: 'app-theme-toggler',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
   template: `
-    <button mat-icon-button class="dark:text-gray-100 text-yellow-500 transition-colors" (click)="toggleTheme()" [matTooltip]="tooltipMessage()">
+    <button mat-icon-button
+      class="dark:text-gray-100 text-yellow-500 transition-colors"
+      (click)="toggleTheme()"
+      [matTooltip]="tooltipMessage()"
+      data-testid="theme-toggler"
+    >
       <mat-icon>{{ iconName() }}</mat-icon>
     </button>
   `,
@@ -19,9 +23,9 @@ import { ThemeService } from '@shared/services/theme/theme.service';
 export class ThemeTogglerComponent {
   private readonly _themeService = inject(ThemeService);
 
-  readonly isDarkTheme = this._themeService.isDarkTheme;
-  readonly iconName = computed(() => this.isDarkTheme() ? 'dark_mode' : 'light_mode' );
-  readonly tooltipMessage = computed(() => this.isDarkTheme() ?  'Switch to dark theme' : 'Switch to light theme');
+  readonly isDarkTheme = this._themeService.isDarkActive;
+  readonly iconName = computed(() => this.isDarkTheme() ? 'dark_mode' : 'light_mode');
+  readonly tooltipMessage = computed(() => this.isDarkTheme() ? 'Switch to dark theme' : 'Switch to light theme');
 
   readonly toggleTheme = () => this._themeService.toggleTheme();
 }
