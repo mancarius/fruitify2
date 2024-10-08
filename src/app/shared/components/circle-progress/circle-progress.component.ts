@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 /**
  * Component for a circular progress bar.
@@ -13,7 +13,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 @Component({
   selector: 'app-circle-progress',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'overflow-hidden relative'
   },
@@ -48,7 +47,7 @@ export class CircleProgressComponent {
   readonly progress = input<number>(0);
 
   protected readonly radiusPercent = computed(() => `${this.radius()}%`);
-  
+
   /** Raggio del cerchio */
   protected readonly strokeDashoffset = computed(() =>
     calculateStrokeDashoffset(this.strokeDasharray(), this.progress()));
