@@ -12,14 +12,19 @@ export class ThemeService {
    * Determines whether the current theme is dark.
    * @returns {boolean} True if the current theme is dark, false otherwise.
    */
-  readonly isDarkTheme = computed(() => this._theme() === 'dark');
+  readonly isDarkActive = computed(() => this._isDark(this._theme()));
 
   constructor() {
     this._initializeTheme();
 
     effect(() => {
-      this._toStorage(untracked(this._theme));
-      this._toggleDarkClass('dark', this.isDarkTheme());
+      const theme = this._theme();
+      const isDarkActive = this._isDark(theme);
+
+      untracked(() => {
+        this._toggleDarkClass('dark', isDarkActive);
+        this._toStorage(theme);
+      });
     });
   }
 
@@ -27,7 +32,7 @@ export class ThemeService {
    * Toggles the theme between light and dark.
    */
   toggleTheme() {
-    this._theme.set(this.isDarkTheme() ? 'light' : 'dark');
+    this._theme.update(currTheme => currTheme === 'dark' ? 'light' : 'dark');
   }
 
   /**
@@ -67,5 +72,9 @@ export class ThemeService {
 
   private _toStorage(theme: Theme) {
     localStorage.setItem('theme', theme);
+  }
+
+  private _isDark(theme: Theme) {
+    return theme === 'dark';
   }
 }
