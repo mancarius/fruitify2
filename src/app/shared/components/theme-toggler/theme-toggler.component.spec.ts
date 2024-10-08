@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ThemeTogglerComponent } from './theme-toggler.component';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('ThemeTogglerComponent', () => {
   let component: ThemeTogglerComponent;
@@ -8,10 +9,11 @@ describe('ThemeTogglerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ThemeTogglerComponent]
+      imports: [ThemeTogglerComponent],
+      providers: [provideExperimentalZonelessChangeDetection()]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ThemeTogglerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -19,5 +21,32 @@ describe('ThemeTogglerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should toggle the button icon when clicked', async () => {
+    // Arrange
+    const button = fixture.nativeElement.querySelector('[data-testid="theme-toggler"]');
+    let previousIconName = button.textContent;
+
+    // Act
+    button.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    // Assert
+    expect(button.textContent).not.toBe(previousIconName);
+    expect(button.textContent).toBe(component.iconName());
+    previousIconName = button.textContent;
+
+    // Act
+    button.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    // Assert
+    expect(button.textContent).not.toBe(previousIconName);
+    expect(button.textContent).toBe(component.iconName());
   });
 });
