@@ -1,5 +1,4 @@
 import { Component, input } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { Fruit } from "@shared/types";
 import { FruitPreviewComponent } from "../fruit-preview/fruit-preview.component";
 import { FruitPreviewPlaceholderComponent } from "@shared/components/fruit-preview-placeholder/fruit-preview-placeholder.component";
@@ -10,7 +9,6 @@ import { EncodeToPathSegmentPipe } from "@pipes";
   selector: "app-fruit-list",
   standalone: true,
   imports: [
-    CommonModule,
     FruitPreviewComponent,
     FruitPreviewPlaceholderComponent,
     RouterLink,
@@ -38,14 +36,17 @@ import { EncodeToPathSegmentPipe } from "@pipes";
               <app-fruit-preview
                 class="grow flex justify-center items-center"
                 [fruit]="fruit"
+                data-testid="fruit-preview"
               ></app-fruit-preview>
             } @loading (after 100ms; minimum 1s) {
               <app-fruit-preview-placeholder
                 class="grow"
+                data-testid="fruit-preview-loading-placeholder"
               ></app-fruit-preview-placeholder>
             } @placeholder (minimum 500ms) {
               <app-fruit-preview-placeholder
                 class="grow"
+                data-testid="fruit-preview-placeholder"
               ></app-fruit-preview-placeholder>
             }
           </a>
@@ -54,6 +55,7 @@ import { EncodeToPathSegmentPipe } from "@pipes";
         <li class="col-span-full">
           <p
             class="text-center bg-white/80 text-black dark:bg-gray-900/80 dark:text-white w-fit px-2 m-0 mx-auto"
+            data-testid="no-fruits-message"
           >
             No fruits found
           </p>

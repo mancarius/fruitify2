@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CircleProgressComponent } from './circle-progress.component';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
-fdescribe('CircleProgressComponent', () => {
+describe('CircleProgressComponent', () => {
   let component: CircleProgressComponent;
   let fixture: ComponentFixture<CircleProgressComponent>;
 
