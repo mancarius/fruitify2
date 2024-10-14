@@ -55,6 +55,24 @@ export default [
     ],
   },
 
+  // Application Error
+  {
+    path: 'error',
+    pathMatch: 'full',
+    component: MinimalHorizontalLayoutComponent,
+    children: [
+      {
+        title: 'Error',
+        path: '',
+        pathMatch: 'full',
+        loadComponent: async () => {
+          const c = await import('@pages/error/error.component');
+          return c.ErrorComponent;
+        },
+      }
+    ],
+  },
+
   // Redirect to `not-found` if no route matches
   {
     path: '**',
