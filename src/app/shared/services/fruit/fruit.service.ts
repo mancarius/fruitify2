@@ -1,50 +1,59 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable, Injector, computed, inject, signal } from "@angular/core";
 import { Fruit, QueryParams } from "@shared/types";
 import { HttpClient } from "@angular/common/http";
 import {
-  BehaviorSubject,
   Observable,
   filter,
   forkJoin,
   map,
-  shareReplay,
+  of,
+  switchMap,
+  take,
   tap,
 } from "rxjs";
 import { API_BASE_PATHNAME } from "@shared/constants";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: "root",
 })
 export class FruitService {
   private readonly _baseUrl = inject(API_BASE_PATHNAME);
-  private readonly _entities = new BehaviorSubject<Fruit[]>([]);
+  private readonly _entities = signal<Fruit[]>([]);
   private readonly _http = inject(HttpClient);
-  private readonly _loaded = new BehaviorSubject<boolean>(false);
+  private readonly _injector = inject(Injector)
+  private readonly _loaded = signal(false);
+
+  readonly loaded = computed(() => this._loaded());
 
   /** Observable stream of entities. */
-  readonly entities$ = this._entities.pipe(
-    map(function (fruits) {
-      return fruits.sort((a, b) => a.name.localeCompare(b.name));
-    }),
-    shareReplay(1),
-  );
+  readonly entities = computed(() => {
+    return this._entities().sort((a, b) => a.name.localeCompare(b.name));
+  });
 
   /**
    * Retrieves all fruits.
    * @returns An Observable that emits an array of Fruit objects.
    */
   getAll(): Observable<Fruit[]> {
-    return this.entities$.pipe(
-      tap(() => {
-        if (!this._loaded.value) {
+    return toObservable(this.entities, {
+      injector: this._injector,
+    }).pipe(
+      take(1),
+      switchMap((entities) => {
+        if (!this._loaded()) {
           const url = this._composeUrl("all");
-          this._http.get<Fruit[]>(url).subscribe((entities) => {
-            this.setLoaded(true);
-            this._entities.next(entities);
-          });
+          return this._http.get<Fruit[]>(url).pipe(
+            tap(() => {
+              this.setLoaded(true);
+              this._entities.set(entities);
+            })
+          );
         }
+
+        return of(entities);
       }),
-      filter(() => this._loaded.value),
+      filter(() => this._loaded()),
     );
   }
 
@@ -68,11 +77,11 @@ export class FruitService {
   getWithQuery(
     query: QueryParams<keyof Omit<Fruit, "nutritions" | "id">>,
   ): Observable<Fruit[]> {
-    return forkJoin(
-      Object.entries(query).map(([key, value]) =>
-        this._http.get<Fruit[]>(`${this._composeUrl(key)}/${value}`),
-      ),
-    ).pipe(
+    const entries = Object.entries(query);
+    const urls = entries.map(([key, value]) => `${this._composeUrl(key)}/${value}`);
+    const httpRequests = urls.map((url) => this._http.get<Fruit[]>(url));
+
+    return forkJoin(httpRequests).pipe(
       map((results) => results.flat()),
       tap((entities) => this._patchEntities(entities)),
       map(function (fruits) {
@@ -86,7 +95,7 @@ export class FruitService {
    * @param loaded - The loaded state to set.
    */
   setLoaded(loaded: boolean): void {
-    this._loaded.next(loaded);
+    this._loaded.set(loaded);
   }
 
   /**
@@ -97,7 +106,7 @@ export class FruitService {
    * @param key - The key to be appended to the URL.
    * @returns The composed URL.
    */
-  _composeUrl(key: string = ""): string {
+  _composeUrl(key = ""): string {
     const url = this._baseUrl;
     const keyList = ["all", "family", "genus", "order"];
 
@@ -109,10 +118,10 @@ export class FruitService {
    * @param entities - The entities to be patched.
    */
   _patchEntities(entities: Fruit[]): void {
-    const currentEntities = this._entities.value;
+    const currentEntities = this._entities();
 
     for (let entity of entities) {
-      const index = this._entities.value.findIndex((e) => e.id === entity.id);
+      const index = this._entities().findIndex((e) => e.id === entity.id);
 
       if (index > -1) {
         currentEntities[index] = entity;
@@ -121,6 +130,6 @@ export class FruitService {
       }
     }
 
-    this._entities.next(currentEntities);
+    this._entities.set(currentEntities);
   }
 }
