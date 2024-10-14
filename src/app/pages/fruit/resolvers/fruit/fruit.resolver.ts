@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
+import { RedirectCommand, ResolveFn, Router } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
 import { catchError, defer, finalize, of } from 'rxjs';
 import { Fruit } from '@shared/types';
@@ -9,6 +9,7 @@ export const fruitResolver: ResolveFn<Fruit | null> = (route, state) => {
   const service = inject(FruitService);
   const loader = inject(LoadingService);
   const fruitId = route.queryParamMap.get('fruitId');
+  const router = inject(Router);
 
   loader.start();
 
@@ -17,6 +18,12 @@ export const fruitResolver: ResolveFn<Fruit | null> = (route, state) => {
     : of(null)
   ).pipe(
     finalize(() => loader.stop()),
-    catchError(() => of(null))
+    catchError((err: any) => {
+      console.error('Failed to retrieve fruit', err);
+      const errorPath = router.parseUrl('/error');
+      return of(new RedirectCommand(errorPath, {
+        skipLocationChange: true,
+      }));
+    })
   );
 };
