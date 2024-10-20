@@ -1,4 +1,11 @@
-import { Component, forwardRef } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  forwardRef,
+  inject,
+  OnInit,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
@@ -11,9 +18,12 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
+  TouchedChangeEvent,
+  StatusChangeEvent
 } from "@angular/forms";
 import { Nullable, SearchContext } from "@shared/types";
 import { MatSelectModule } from "@angular/material/select";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 type ChangeFn = (value: Record<SearchContext, Nullable<string>> | null) => void;
 type TouchedFn = () => void;
@@ -73,6 +83,7 @@ type TouchedFn = () => void;
           aria-label="Search"
           type="submit"
           class="dark:text-white text-black"
+          [disabled]="fg.disabled"
         >
           <mat-icon>search</mat-icon>
         </button>
@@ -88,7 +99,9 @@ type TouchedFn = () => void;
     `,
   ],
 })
-export class FruitsSearchComponent implements ControlValueAccessor {
+export class FruitsSearchComponent implements OnInit, ControlValueAccessor {
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _cdRef = inject(ChangeDetectorRef);
   private readonly _defaultContext: SearchContext = "name";
   readonly contextOptions: SearchContext[] = [
     "name",
@@ -103,8 +116,21 @@ export class FruitsSearchComponent implements ControlValueAccessor {
     value: new FormControl<string>(""),
   });
 
-  private _change: ChangeFn = () => {};
-  private _touched: TouchedFn = () => {};
+  private _change: ChangeFn = () => { };
+  private _touched: TouchedFn = () => { };
+
+  ngOnInit() {
+    this.fg.events
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((event) => {
+        if (event instanceof TouchedChangeEvent) {
+          this._touched();
+        }
+        if (event instanceof StatusChangeEvent) {
+          this._cdRef.markForCheck();
+        }
+      });
+  }
 
   protected onSubmit() {
     this._touched();
@@ -119,11 +145,7 @@ export class FruitsSearchComponent implements ControlValueAccessor {
   }
 
   writeValue(value: Record<SearchContext, Nullable<string>> | null): void {
-    const context = value ? (Object.keys(value)[0] as SearchContext) : null;
-    this.fg.patchValue({
-      context: context ?? this._defaultContext,
-      value: context && value ? value[context] : "",
-    });
+    this.fg.patchValue(this._getContextAndValueFromObj(value));
   }
 
   registerOnChange(fn: ChangeFn): void {
@@ -135,7 +157,31 @@ export class FruitsSearchComponent implements ControlValueAccessor {
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    if (isDisabled && this.fg.enabled) this.fg.disable();
-    else if (!isDisabled && this.fg.disabled) this.fg.enable();
+    if (isDisabled) {
+      this._disableForm();
+    } else {
+      this._enableForm();
+    }
+  }
+
+  private _disableForm() {
+    this.fg.enabled && this.fg.disable();
+  }
+
+  private _enableForm() {
+    this.fg.disabled && this.fg.enable();
+  }
+
+  private _getContextAndValueFromObj(
+    value: Record<SearchContext, Nullable<string>> | null,
+  ): {
+    context: SearchContext;
+    value: Nullable<string>;
+  } {
+    const context = value ? (Object.keys(value)[0] as SearchContext) : null;
+    return {
+      context: context ?? this._defaultContext,
+      value: context && value ? value[context] : "",
+    };
   }
 }
