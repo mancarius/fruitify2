@@ -1,4 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { environment } from '@env/environment';
 import { API_BASE_PATHNAME, FRUITYVICE_PROXY_BASE_URL } from '@shared/constants';
 
 /**
@@ -8,14 +10,20 @@ import { API_BASE_PATHNAME, FRUITYVICE_PROXY_BASE_URL } from '@shared/constants'
  * @returns The modified HTTP request.
  */
 export const fruityviceProxyInterceptor: HttpInterceptorFn = (req, next) => {
-  const url = new URL(req.url);
-  const matchesBaseUrl = url.pathname.includes(API_BASE_PATHNAME);
+  // Skip this interceptor in development mode because of the CORS policy. The proxy server will be used instead.
+  if (!environment.production) {
+    return next(req);
+  }
+
+  const apiPathname = inject(API_BASE_PATHNAME);
+  const matchesBaseUrl = req.url.includes(apiPathname);
 
   if (!matchesBaseUrl) {
     return next(req);
   }
 
-  url.hostname = FRUITYVICE_PROXY_BASE_URL;
+  const url = new URL(inject(FRUITYVICE_PROXY_BASE_URL));
+  url.pathname = apiPathname;
   url.protocol = 'https';
   url.port = '';
 
