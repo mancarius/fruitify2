@@ -24,7 +24,7 @@ class TestHostComponent {
   public onSearchValueChange(value: any) { }
 }
 
-fdescribe('FruitsSearchComponent', () => {
+describe('FruitsSearchComponent', () => {
   let testHost: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let searchInput: HTMLInputElement;
