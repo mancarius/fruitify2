@@ -9,7 +9,7 @@ import { FruitPreviewComponent } from "@shared/components/fruit-preview/fruit-pr
 import { fruitsStore } from "./fruits.store";
 import { ActivatedRoute, Params, RouterLink } from "@angular/router";
 import { NgIf } from "@angular/common";
-import { map } from "rxjs";
+import { filter, map } from "rxjs";
 
 @Component({
   selector: "app-home",
@@ -124,7 +124,9 @@ export class FruitsComponent implements OnInit {
   ngOnInit() {
     this.cs.setFruits(this.fruits);
 
-    this.cs.search(this.searchControl.valueChanges);
+    this.cs.search(this.searchControl.valueChanges.pipe(
+      filter(() => this.searchControl.touched)
+    ));
 
     this._activatedRoute.queryParams
       .pipe(
