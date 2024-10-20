@@ -1,4 +1,4 @@
-import { Inject, Injectable, Signal, effect } from '@angular/core';
+import { Inject, Injectable, Signal, effect, untracked } from '@angular/core';
 import { PhotoFinder, MediaPhoto, MediaOptions, MediaServiceConfig, MediaProvidersEnum } from '../../types';
 import { Observable } from 'rxjs';
 import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
@@ -14,7 +14,7 @@ import { UnsplashService } from '../unsplash/unsplash.service';
   providedIn: 'root'
 })
 export class MediaService implements PhotoFinder {
-  private _providerMap = new Map<MediaProvidersEnum, AbstractMediaProviderService>();
+  private readonly _providerMap = new Map<MediaProvidersEnum, AbstractMediaProviderService>();
   /**
    * The media provider used by the media service.
    */
@@ -30,7 +30,7 @@ export class MediaService implements PhotoFinder {
 
     effect(() => {
       if (this._provider?.providerName !== mediaServiceConfig()?.provider) {
-        this._assignProvider(mediaServiceConfig())
+        untracked(() => this._assignProvider(mediaServiceConfig()))
       }
     });
   }
@@ -72,7 +72,7 @@ export class MediaService implements PhotoFinder {
 
     this._createProviderIfNotExists(config);
 
-    return this._providerMap.get(config.provider)!;
+    return this._providerMap.get(config.provider) ?? null;
   }
 
   private _createProviderIfNotExists(config: MediaServiceConfig): void {
