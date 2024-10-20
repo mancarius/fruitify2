@@ -13,7 +13,12 @@ import {
  */
 export const MEDIA_SERVICE_CONFIG_TOKEN = new InjectionToken<
   WritableSignal<Nullable<MediaServiceConfig>>
->("MEDIA_SERVICE_CONFIG_TOKEN");
+>("MEDIA_SERVICE_CONFIG_TOKEN", {
+  providedIn: "root",
+  factory: () => {
+    throw new Error("MEDIA_SERVICE_CONFIG_TOKEN is not provided");
+  },
+});
 
 /**
  * Context token for the authentication configuration.
@@ -28,6 +33,12 @@ export const AUTH_CONFIG_CONTEXT_TOKEN = new HttpContextToken<
  */
 export const MAX_SUGGESTIONS_PREVIEW_OPTION = new InjectionToken<number>(
   "MAX_SUGGESTIONS_PREVIEW_OPTION",
+  {
+    providedIn: "root",
+    factory: () => {
+      throw new Error("MAX_SUGGESTIONS_PREVIEW_OPTION is not provided");
+    },
+  }
 );
 
 /**
