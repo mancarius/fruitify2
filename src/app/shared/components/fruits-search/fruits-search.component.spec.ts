@@ -1,8 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { FruitsSearchComponent } from './fruits-search.component';
-import { Component } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+import { MatSelectHarness } from '@angular/material/select/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
 
 @Component({
   standalone: true,
@@ -17,63 +21,93 @@ class TestHostComponent {
       .subscribe(value => this.onSearchValueChange(value));
   }
 
-  public onSearchValueChange(value: Event | string | null) {}
+  public onSearchValueChange(value: any) { }
 }
 
-describe('FruitsSearchComponent', () => {
+fdescribe('FruitsSearchComponent', () => {
   let testHost: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;
   let searchInput: HTMLInputElement;
   let searchButton: HTMLButtonElement;
+  let loader: HarnessLoader;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FruitsSearchComponent, TestHostComponent, NoopAnimationsModule]
-    })
-    .compileComponents();
-    
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FruitsSearchComponent, TestHostComponent],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideNoopAnimations()
+      ],
+    });
+
     fixture = TestBed.createComponent(TestHostComponent);
     testHost = fixture.componentInstance;
     fixture.detectChanges();
     searchInput = fixture.nativeElement.querySelector('input[type="search"]');
     searchButton = fixture.nativeElement.querySelector('button[type="submit"]');
+    loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should create', () => {
     expect(testHost).toBeTruthy();
   });
 
-  it('should populate html input with component input value', waitForAsync(() => {
-    testHost['searchControl'].setValue('banana');
 
-    fixture.detectChanges();
+  it('should set default context correctly', () => {
+    expect(testHost['searchControl'].value).toEqual(null);
+  });
 
-    fixture.whenStable().then(() => {
-      expect(searchInput.value).toBe('banana');
-    });
-  }));
+  it('should change context when a new option is selected', async () => {
+    const select = await loader.getHarness(MatSelectHarness);
+    await select.open();
+    const options = await select.getOptions();
 
-  it('should emit change event when form submit', waitForAsync(() => {
-    spyOn(testHost, 'onSearchValueChange');
-    testHost['searchControl'].setValue('apple');
-
-    fixture.detectChanges();
+    await options[1].click();
     searchButton.click();
 
-    fixture.whenStable().then(() => {
-      expect(testHost.onSearchValueChange).toHaveBeenCalledWith('apple');
-    });
-  }));
+    // Select the second option, e.g., "order"
+    await fixture.whenStable();
 
-  it('should be disabled when control is disabled', waitForAsync(() => {
+    const input = await loader.getHarness(MatInputHarness);
+    const inputPlaceholder = await input.getPlaceholder();
+
+    expect(inputPlaceholder).toBe('Search fruits by order');
+  });
+
+  it('should change input value when form control value changes', async () => {
+    testHost['searchControl'].setValue({ name: 'banana' });
+
+    await fixture.whenStable();
+
+    expect(searchInput.value).toBe('banana');
+  });
+
+  it('should emit correct value on form submit', async () => {
+    spyOn(testHost, 'onSearchValueChange');
+    const select = await loader.getHarness(MatSelectHarness);
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+
+    await fixture.whenStable();
+
+    const input = await loader.getHarness(MatInputHarness);
+    await input.setValue('apple');
+
+    searchButton.click();
+
+    await fixture.whenStable();
+
+    expect(testHost.onSearchValueChange).toHaveBeenCalledWith({ name: 'apple' });
+  });
+
+  it('should disable form controls when control is disabled', async () => {
     testHost['searchControl'].disable();
 
-    fixture.detectChanges();
+    await fixture.whenStable();
 
-    fixture.whenStable().then(() => {
-      expect(searchInput.disabled).toBeTrue();
-      expect(searchButton.disabled).toBeTrue();
-    });
-  }));
+    expect(searchInput.disabled).toBeTrue();
+    expect(searchButton.disabled).toBeTrue();
+  });
+
 });
-
