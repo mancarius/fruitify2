@@ -10,7 +10,7 @@ import { PexelsService } from '../pexels/pexels.service';
 import { UnsplashService } from '../unsplash/unsplash.service';
 
 
-fdescribe('MediaService', () => {
+describe('MediaService', () => {
   let service: MediaService;
   let pexelsService: PexelsService;
 
