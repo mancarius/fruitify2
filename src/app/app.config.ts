@@ -18,7 +18,7 @@ import { provideServiceWorker } from "@angular/service-worker";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { MediaServiceConfig } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
-import { authenticationInterceptor } from "@core/interceptors";
+import { authenticationInterceptor, fruityviceProxyInterceptor } from "@core/interceptors";
 import { PEXELS_API_CONFIG } from "@shared/constants";
 
 export const appConfig: ApplicationConfig = {
@@ -39,12 +39,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: "registerWhenStable:30000",
     }),
 
-    provideServiceWorker("ngsw-worker.js", {
-      enabled: !isDevMode(),
-      registrationStrategy: "registerWhenStable:30000",
-    }),
-
-    provideHttpClient(withInterceptors([authenticationInterceptor])),
+    provideHttpClient(withInterceptors([authenticationInterceptor, fruityviceProxyInterceptor])),
 
     {
       provide: MEDIA_SERVICE_CONFIG_TOKEN,
