@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Params, RedirectCommand, ResolveFn, Router } from '@angular/router';
 import { FruitService } from '@shared/services/fruit/fruit.service';
-import { catchError, defer, finalize, of } from 'rxjs';
+import { catchError, iif, finalize, of, map } from 'rxjs';
 import { Fruit, QueryParams } from '@shared/types';
 import { LoadingService } from '@shared/services/loading/loading.service';
 
@@ -13,10 +13,12 @@ export const fruitsResolver: ResolveFn<Fruit[]> = (route, state) => {
 
   loader.start();
 
-  return defer(() => Object.keys(query).length
-    ? service.getWithQuery(query)
-    : service.getAll()
+  return iif(
+    () => Object.keys(query).length > 0,
+    service.getWithQuery(query),
+    service.getAll()
   ).pipe(
+    map((fruits) => fruits.sort((a, b) => a.name.localeCompare(b.name))),
     finalize(() => loader.stop()),
     catchError((err: any) => {
       console.error('Failed to retrieve fruits', err);
