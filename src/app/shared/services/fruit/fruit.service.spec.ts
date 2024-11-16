@@ -39,15 +39,24 @@ describe('FruitService', () => {
     const fruits$ = service.getAll();
     const fruitsPromise = firstValueFrom(fruits$);
 
+
     const req = httpMock.expectOne('http://mock-api.com/fruits/all');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method)
+      .withContext('Expected request method to be GET')
+      .toBe('GET');
     req.flush(mockFruits);
 
     const fruits = await fruitsPromise;
 
-    expect(fruits.length).toBe(2);
-    expect(fruits[0].name).toBe('Apple');
-    expect(fruits[1].name).toBe('Banana');
+    expect(fruits.length)
+      .withContext('Expected 2 fruits to be retrieved')
+      .toBe(2);
+    expect(fruits[0].name)
+      .withContext('Expected the first fruit to be an Apple')
+      .toBe('Apple');
+    expect(fruits[1].name)
+      .withContext('Expected the second fruit to be a Banana')
+      .toBe('Banana');
   });
 
   it('should retrieve a fruit by ID', async () => {
@@ -57,12 +66,16 @@ describe('FruitService', () => {
     const fruitPromise = firstValueFrom(fruit$);
 
     const req = httpMock.expectOne('http://mock-api.com/fruits/1');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method)
+      .withContext('Expected request method to be GET')
+      .toBe('GET');
     req.flush(mockFruit);
 
     const fruit = await fruitPromise;
 
-    expect(fruit).toEqual(mockFruit);
+    expect(fruit)
+      .withContext('Expected the retrieved fruit to be an Apple')
+      .toEqual(mockFruit);
   });
 
   it('should retrieve fruits with query parameters', async () => {
@@ -73,12 +86,18 @@ describe('FruitService', () => {
     const fruitsPromise = firstValueFrom(fruits$);
 
     const req = httpMock.expectOne('http://mock-api.com/fruits/genus/Malus');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method)
+      .withContext('Expected request method to be GET')
+      .toBe('GET');
     req.flush([mockFruits[0]]);
 
     const fruits = await fruitsPromise;
 
-    expect(fruits.length).toBe(1);
-    expect(fruits[0].name).toBe('Apple');
+    expect(fruits.length)
+      .withContext('Expected 1 fruit to be retrieved')
+      .toBe(1);
+    expect(fruits[0].name)
+      .withContext('Expected the retrieved fruit to be an Apple')
+      .toBe('Apple');
   });
 });

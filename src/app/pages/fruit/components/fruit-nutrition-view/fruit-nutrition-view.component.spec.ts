@@ -6,7 +6,7 @@ import { CircleProgressComponent } from '@shared/components/circle-progress/circ
 import { NUTRITION_COLORS, NUTRITION_DEFAULT_COLOR } from '@shared/constants';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
-fdescribe('FruitNutritionViewComponent', () => {
+describe('FruitNutritionViewComponent', () => {
   let component: FruitNutritionViewComponent;
   let fixture: ComponentFixture<FruitNutritionViewComponent>;
 
