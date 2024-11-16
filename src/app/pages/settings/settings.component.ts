@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatListModule, RouterLink, RouterOutlet],
+  imports: [MatCardModule, MatListModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'flex flex-col items-center p-4 w-full',
@@ -24,7 +23,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
             <a mat-list-item role="listitem" [routerLink]="['/settings/media-provider']" class="w-full">
               <div matListItemTitle class="text-black dark:text-white">Provider</div>
               <div matListItemLine class="text-slate-900 dark:text-slate-200 capitalize">{{ provider() }}</div>
-            </a> 
+            </a>
           </mat-nav-list>
         </mat-card-content>
       </mat-card>
@@ -32,7 +31,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   `,
 })
 export class SettingsComponent {
-  private readonly _mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN);
+  readonly #mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN);
 
-  readonly provider = computed(() => this._mediaServiceConfig()?.provider ?? 'Unkown');
+  readonly provider = computed(() => this.#mediaServiceConfig()?.provider ?? 'Unknown');
 }
