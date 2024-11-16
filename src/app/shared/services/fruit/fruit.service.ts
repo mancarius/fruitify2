@@ -1,15 +1,13 @@
-import { Injectable, Injector, computed, inject, signal } from "@angular/core";
+import { Injectable, computed, inject, signal } from "@angular/core";
 import { Fruit, QueryParams } from "@shared/types";
 import { HttpClient } from "@angular/common/http";
 import {
   Observable,
-  filter,
   forkJoin,
   map,
-  of,
-  switchMap,
   take,
   tap,
+  iif
 } from "rxjs";
 import { API_BASE_PATHNAME } from "@shared/constants";
 import { toObservable } from "@angular/core/rxjs-interop";
@@ -18,42 +16,36 @@ import { toObservable } from "@angular/core/rxjs-interop";
   providedIn: "root",
 })
 export class FruitService {
-  private readonly _baseUrl = inject(API_BASE_PATHNAME);
-  private readonly _entities = signal<Fruit[]>([]);
-  private readonly _http = inject(HttpClient);
-  private readonly _injector = inject(Injector)
-  private readonly _loaded = signal(false);
+  readonly #baseUrl = inject(API_BASE_PATHNAME);
+  readonly #entities = signal<Fruit[]>([]);
+  readonly #http = inject(HttpClient);
+  readonly #loaded = signal(false);
 
-  readonly loaded = computed(() => this._loaded());
+  readonly loaded = this.#loaded.asReadonly();
 
-  /** Observable stream of entities. */
-  readonly entities = computed(() => {
-    return this._entities().sort((a, b) => a.name.localeCompare(b.name));
-  });
+  readonly entities = this.#entities.asReadonly();
+
+  readonly #entities$ = toObservable(this.#entities);
 
   /**
    * Retrieves all fruits.
    * @returns An Observable that emits an array of Fruit objects.
    */
   getAll(): Observable<Fruit[]> {
-    return toObservable(this.entities, {
-      injector: this._injector,
-    }).pipe(
-      take(1),
-      switchMap((entities) => {
-        if (!this._loaded()) {
-          const url = this._composeUrl("all");
-          return this._http.get<Fruit[]>(url).pipe(
-            tap(() => {
-              this.setLoaded(true);
-              this._entities.set(entities);
-            })
-          );
-        }
+    const fetch = () => {
+      const url = this._composeUrl("all");
+      return this.#http.get<Fruit[]>(url).pipe(
+        tap((entities) => {
+          this.setLoaded(true);
+          this.#entities.set(entities);
+        })
+      );
+    }
 
-        return of(entities);
-      }),
-      filter(() => this._loaded()),
+    return iif(
+      () => this.#loaded(),
+      this.#entities$.pipe(take(1)),
+      fetch()
     );
   }
 
@@ -64,7 +56,7 @@ export class FruitService {
    */
   getById(id: number): Observable<Fruit> {
     const url = `${this._composeUrl()}/${id}`;
-    return this._http
+    return this.#http
       .get<Fruit>(url)
       .pipe(tap((entity) => this._patchEntities([entity])));
   }
@@ -79,7 +71,7 @@ export class FruitService {
   ): Observable<Fruit[]> {
     const entries = Object.entries(query);
     const urls = entries.map(([key, value]) => `${this._composeUrl(key)}/${value}`);
-    const httpRequests = urls.map((url) => this._http.get<Fruit[]>(url));
+    const httpRequests = urls.map((url) => this.#http.get<Fruit[]>(url));
 
     return forkJoin(httpRequests).pipe(
       map((results) => results.flat()),
@@ -95,7 +87,7 @@ export class FruitService {
    * @param loaded - The loaded state to set.
    */
   setLoaded(loaded: boolean): void {
-    this._loaded.set(loaded);
+    this.#loaded.set(loaded);
   }
 
   /**
@@ -107,7 +99,7 @@ export class FruitService {
    * @returns The composed URL.
    */
   _composeUrl(key = ""): string {
-    const url = this._baseUrl;
+    const url = `${this.#baseUrl}/fruits`;
     const keyList = ["all", "family", "genus", "order"];
 
     return keyList.includes(key) ? `${url}/${key}` : url;
@@ -118,10 +110,10 @@ export class FruitService {
    * @param entities - The entities to be patched.
    */
   _patchEntities(entities: Fruit[]): void {
-    const currentEntities = this._entities();
+    const currentEntities = this.#entities();
 
     for (let entity of entities) {
-      const index = this._entities().findIndex((e) => e.id === entity.id);
+      const index = this.#entities().findIndex((e) => e.id === entity.id);
 
       if (index > -1) {
         currentEntities[index] = entity;
@@ -130,6 +122,6 @@ export class FruitService {
       }
     }
 
-    this._entities.set(currentEntities);
+    this.#entities.set(currentEntities);
   }
 }
