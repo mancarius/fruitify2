@@ -11,7 +11,6 @@ import { NgTemplateOutlet } from "@angular/common";
 import { RelatedFruitsStore } from "./related-fruits.store";
 import { Fruit, Nullable } from "@shared/types";
 import { MatButtonModule } from "@angular/material/button";
-import { RouterLink } from "@angular/router";
 import { MAX_SUGGESTIONS_PREVIEW_OPTION } from "@tokens";
 
 /**
@@ -37,7 +36,7 @@ export class RelatedFruitsContentDirective {
 @Component({
   selector: "app-related-fruits",
   standalone: true,
-  imports: [NgTemplateOutlet, MatButtonModule, RouterLink],
+  imports: [NgTemplateOutlet, MatButtonModule],
   providers: [RelatedFruitsStore],
   host: {
     class: "flex flex-col gap-4",
