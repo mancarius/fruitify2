@@ -21,11 +21,15 @@ import {
   imports: [CommonModule, CircleProgressComponent],
   host: { class: "flex gap-4" },
   template: `
+    @let rdiPercentage = recommendedDailyIntakePercentage();
+    @let name = nutrition().name;
+    @let value = nutrition().value;
+
     <div class="relative flex justify-center items-center h-[6rem] w-[8rem]">
       <app-circle-progress
         class="w-full h-full"
         [radius]="35"
-        [progress]="recommendedDailyIntakePercentage()"
+        [progress]="rdiPercentage"
         [strokeWidth]="10"
         [color]="color()"
       >
@@ -33,21 +37,20 @@ import {
       <p
         class="absolute z-[1] top-0 w-full bottom-0 flex justify-center items-center text-sm m-0"
       >
-        {{ nutrition().value }}g
+        {{ value }}g
       </p>
     </div>
 
     <div class="flex flex-col gap-2 grow-1">
       <h3 class="text-sm font-medium text-left capitalize m-0">
-        {{ nutrition().name }}
+        {{ name }}
       </h3>
       <p class="m-0">
         Fits the
         <strong
-          [ngClass]="{
-            'text-red-600': recommendedDailyIntakePercentage() > 100,
-          }"
-          >{{ recommendedDailyIntakePercentage() }}%</strong
+          [class.text-red-600]="rdiPercentage > 100"
+          data-testid="recommended-daily-intake-percentage"
+          >{{ rdiPercentage }}%</strong
         >
         of the recommended daily intake.
       </p>
@@ -55,9 +58,9 @@ import {
   `,
 })
 export class FruitNutritionViewComponent {
-  private readonly nutritionColors = inject(NUTRITION_COLORS);
+  readonly #nutritionColors = inject(NUTRITION_COLORS);
 
-  private readonly defaultNutritionColor = inject(DEFAULT_NUTRITION_COLOR);
+  readonly #defaultNutritionColor = inject(DEFAULT_NUTRITION_COLOR);
 
   readonly nutrition = input.required<{
     name: keyof Nutritions;
@@ -74,7 +77,7 @@ export class FruitNutritionViewComponent {
 
   protected readonly color = computed<string>(
     () =>
-      this.nutritionColors[this.nutrition()?.name] ??
-      this.defaultNutritionColor,
+      this.#nutritionColors[this.nutrition()?.name] ??
+      this.#defaultNutritionColor,
   );
 }
