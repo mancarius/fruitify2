@@ -14,7 +14,7 @@ export const API_BASE_PATHNAME = new InjectionToken<string>(
   "API_BASE_PATHNAME_TOKEN",
   {
     providedIn: "root",
-    factory: () => "/api/fruit",
+    factory: () => "/api",
   },
 );
 
