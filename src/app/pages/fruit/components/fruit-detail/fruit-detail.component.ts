@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, MatListModule, MatCardModule, FruitNutritionsComponent],
+  inputs: ['fruit'],
   template: `
     @if(fruit) {
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Classification</h3>
@@ -36,11 +37,17 @@ import { RouterLink } from '@angular/router';
         </mat-nav-list>
       </mat-card>
 
+
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Nutritions</h3>
 
       <mat-card class="w-full bg-white dark:bg-slate-50/10">
         <mat-card-content>
-          <app-fruit-nutritions [nutritions]="fruit.nutritions"></app-fruit-nutritions>
+          @if(fruit.nutritions) {
+            <app-fruit-nutritions [nutritions]="fruit.nutritions"></app-fruit-nutritions>
+          }
+          @else {
+            <p data-testid="no-nutritions-available">No nutritions available</p>
+          }
         </mat-card-content>
       </mat-card>
     }
@@ -50,6 +57,5 @@ import { RouterLink } from '@angular/router';
   `,
 })
 export class FruitDetailComponent {
-  @Input({ required: true })
   fruit!: Nullable<Fruit>;
 }
