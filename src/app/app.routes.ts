@@ -30,13 +30,6 @@ export default [
     loadChildren: async () => import('@pages/settings/settings.routes'),
   },
 
-  // Redirect to `fruits` if no route matches
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'fruits',
-  },
-
   // Not Found
   {
     path: 'not-found',
@@ -71,6 +64,13 @@ export default [
         },
       }
     ],
+  },
+
+  // Redirect to `fruits` if no route matches
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'fruits',
   },
 
   // Redirect to `not-found` if no route matches
