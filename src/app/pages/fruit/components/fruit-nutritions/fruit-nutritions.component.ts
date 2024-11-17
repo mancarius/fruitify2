@@ -6,6 +6,16 @@ import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutri
 type NutritionsArray<T extends Nutritions> = Array<{ name: keyof T, value: T[keyof T] }>;
 
 /**
+ * Transforms the given Nutritions object into an array of objects with name-value pairs.
+ * @param value The Nutritions object to transform.
+ * @returns An array of objects with name-value pairs.
+ */
+function transformNutritions<T extends Nutritions>(value: T): Array<{ name: keyof T, value: T[keyof T] }> {
+  return Object.entries(value).reduce((acc: ReturnType<typeof transformNutritions>, [name, value]) => [...acc, { name, value }], []);
+}
+
+
+/**
  * Component for displaying the nutritions of a fruit.
  * @example
  * <app-fruit-nutritions
@@ -32,7 +42,7 @@ type NutritionsArray<T extends Nutritions> = Array<{ name: keyof T, value: T[key
     }
     @empty {
       <li>
-        <p>No nutritions available</p>
+        <p data-testid="no-nutritions-message">No nutritions available</p>
       </li>
     }
     </ul>
@@ -44,15 +54,4 @@ export class FruitNutritionsComponent<T extends Nutritions = Nutritions> {
   trackByNutritionName(index: number, item: { name: keyof T, value: T[keyof T] }) {
     return item.name;
   }
-}
-
-
-
-/**
- * Transforms the given Nutritions object into an array of objects with name-value pairs.
- * @param value The Nutritions object to transform.
- * @returns An array of objects with name-value pairs.
- */
-function transformNutritions<T extends Nutritions>(value: T): Array<{ name: keyof T, value: T[keyof T] }> {
-  return Object.entries(value).reduce((acc: ReturnType<typeof transformNutritions>, [name, value]) => [...acc, { name, value }], []);
 }
