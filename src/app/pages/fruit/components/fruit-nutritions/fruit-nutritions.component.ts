@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Nutritions } from '@shared/types';
 import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutrition-view.component';
+
+type NutritionsArray<T extends Nutritions> = Array<{ name: keyof T, value: T[keyof T] }>;
 
 /**
  * Component for displaying the nutritions of a fruit.
@@ -23,19 +25,23 @@ import { FruitNutritionViewComponent } from '../fruit-nutrition-view/fruit-nutri
   host: { class: 'w-full flex flex-col bg-cover bg-center flex flex-col relative justify-center items-center' },
   template: `
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-    @for(nutrition of nutritionEntries; track trackByNutritionName){
+    @for(nutrition of nutritions(); track trackByNutritionName){
       <li class="rounded bg-gray-500/5 p-4">
         <app-fruit-nutrition-view [nutrition]="nutrition"></app-fruit-nutrition-view>
+      </li>
+    }
+    @empty {
+      <li>
+        <p>No nutritions available</p>
       </li>
     }
     </ul>
   `
 })
-export class FruitNutritionsComponent {
-  @Input({ alias: 'nutritions', required: true, transform: transformNutritions })
-  nutritionEntries!: Array<{ name: keyof Nutritions, value: number }>;
+export class FruitNutritionsComponent<T extends Nutritions = Nutritions> {
+  readonly nutritions = input.required<NutritionsArray<T>, T>({ transform: transformNutritions });
 
-  trackByNutritionName(index: number, item: { name: keyof Nutritions, value: number }) {
+  trackByNutritionName(index: number, item: { name: keyof T, value: T[keyof T] }) {
     return item.name;
   }
 }
@@ -47,6 +53,6 @@ export class FruitNutritionsComponent {
  * @param value The Nutritions object to transform.
  * @returns An array of objects with name-value pairs.
  */
-function transformNutritions(value: Nutritions): Array<{ name: keyof Nutritions, value: number }> {
-  return Object.entries(value).reduce((acc: any[], [name, value]) => [...acc, { name, value }], []);
+function transformNutritions<T extends Nutritions>(value: T): Array<{ name: keyof T, value: T[keyof T] }> {
+  return Object.entries(value).reduce((acc: ReturnType<typeof transformNutritions>, [name, value]) => [...acc, { name, value }], []);
 }
