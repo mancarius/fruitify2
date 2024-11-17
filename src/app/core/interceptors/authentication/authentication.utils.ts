@@ -4,12 +4,13 @@ import { MediaServiceConfig, ApiAuthConfig } from "@shared/types";
 
 /**
    * Sets the authentication information in the request headers or URL parameters based on the provided configuration.
-   * 
+   *
    * @param config - The authentication configuration.
    * @param request - The request object.
    * @returns A new request object with the updated authentication information.
    */
-export function setRequestAuth<T>(req: HttpRequest<T>, authConfigs: MediaServiceConfig['authConfigs']): HttpRequest<T> {;
+export function setRequestAuth<T>(req: HttpRequest<T>, authConfigs: MediaServiceConfig['authConfigs']): HttpRequest<T> {
+  ;
   const { headers, params } = authConfigs.reduce((acc, curr) => {
     switch (curr.addTo) {
       case 'headers':
@@ -36,7 +37,8 @@ export function setRequestAuth<T>(req: HttpRequest<T>, authConfigs: MediaService
  * @returns The updated headers object.
  */
 export function addHeader(headers: HttpHeaders, config: Extract<ApiAuthConfig, { addTo: 'headers' }>): HttpHeaders {
-  return headers.set(config.key, `${config.authorizationType} ${config.value}`.trim());
+  let value = !config.authorizationType ? config.value : `${config.authorizationType} ${config.value}`;
+  return headers.set(config.key, value.trim());
 }
 
 /**
