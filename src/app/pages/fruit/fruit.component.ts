@@ -37,7 +37,7 @@ import { MAX_SUGGESTIONS_PREVIEW_OPTION } from '@tokens';
     </article>
 
     @if(fruit()) {
-      <aside class="w-full flex flex-col gap-4 p-4 pt-0">
+      <aside class="w-full flex flex-col gap-4 p-4 pt-0" data-testid="related-fruits">
         <h3 class="font-bold text-sm text-black dark:text-white m-0 w-full max-w-screen-sm mx-auto">Related fruits</h3>
 
         <mat-card class="w-full bg-white dark:bg-slate-50/10 max-w-screen-sm mx-auto">
@@ -51,9 +51,9 @@ import { MAX_SUGGESTIONS_PREVIEW_OPTION } from '@tokens';
                 </app-related-fruits>
               </nav>
             } @placeholder (minimum 500ms) {
-              <p class="text-slate">Loading related fruits...</p>
+              <p class="text-slate-400 dark:text-slate-500" data-testid="related-fruits-placeholder">Loading related fruits...</p>
             } @loading (after 100ms; minimum 1s) {
-              <p class="text-slate-400 dark:text-slate-500">Loading...</p>
+              <p class="text-slate-400 dark:text-slate-500" data-testid="related-fruits-loading">Loading...</p>
             }
           </mat-card-content>
         </mat-card>
