@@ -48,7 +48,8 @@ describe('FruitNutritionsComponent', () => {
       { name: 'calories', value: 50 },
       { name: 'carbohydrates', value: 10 },
       { name: 'fat', value: 5 },
-      { name: 'protein', value: 2 }
+      { name: 'protein', value: 2 },
+      { name: 'sugar', value: 5 }
     ];
 
     beforeEach(() => {
@@ -63,8 +64,8 @@ describe('FruitNutritionsComponent', () => {
 
     it('should render a list of nutritions correctly', () => {
       expect(nutritionViews.length)
-        .withContext('Expected to find 4 nutrition views')
-        .toBe(4);
+        .withContext(`Expected to find ${Object.keys(mockNutritionMap).length} nutrition views`)
+        .toBe(Object.keys(mockNutritionMap).length);
     });
 
     it('should pass the nutritions to the nutrition views', () => {
