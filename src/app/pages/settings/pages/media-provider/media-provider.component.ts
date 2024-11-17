@@ -19,6 +19,7 @@ import { mediaProviderStore } from "./media-provider.store";
 @Component({
   selector: "app-media-provider",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatCardModule, MatListModule],
   providers: [mediaProviderStore],
   host: {
@@ -31,37 +32,53 @@ import { mediaProviderStore } from "./media-provider.store";
           <p class="text-black dark:text-white p-2 m-2">
             Select the provider to use to load media
           </p>
-          <mat-selection-list
-            #providers
-            [multiple]="false"
-            (selectionChange)="setProvider($event)"
-          >
-            @for (provider of cs.providers() | keyvalue; track provider.key) {
-              <mat-list-option
-                role="listitem"
-                lines="2"
-                color="primary"
-                [value]="provider.value.name"
-              >
-                <div matListItemTitle class="text-black dark:text-white">
-                  <span class="capitalize font-bold">{{
-                    provider.value.name
-                  }}</span>
-                  <a
-                    [href]="provider.value.link"
-                    class="text-sm ml-3 text-blue-700 hover:underline"
-                    >{{ provider.value.link }}</a
-                  >
-                </div>
-                <div
-                  matListItemLine
-                  class="truncate text-black dark:text-white"
+
+          @if (cs.emptyProviders()) {
+
+            <p class="text-black dark:text-white p-2 m-2" data-testid="no-providers">
+              No providers available
+            </p>
+
+          }
+          @else {
+
+            <mat-selection-list
+              #providers
+              [multiple]="false"
+              (selectionChange)="setProvider($event)"
+            >
+
+              @for (provider of cs.providers() | keyvalue; track provider.key) {
+
+                <mat-list-option
+                  role="listitem"
+                  lines="2"
+                  color="primary"
+                  [value]="provider.value.name"
                 >
-                  {{ provider.value.description }}
-                </div>
-              </mat-list-option>
-            }
-          </mat-selection-list>
+                  <div matListItemTitle class="text-black dark:text-white">
+                    <span class="capitalize font-bold">{{
+                      provider.value.name
+                    }}</span>
+                    <a
+                      [href]="provider.value.link"
+                      class="text-sm ml-3 text-blue-700 hover:underline"
+                      >{{ provider.value.link }}</a
+                    >
+                  </div>
+                  <div
+                    matListItemLine
+                    class="truncate text-black dark:text-white"
+                  >
+                    {{ provider.value.description }}
+                  </div>
+                </mat-list-option>
+
+              }
+
+            </mat-selection-list>
+          }
+
         </mat-card-content>
       </mat-card>
     </div>
