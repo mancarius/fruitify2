@@ -57,14 +57,14 @@ import {
     </div>
   `,
 })
-export class FruitNutritionViewComponent {
+export class FruitNutritionViewComponent<T extends Nutritions = Nutritions> {
   readonly #nutritionColors = inject(NUTRITION_COLORS);
 
   readonly #defaultNutritionColor = inject(DEFAULT_NUTRITION_COLOR);
 
   readonly nutrition = input.required<{
-    name: keyof Nutritions;
-    value: number;
+    name: keyof T;
+    value: T[keyof T];
   }>();
 
   protected readonly recommendedDailyIntakePercentage = computed<number>(() => {
@@ -76,8 +76,10 @@ export class FruitNutritionViewComponent {
   });
 
   protected readonly color = computed<string>(
-    () =>
-      this.#nutritionColors[this.nutrition()?.name] ??
-      this.#defaultNutritionColor,
+    () => {
+      const key = this.nutrition()?.name as keyof Nutritions;
+      return this.#nutritionColors[key] ??
+        this.#defaultNutritionColor;
+    }
   );
 }
