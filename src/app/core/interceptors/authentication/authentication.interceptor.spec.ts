@@ -3,6 +3,7 @@ import { HttpClient, HttpContext, HttpInterceptorFn, HttpRequest, provideHttpCli
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { authenticationInterceptor } from './authentication.interceptor';
 import { AUTH_CONFIG_CONTEXT_TOKEN } from '@tokens';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('authenticationInterceptor', () => {
   let httpTesting: HttpTestingController;
@@ -13,6 +14,7 @@ describe('authenticationInterceptor', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         provideHttpClient(withInterceptors([authenticationInterceptor])),
         provideHttpClientTesting(),
       ]

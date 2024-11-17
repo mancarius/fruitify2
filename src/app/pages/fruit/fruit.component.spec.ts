@@ -24,7 +24,7 @@ class RelatedFruitsStubComponent {
   maxSuggestions: any = input<any>();
 }
 
-fdescribe('FruitComponent', () => {
+describe('FruitComponent', () => {
   const mockFruit = { name: 'Apple' };
   let component: FruitComponent;
   let fixture: ComponentFixture<FruitComponent>;
