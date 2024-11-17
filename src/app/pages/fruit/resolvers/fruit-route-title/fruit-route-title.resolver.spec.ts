@@ -2,13 +2,18 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 import { fruitRouteTitleResolver } from './fruit-route-title.resolver';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('fruitRouteTitleResolver', () => {
-  const executeResolver: ResolveFn<string> = (...resolverParameters) => 
-      TestBed.runInInjectionContext(() => fruitRouteTitleResolver(...resolverParameters));
+  const executeResolver: ResolveFn<string> = (...resolverParameters) =>
+    TestBed.runInInjectionContext(() => fruitRouteTitleResolver(...resolverParameters));
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        provideExperimentalZonelessChangeDetection()
+      ]
+    });
   });
 
   it('should be created', () => {
