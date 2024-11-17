@@ -1,4 +1,4 @@
-import { inject, computed, signal } from "@angular/core";
+import { inject, computed } from "@angular/core";
 import {
   MediaProvidersEnum,
   MediaServiceConfig,
@@ -14,6 +14,7 @@ import {
   withState,
   patchState,
   withComputed,
+  withHooks,
 } from "@ngrx/signals";
 
 export type MediaProviderState = {
@@ -29,20 +30,17 @@ export const mediaProviderStore = signalStore(
 
   withComputed(
     (
-      _state,
+      state,
       mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN),
-      mediaServiceProviders = inject(MEDIA_SERVICE_PROVIDERS),
     ) => {
-      const providers = signal<MediaServiceProviderCollection | null>(
-        mediaServiceProviders,
-      ).asReadonly();
-
       const provider = computed(() => {
         const provider = mediaServiceConfig()?.provider;
-        return provider ? (providers()?.[provider] ?? null) : null;
+        return provider ? (state.providers()?.[provider] ?? null) : null;
       });
 
-      return { provider, providers };
+      const emptyProviders = computed(() => Object.keys(state.providers() ?? {})?.length === 0);
+
+      return { provider, emptyProviders };
     },
   ),
 
@@ -63,6 +61,15 @@ export const mediaProviderStore = signalStore(
       },
     }),
   ),
+
+  withHooks({
+    onInit: (
+      { setProviders },
+      mediaServiceProviders = inject(MEDIA_SERVICE_PROVIDERS)
+    ) => {
+      setProviders(mediaServiceProviders);
+    },
+  }),
 );
 
 /**
