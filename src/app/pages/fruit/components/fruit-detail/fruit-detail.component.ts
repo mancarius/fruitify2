@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { Fruit, Nullable } from '@shared/types';
 import { MatCardModule } from '@angular/material/card';
 import { FruitNutritionsComponent } from '../fruit-nutritions/fruit-nutritions.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-fruit-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MatListModule, MatCardModule, FruitNutritionsComponent],
+  imports: [RouterLink, MatListModule, MatCardModule, FruitNutritionsComponent],
   template: `
     @if(fruit) {
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Classification</h3>
