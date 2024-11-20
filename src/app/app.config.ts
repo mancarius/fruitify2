@@ -4,6 +4,7 @@ import {
   provideExperimentalZonelessChangeDetection,
   signal,
   inject,
+  APP_INITIALIZER,
 } from "@angular/core";
 import {
   provideRouter,
@@ -20,6 +21,7 @@ import { MediaServiceConfig } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
 import { authenticationInterceptor, fruityviceProxyInterceptor } from "@core/interceptors";
 import { PEXELS_API_CONFIG } from "@shared/constants";
+import { registerCustomSvgIcons } from "@core/utils/registerCustomSvgIcons";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,5 +53,11 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: { appearance: "outline" },
     },
+
+    {
+      provide: APP_INITIALIZER,
+      useFactory: registerCustomSvgIcons,
+      multi: true,
+    }
   ],
 };
