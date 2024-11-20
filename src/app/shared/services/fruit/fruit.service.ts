@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from "@angular/core";
+import { Injectable, inject, signal } from "@angular/core";
 import { Fruit, QueryParams } from "@shared/types";
 import { HttpClient } from "@angular/common/http";
 import {
