@@ -36,7 +36,7 @@ function transformNutritions<T extends Nutritions>(value: T): Array<{ name: keyo
   template: `
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
     @for(nutrition of nutritions(); track trackByNutritionName){
-      <li class="rounded bg-gray-500/5 p-4">
+      <li class="rounded bg-gray-500/5 p-4 hover:bg-gray-500/20 hover:shadow">
         <app-fruit-nutrition-view [nutrition]="nutrition"></app-fruit-nutrition-view>
       </li>
     }
