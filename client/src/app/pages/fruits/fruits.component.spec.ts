@@ -77,7 +77,7 @@ describe('FruitsComponent', () => {
   it('should navigate to /fruits with correct query params when search control value changes', () => {
     component.searchControl.setValue({ name: 'banana' });
 
-    fixture.detectChanges();
+    harness.detectChanges();
 
     expect(TestBed.inject(Router).url)
       .withContext('The URL should be /fruits')
@@ -110,7 +110,7 @@ describe('FruitsComponent', () => {
   });
 
   it('should navigate to /fruits when "Show all" link is clicked', () => {
-    const showAllLink: HTMLAnchorElement = fixture.debugElement.query(By.css('[data-testid="reset-filters"]')).nativeElement;
+    const showAllLink: HTMLAnchorElement = harness.routeDebugElement?.query(By.css('[data-testid="reset-filters"]')).nativeElement;
     showAllLink.click();
 
     harness.detectChanges();
