@@ -107,7 +107,7 @@ export class FruitsComponent implements OnInit {
   protected readonly cs = inject(fruitsStore);
 
   readonly searchControl = new FormControl<
-    Record<SearchContext, Nullable<string>> | null
+    Partial<Record<SearchContext, Nullable<string>>> | null
   >(null);
 
   readonly fruits = input.required<Fruit[]>();

@@ -26,7 +26,7 @@ export const fruitsStore = signalStore(
     ),
 
     search: rxMethod(
-      (query$: Observable<Record<SearchContext, Nullable<string>> | null>) => {
+      (query$: Observable<Partial<Record<SearchContext, Nullable<string>>> | null>) => {
         return query$.pipe(
           tap((query) => {
             const queryParams = query ?? {};

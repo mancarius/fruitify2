@@ -76,7 +76,7 @@ describe('FruitsComponent', () => {
   });
 
   it('should navigate to /fruits with correct query params when search control value changes', () => {
-    component.searchControl.setValue({ name: 'banana' } as any);
+    component.searchControl.setValue({ name: 'banana' });
 
     fixture.detectChanges();
 
