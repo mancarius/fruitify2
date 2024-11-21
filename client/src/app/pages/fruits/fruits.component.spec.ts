@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FruitsComponent } from './fruits.component';
 import { FruitsSearchComponent } from '@shared/components/fruits-search/fruits-search.component';
 import { FruitListComponent } from '@shared/components/fruit-list/fruit-list.component';
-import { ActivatedRoute, ActivatedRouteSnapshot, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { Component, provideExperimentalZonelessChangeDetection, Input } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -47,8 +47,9 @@ describe('FruitsComponent', () => {
   });
 
   it('should render the hero section and search component', () => {
-    const heroSection = fixture.debugElement.query(By.css('.hero-bg'));
-    const searchComponent = fixture.debugElement.query(By.directive(FruitsSearchComponent));
+    const heroSection = harness.routeDebugElement?.query(By.css('.hero-bg'));
+    const searchComponent = harness.routeDebugElement?.query(By.directive(FruitsSearchComponent));
+
     expect(heroSection)
       .withContext('The hero section should be rendered')
       .toBeTruthy();
@@ -67,8 +68,11 @@ describe('FruitsComponent', () => {
   });
 
   it('should update search control value when query params change', async () => {
-    await harness.navigateByUrl('/fruits?name=apple');
+    await harness.navigateByUrl('/?name=apple');
+
     fixture.detectChanges();
+
+    component = harness.routeDebugElement?.componentInstance as FruitsComponent;
     expect(component.searchControl.value)
       .withContext('The search control value should be { name: "apple" }')
       .toEqual({ name: 'apple' } as any);
