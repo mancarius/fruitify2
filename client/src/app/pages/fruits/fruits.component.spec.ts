@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FruitsComponent } from './fruits.component';
 import { FruitsSearchComponent } from '@shared/components/fruits-search/fruits-search.component';
 import { FruitListComponent } from '@shared/components/fruit-list/fruit-list.component';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { Component, provideExperimentalZonelessChangeDetection, signal, Input } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection, Input } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 @Component({ template: "", standalone: true })
@@ -26,21 +26,20 @@ describe('FruitsComponent', () => {
       providers: [
         provideExperimentalZonelessChangeDetection(),
         provideRouter([
-          { path: 'fruits', component: FruitsComponent },
-          { path: '**', redirectTo: '/fruits' },
+          { path: 'fruits', component: MockComponent },
+          { path: '', pathMatch: 'full', component: FruitsComponent },
         ]),
       ]
     })
       .overrideComponent(FruitsComponent, {
         remove: { imports: [FruitListComponent] },
         add: { imports: [FruitListStubComponent] }
-      })
-      .compileComponents();
+      });
 
     harness = await RouterTestingHarness.create();
-    fixture = TestBed.createComponent(FruitsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture = harness.fixture as ComponentFixture<FruitsComponent>;
+    component = await harness.navigateByUrl('/', FruitsComponent);
+    harness.detectChanges();
   });
 
   it('should create the component', () => {
@@ -89,8 +88,10 @@ describe('FruitsComponent', () => {
   });
 
   it('should render the correct number of fruits', () => {
-    component['cs'].fruits = signal([{ name: 'Apple' }, { name: 'Banana' }] as any);
+    component['cs'].setFruits([{ name: 'Apple' }, { name: 'Banana' }] as any);
+
     fixture.detectChanges();
+
     const fruitList = fixture.debugElement.query(By.directive(FruitListStubComponent));
     expect(fruitList.componentInstance.fruits.length)
       .withContext('The number of fruits should be 2')
@@ -98,8 +99,10 @@ describe('FruitsComponent', () => {
   });
 
   it('should display the correct number of found fruits', () => {
-    component['cs'].fruits = signal([{ name: 'Apple' }] as any);
+    component['cs'].setFruits([{ name: 'Apple' }] as any);
+
     fixture.detectChanges();
+
     const foundFruitsText = fixture.debugElement.query(By.css('.text-sm')).nativeElement.textContent;
     expect(foundFruitsText)
       .withContext('The text should be "Found 1 fruit."')
@@ -109,7 +112,9 @@ describe('FruitsComponent', () => {
   it('should navigate to /fruits when "Show all" link is clicked', () => {
     const showAllLink: HTMLAnchorElement = fixture.debugElement.query(By.css('[data-testid="reset-filters"]')).nativeElement;
     showAllLink.click();
-    fixture.detectChanges();
+
+    harness.detectChanges();
+
     expect(TestBed.inject(Router).url)
       .withContext('The URL should be /fruits')
       .toBe('/fruits');
