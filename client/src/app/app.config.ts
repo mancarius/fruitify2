@@ -19,7 +19,7 @@ import { provideServiceWorker } from "@angular/service-worker";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { MediaServiceConfig } from "@shared/types";
 import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
-import { authenticationInterceptor, fruityviceProxyInterceptor } from "@core/interceptors";
+import { authenticationInterceptor } from "@core/interceptors";
 import { PEXELS_API_CONFIG } from "@shared/constants";
 import { registerCustomSvgIcons } from "@core/utils/registerCustomSvgIcons";
 
@@ -41,7 +41,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: "registerWhenStable:30000",
     }),
 
-    provideHttpClient(withInterceptors([authenticationInterceptor, fruityviceProxyInterceptor])),
+    provideHttpClient(withInterceptors([authenticationInterceptor])),
 
     {
       provide: MEDIA_SERVICE_CONFIG_TOKEN,
