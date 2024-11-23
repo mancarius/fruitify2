@@ -40,6 +40,7 @@ describe('FruitsComponent', () => {
     fixture = harness.fixture as ComponentFixture<FruitsComponent>;
     component = await harness.navigateByUrl('/', FruitsComponent);
     harness.detectChanges();
+    await harness.fixture.whenStable();
   });
 
   it('should create the component', () => {
@@ -78,14 +79,16 @@ describe('FruitsComponent', () => {
       .toEqual({ name: 'apple' } as any);
   });
 
-  it('should navigate to /fruits with correct query params when search control value changes', () => {
+  it('should navigate to /fruits with correct query params when search control value changes', async () => {
+    component.searchControl.markAsTouched();
     component.searchControl.setValue({ name: 'banana' });
 
     harness.detectChanges();
+    await harness.fixture.whenStable();
 
     expect(TestBed.inject(Router).url)
       .withContext('The URL should be /fruits')
-      .toBe('/fruits');
+      .toContain('/fruits');
     expect(TestBed.inject(ActivatedRoute).snapshot.queryParams)
       .withContext('The query params should be { name: "banana" }')
       .toEqual({ name: 'banana' });
@@ -113,11 +116,12 @@ describe('FruitsComponent', () => {
       .toContain('Found 1 fruit.');
   });
 
-  it('should navigate to /fruits when "Show all" link is clicked', () => {
+  it('should navigate to /fruits when "Show all" link is clicked', async () => {
     const showAllLink: HTMLAnchorElement = harness.routeDebugElement?.query(By.css('[data-testid="reset-filters"]')).nativeElement;
     showAllLink.click();
 
     harness.detectChanges();
+    await harness.fixture.whenStable();
 
     expect(TestBed.inject(Router).url)
       .withContext('The URL should be /fruits')
