@@ -1,5 +1,5 @@
 import { InjectionToken, inject } from "@angular/core";
-import { environment } from "@env/environment.development";
+import { environment } from "@env/environment.dev";
 import {
   MediaProvidersEnum,
   MediaServiceConfig,
