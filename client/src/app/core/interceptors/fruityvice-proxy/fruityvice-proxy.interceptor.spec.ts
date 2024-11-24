@@ -4,7 +4,7 @@ import { fruityviceProxyInterceptor } from './fruityvice-proxy.interceptor';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { FRUITYVICE_PROXY_BASE_URL } from '@shared/constants';
+import { FRUITYVICE_PROXY_BASE_URL } from '@tokens';
 import { environment } from '@env/environment';
 
 describe('fruityviceProxyInterceptor', () => {

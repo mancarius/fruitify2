@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FruitService } from './fruit.service';
 import { Fruit } from '@shared/types';
-import { API_BASE_PATHNAME } from '@shared/constants';
+import { API_BASE_PATHNAME } from '@tokens';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { firstValueFrom } from 'rxjs';

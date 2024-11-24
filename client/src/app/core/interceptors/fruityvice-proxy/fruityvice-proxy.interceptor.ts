@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { environment } from '@env/environment';
-import { API_BASE_PATHNAME, FRUITYVICE_PROXY_BASE_URL } from '@shared/constants';
+import { API_BASE_PATHNAME, FRUITYVICE_PROXY_BASE_URL } from '@tokens';
 
 /**
  * Modifies the given request URL to use the hostname, protocol, and port of the proxy base URL.

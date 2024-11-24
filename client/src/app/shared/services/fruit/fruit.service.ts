@@ -9,7 +9,7 @@ import {
   tap,
   iif
 } from "rxjs";
-import { API_BASE_PATHNAME } from "@shared/constants";
+import { API_BASE_PATHNAME } from "@tokens";
 import { toObservable } from "@angular/core/rxjs-interop";
 
 @Injectable({

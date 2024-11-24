@@ -6,8 +6,7 @@ import {
   MediaServiceProviderCollection,
   Nullable,
 } from "@shared/types";
-import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
-import { API_CONFIGS, MEDIA_SERVICE_PROVIDERS } from "@shared/constants";
+import { MEDIA_SERVICE_CONFIG_TOKEN, API_CONFIGS, MEDIA_SERVICE_PROVIDERS } from "@tokens";
 import {
   signalStore,
   withMethods,

@@ -6,7 +6,7 @@ import { provideExperimentalZonelessChangeDetection, Provider, signal } from '@a
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
-import { MEDIA_SERVICE_PROVIDERS } from '@shared/constants';
+import { MEDIA_SERVICE_PROVIDERS } from '@tokens';
 import { MatListOptionHarness } from '@angular/material/list/testing';
 
 

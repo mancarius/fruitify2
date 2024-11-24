@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { API_BASE_PATHNAME } from "@shared/constants";
+import { API_BASE_PATHNAME } from "@tokens";
 
 export type EnvironmentConfigs = {
   pexelsApiKey: string;

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FruitNutritionViewComponent } from './fruit-nutrition-view.component';
 import { By } from '@angular/platform-browser';
 import { CircleProgressComponent } from '@shared/components/circle-progress/circle-progress.component';
-import { NUTRITION_COLORS, NUTRITION_DEFAULT_COLOR } from '@shared/constants';
+import { NUTRITION_COLORS, NUTRITION_DEFAULT_COLOR } from '@tokens';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('FruitNutritionViewComponent', () => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { PexelsService } from './pexels.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
-import { PEXELS_API_CONFIG } from '@shared/constants';
+import { PEXELS_API_CONFIG } from '@tokens';
 import { AUTH_CONFIG_CONTEXT_TOKEN, MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { inject, provideExperimentalZonelessChangeDetection } from '@angular/core';

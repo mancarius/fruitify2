@@ -12,7 +12,7 @@ import { CircleProgressComponent } from "@shared/components/circle-progress/circ
 import {
   NUTRITION_COLORS,
   NUTRITION_DEFAULT_COLOR as DEFAULT_NUTRITION_COLOR,
-} from "@shared/constants";
+} from "@tokens";
 
 @Component({
   selector: "app-fruit-nutrition-view",
