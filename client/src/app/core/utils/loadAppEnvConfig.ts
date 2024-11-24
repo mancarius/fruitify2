@@ -14,9 +14,7 @@ export function loadAppEnvConfig(configService: EnvironmentConfigService): () =>
   return () => configService.getConfigs(env).pipe(
     tap((configs) => {
       for (let [key, value] of Object.entries(configs)) {
-        if (environment.hasOwnProperty(key)) {
-          Reflect.set(environment, key, value);
-        }
+        sessionStorage.setItem(key, value);
       }
     })
   );
