@@ -20,7 +20,9 @@ ENV NODE_ENV=production
 RUN npm run build
 
 # Make port 9000 available to the world outside this container
-EXPOSE 9000
+EXPOSE 3000
+
+CMD ["npm", "start:prod"]
 
 # Set entrypoint
-CMD [ "/bin/sh", "-c \"while sleep 1000; do :; done\"" ]
+#CMD [ "/bin/sh", "-c \"while sleep 1000; do :; done\"" ]
