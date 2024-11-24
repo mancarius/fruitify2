@@ -10,7 +10,7 @@ import { FruitsService } from 'src/fruits/services/fruits.service';
 import { Fruit } from '../models/fruit.model';
 
 function isNumber(value: string | number): value is number {
-  return typeof value === "number" && !isNaN(value)
+  return typeof value === 'number' && !isNaN(value);
 }
 
 @Controller('fruits')
@@ -58,7 +58,7 @@ export class FruitsController {
     const asNumber = Number(idOrValue);
     const response: Fruit | null = isNumber(asNumber)
       ? this.fruitsService.findOne(Number(idOrValue))
-      : this.find({ name: String(idOrValue) })[0] ?? null;
+      : (this.find({ name: String(idOrValue) })[0] ?? null);
 
     if (!response) {
       throw new HttpException('Fruit not found', 404);
