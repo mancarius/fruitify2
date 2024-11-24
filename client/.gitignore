@@ -45,4 +45,6 @@ testem.log
 Thumbs.db
 
 # Env files
-environment*.ts
+environment.*.ts
+!environment.ts
+!environment.common.ts
