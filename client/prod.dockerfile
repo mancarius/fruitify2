@@ -17,6 +17,3 @@ ENV NODE_ENV=production
 
 # Build the project
 RUN npm run build
-
-# Set entrypoint
-#CMD [ "/bin/sh", "-c \"while sleep 1000; do :; done\"" ]
