@@ -5,6 +5,7 @@ import {
   signal,
   inject,
   ENVIRONMENT_INITIALIZER,
+  APP_INITIALIZER,
 } from "@angular/core";
 import {
   provideRouter,
@@ -22,6 +23,8 @@ import { MEDIA_SERVICE_CONFIG_TOKEN } from "@tokens";
 import { authenticationInterceptor } from "@core/interceptors";
 import { PEXELS_API_CONFIG } from "@shared/constants";
 import { registerCustomSvgIcons } from "@core/utils/registerCustomSvgIcons";
+import { loadAppEnvConfig } from "@core/utils/loadAppEnvConfig";
+import { EnvironmentConfigService } from "@shared/services/configurations/configurations.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,6 +45,13 @@ export const appConfig: ApplicationConfig = {
     }),
 
     provideHttpClient(withInterceptors([authenticationInterceptor])),
+
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadAppEnvConfig,
+      deps: [EnvironmentConfigService],
+      multi: true,
+    },
 
     {
       provide: MEDIA_SERVICE_CONFIG_TOKEN,
