@@ -1,3 +1,0 @@
-FROM nginx:alpine
-COPY ./configs/dev/http.conf /etc/nginx/conf.d/http.conf
-COPY ./configs/dev/nginx.conf /etc/nginx/nginx.conf
