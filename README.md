@@ -27,7 +27,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">Fruitify</h3>
+  <h1 align="center">Fruitify</h1>
   <p align="center">
     A simple Angular application for searching and visualizing fruit nutrition information.
     <br />
