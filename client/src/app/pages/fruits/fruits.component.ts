@@ -7,6 +7,7 @@ import { FruitListComponent } from "@shared/components/fruit-list/fruit-list.com
 import { fruitsStore } from "./fruits.store";
 import { ActivatedRoute, Params, RouterLink } from "@angular/router";
 import { filter, map } from "rxjs";
+import { NgOptimizedImage } from "@angular/common";
 
 @Component({
   selector: "app-home",
@@ -17,6 +18,7 @@ import { filter, map } from "rxjs";
     ReactiveFormsModule,
     FruitListComponent,
     RouterLink,
+    NgOptimizedImage
   ],
   providers: [fruitsStore],
 
@@ -35,6 +37,12 @@ import { filter, map } from "rxjs";
       <div
         class="hero-bg absolute top-0 w-full h-full bg-center bg-cover bg-fixed"
       >
+        <img
+          id="bgImage"
+          class="w-full h-full absolute z-0 object-cover"
+          ngSrc="/assets/images/pexels-jane-doan-1128678.jpg"
+          priority
+          fill>
         <span
           id="blackOverlay"
           class="w-full h-full absolute opacity-75 dark:bg-black bg-white"
