@@ -15,6 +15,7 @@ import { ThemeService } from '@shared/services/theme/theme.service';
       (click)="toggleTheme()"
       [matTooltip]="tooltipMessage()"
       data-testid="theme-toggler"
+      aria-label="Toggle theme"
     >
       <mat-icon>{{ iconName() }}</mat-icon>
     </button>

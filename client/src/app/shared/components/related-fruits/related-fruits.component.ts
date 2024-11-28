@@ -72,6 +72,7 @@ export class RelatedFruitsContentDirective {
             mat-button
             class="text-slate-900 dark:text-slate-200"
             (click)="cs.toggleShowAll()"
+            aria-label="Load more fruits"
             >{{ cs.buttonText() }}</a
           >
         </div>

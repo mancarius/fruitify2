@@ -19,7 +19,7 @@ import { injectRouteTitle } from '@shared/helpers';
     <header class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center">
       <app-navbar class="w-full"></app-navbar>
       <div class="w-full max-w-screen-sm flex gap-4 items-center justify-start text-2xl md:text-4xl text-black dark:text-white pl-4 md:pl-0 pb-4 md:pb-2">
-        <button mat-icon-button (click)="location.back()" data-testid="location-back-btn">
+        <button mat-icon-button (click)="location.back()" data-testid="location-back-btn" aria-label="Navigate to previous page">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <h2 class="font-bold m-0" data-testid="route-title">{{ routeTitle() }}</h2>

@@ -26,11 +26,13 @@ import { EncodeToPathSegmentPipe } from "@pipes";
     >
       @for (fruit of fruits(); track fruit.id) {
         <li class="aspect-[3/2] flex flex-col">
+          @let ariaLabel = "Navigate to " + fruit.name + " detail";
           <a
             class="grow flex"
             [routerLink]="['/fruit', fruit.name | encodeToPathSegment]"
             [queryParams]="{ fruitId: fruit.id }"
             routerLinkActive="active"
+            [attr.aria-label]="ariaLabel"
           >
             @defer (on viewport) {
               <app-fruit-preview

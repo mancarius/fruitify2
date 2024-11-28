@@ -39,6 +39,7 @@ import { MatRippleModule } from '@angular/material/core';
             type="button"
             (click)="toggleNavbar()"
             data-testid="toggle-navbar-btn"
+            aria-label="Toggle navigation"
           >
             @let icon = showMenu() ? 'menu_open' : 'menu';
             <mat-icon class="opacity-80 text-gray-900 dark:text-gray-100 ">{{icon}}</mat-icon>
@@ -55,6 +56,7 @@ import { MatRippleModule } from '@angular/material/core';
                 class="px-3 py-4 md:py-2 flex items-center text-xs uppercase font-bold w-full md:rounded-full"
                 matRipple
                 routerLink="/settings"
+                aria-label="Settings"
               >
                 <mat-icon class="opacity-80">settings</mat-icon>
                 <span class="md:hidden inline-block ml-2">Settings</span>
@@ -66,6 +68,7 @@ import { MatRippleModule } from '@angular/material/core';
                 [href]="ghLink"
                 matRipple
                 class="px-3 py-4 md:py-2 flex items-center text-xs uppercase font-bold w-full md:rounded-full"
+                aria-label="Github"
               >
                 <mat-icon svgIcon="github" class="opacity-80"></mat-icon>
                 <span class="md:hidden inline-block ml-2">Github</span>

@@ -39,6 +39,7 @@ import { NgOptimizedImage } from "@angular/common";
       >
         <img
           id="bgImage"
+          alt="Background image with mixed fruits"
           class="w-full h-full absolute z-0 object-cover"
           ngSrc="/assets/images/pexels-jane-doan-1128678.jpg"
           priority
