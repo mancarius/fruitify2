@@ -4,15 +4,12 @@ import { FooterComponent } from '@core/components/footer/footer.component';
 import { NavbarComponent } from '@core/components/navbar/navbar.component';
 
 @Component({
-  selector: 'app-minimal-horizontal-layout',
-  standalone: true,
-  imports: [RouterOutlet, NavbarComponent, FooterComponent],
-
-  host: {
-    class: 'flex flex-col w-full grow',
-  },
-  
-  template: `
+    selector: 'app-minimal-horizontal-layout',
+    imports: [RouterOutlet, NavbarComponent, FooterComponent],
+    host: {
+        class: 'flex flex-col w-full grow',
+    },
+    template: `
     <!-- Header -->
     <header class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md">
       <app-navbar></app-navbar>
@@ -27,6 +24,6 @@ import { NavbarComponent } from '@core/components/navbar/navbar.component';
     <footer>
       <app-footer></app-footer>
     </footer>
-  `,
+  `
 })
 export class MinimalHorizontalLayoutComponent {}

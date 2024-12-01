@@ -11,17 +11,14 @@ import { Fruit, Nullable } from "@shared/types";
 import { fruitPreviewStore } from "./fruit-preview.store";
 
 @Component({
-  selector: "app-fruit-preview",
-  standalone: true,
-  imports: [NgIf, NgOptimizedImage],
-  providers: [fruitPreviewStore],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
-  host: {
-    class: "bg-gray-500/10 relative overflow-hidden p-4",
-  },
-
-  template: `
+    selector: "app-fruit-preview",
+    imports: [NgIf, NgOptimizedImage],
+    providers: [fruitPreviewStore],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: "bg-gray-500/10 relative overflow-hidden p-4",
+    },
+    template: `
     <div class="fruit-preview">
       @if (cs.imgUrl()) {
         <div class="fruit-preview__photo" data-testid="photo-container">
@@ -37,8 +34,7 @@ import { fruitPreviewStore } from "./fruit-preview.store";
       </div>
     </div>
   `,
-
-  styles: `
+    styles: `
     :host {
       container-type: inline-size;
     }
@@ -69,7 +65,7 @@ import { fruitPreviewStore } from "./fruit-preview.store";
         width: min-content;
       }
     }
-  `,
+  `
 })
 export class FruitPreviewComponent {
   protected readonly cs = inject(fruitPreviewStore);

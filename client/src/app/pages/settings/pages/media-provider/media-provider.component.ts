@@ -17,15 +17,14 @@ import { MediaServiceProvider, Nullable } from "@shared/types";
 import { mediaProviderStore } from "./media-provider.store";
 
 @Component({
-  selector: "app-media-provider",
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatCardModule, MatListModule],
-  providers: [mediaProviderStore],
-  host: {
-    class: "flex flex-col items-center p-4 w-full",
-  },
-  template: `
+    selector: "app-media-provider",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, MatCardModule, MatListModule],
+    providers: [mediaProviderStore],
+    host: {
+        class: "flex flex-col items-center p-4 w-full",
+    },
+    template: `
     <div class="w-full max-w-screen-sm flex flex-col gap-4">
       <mat-card class="w-full bg-white dark:bg-slate-50/10">
         <mat-card-content class="p-0">
@@ -82,7 +81,7 @@ import { mediaProviderStore } from "./media-provider.store";
         </mat-card-content>
       </mat-card>
     </div>
-  `,
+  `
 })
 export class MediaProviderComponent {
   private readonly providersCmp = viewChild<MatSelectionList>("providers");

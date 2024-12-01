@@ -10,27 +10,24 @@ import { filter, map } from "rxjs";
 import { NgOptimizedImage } from "@angular/common";
 
 @Component({
-  selector: "app-home",
-  standalone: true,
-  imports: [
-    FruitsSearchComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    FruitListComponent,
-    RouterLink,
-    NgOptimizedImage
-  ],
-  providers: [fruitsStore],
-
-  styles: [
-    `
+    selector: "app-home",
+    imports: [
+        FruitsSearchComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        FruitListComponent,
+        RouterLink,
+        NgOptimizedImage
+    ],
+    providers: [fruitsStore],
+    styles: [
+        `
       .hero-bg {
         background-image: url("/assets/images/pexels-jane-doan-1128678.jpg");
       }
     `,
-  ],
-
-  template: `
+    ],
+    template: `
     <div
       class="relative pt-16 pb-32 flex content-center items-center justify-center min-h-[30rem] lg:min-h-[50vh]"
     >
@@ -106,7 +103,7 @@ import { NgOptimizedImage } from "@angular/common";
         [fruits]="cs.fruits()"
       ></app-fruit-list>
     </section>
-  `,
+  `
 })
 export class FruitsComponent implements OnInit {
   private readonly _destroy$ = inject(DestroyRef);

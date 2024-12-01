@@ -28,12 +28,11 @@ function transformNutritions<T extends Nutritions>(value: T): Array<{ name: keyo
  * </app-fruit-nutritions>
  */
 @Component({
-  selector: 'app-fruit-nutritions',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FruitNutritionViewComponent],
-  host: { class: 'w-full flex flex-col bg-cover bg-center flex flex-col relative justify-center items-center' },
-  template: `
+    selector: 'app-fruit-nutritions',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, FruitNutritionViewComponent],
+    host: { class: 'w-full flex flex-col bg-cover bg-center flex flex-col relative justify-center items-center' },
+    template: `
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
     @for(nutrition of nutritions(); track trackByNutritionName){
       <li class="rounded bg-gray-500/5 p-4 hover:bg-gray-500/10 hover:shadow">

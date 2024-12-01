@@ -7,20 +7,19 @@ import { MatCardModule } from '@angular/material/card';
 import { MAX_SUGGESTIONS_PREVIEW_OPTION } from '@tokens';
 
 @Component({
-  selector: 'app-fruit',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FruitDetailComponent,
-    RelatedFruitsComponent,
-    RelatedFruitsContentDirective,
-    FruitListComponent,
-    MatCardModule
-  ],
-  host: {
-    class: 'w-full min-h-screen flex flex-col justify-center items-center relative'
-  },
-  template: `
+    selector: 'app-fruit',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FruitDetailComponent,
+        RelatedFruitsComponent,
+        RelatedFruitsContentDirective,
+        FruitListComponent,
+        MatCardModule
+    ],
+    host: {
+        class: 'w-full min-h-screen flex flex-col justify-center items-center relative'
+    },
+    template: `
     <article class="w-full dark:text-slate-200 flex flex-col gap-4 grow">
       <header class="relative w-full h-64 sm:h-96 flex flex-col justify-end items-center bg-center bg-no-repeat bg-cover"
         [style.background-image]="heroBackgroundImage()">
@@ -59,7 +58,7 @@ import { MAX_SUGGESTIONS_PREVIEW_OPTION } from '@tokens';
         </mat-card>
       </aside>
     }
-  `,
+  `
 })
 export class FruitComponent {
   readonly maxSuggestions = inject(MAX_SUGGESTIONS_PREVIEW_OPTION);

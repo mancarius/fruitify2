@@ -6,10 +6,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThemeService } from '@shared/services/theme/theme.service';
 
 @Component({
-  selector: 'app-theme-toggler',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
-  template: `
+    selector: 'app-theme-toggler',
+    imports: [CommonModule, MatIconModule, MatButtonModule, MatTooltipModule],
+    template: `
     <button mat-icon-button
       class="dark:text-gray-100 text-yellow-500 transition-colors"
       (click)="toggleTheme()"
@@ -19,7 +18,7 @@ import { ThemeService } from '@shared/services/theme/theme.service';
     >
       <mat-icon>{{ iconName() }}</mat-icon>
     </button>
-  `,
+  `
 })
 export class ThemeTogglerComponent {
   private readonly _themeService = inject(ThemeService);

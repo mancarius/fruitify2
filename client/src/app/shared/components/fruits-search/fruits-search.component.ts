@@ -29,27 +29,25 @@ type ChangeFn = (value: Record<SearchContext, Nullable<string>> | null) => void;
 type TouchedFn = () => void;
 
 @Component({
-  selector: "app-fruits-search",
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FruitsSearchComponent),
-      multi: true,
-    },
-  ],
-
-  template: `
+    selector: "app-fruits-search",
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+    ],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FruitsSearchComponent),
+            multi: true,
+        },
+    ],
+    template: `
     <form
       class="flex gap-4 items-center w-full border border-black dark:border-white rounded"
       autocomplete="off"
@@ -90,14 +88,14 @@ type TouchedFn = () => void;
       </div>
     </form>
   `,
-  styles: [
-    `
+    styles: [
+        `
       :host ::ng-deep .mat-mdc-select-value {
         text-align: left;
         padding-left: 1rem;
       }
     `,
-  ],
+    ]
 })
 export class FruitsSearchComponent implements OnInit, ControlValueAccessor {
   private readonly _destroyRef = inject(DestroyRef);

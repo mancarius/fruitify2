@@ -8,8 +8,9 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatNavListItemHarness } from '@angular/material/list/testing';
 
 @Component({
-  selector: 'mock-component',
-  template: ''
+    selector: 'mock-component',
+    template: '',
+    standalone: false
 })
 class MockComponent { }
 

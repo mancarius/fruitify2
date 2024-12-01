@@ -34,14 +34,13 @@ export class RelatedFruitsContentDirective {
 }
 
 @Component({
-  selector: "app-related-fruits",
-  standalone: true,
-  imports: [NgTemplateOutlet, MatButtonModule],
-  providers: [RelatedFruitsStore],
-  host: {
-    class: "flex flex-col gap-4",
-  },
-  template: `
+    selector: "app-related-fruits",
+    imports: [NgTemplateOutlet, MatButtonModule],
+    providers: [RelatedFruitsStore],
+    host: {
+        class: "flex flex-col gap-4",
+    },
+    template: `
     @if (!content) {
       <p class="text-slate-400 dark:text-slate-500 center" data-testid="no-content-provided-error-message">
         No content provided
@@ -78,7 +77,7 @@ export class RelatedFruitsContentDirective {
         </div>
       }
     }
-  `,
+  `
 })
 export class RelatedFruitsComponent implements OnInit {
   protected readonly cs = inject(RelatedFruitsStore);

@@ -6,12 +6,11 @@ import { FruitNutritionsComponent } from '../fruit-nutritions/fruit-nutritions.c
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-fruit-detail',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatListModule, MatCardModule, FruitNutritionsComponent],
-  inputs: ['fruit'],
-  template: `
+    selector: 'app-fruit-detail',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterLink, MatListModule, MatCardModule, FruitNutritionsComponent],
+    inputs: ['fruit'],
+    template: `
     @if(fruit) {
       <h3 class="font-bold text-sm text-black dark:text-white m-0">Classification</h3>
 
@@ -54,7 +53,7 @@ import { RouterLink } from '@angular/router';
     @else {
       <p>Nothing to show</p>
     }
-  `,
+  `
 })
 export class FruitDetailComponent {
   fruit!: Nullable<Fruit>;

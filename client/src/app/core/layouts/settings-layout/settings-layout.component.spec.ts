@@ -16,8 +16,9 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'mock-component',
-  template: ''
+    selector: 'mock-component',
+    template: '',
+    standalone: false
 })
 class MockComponent { }
 

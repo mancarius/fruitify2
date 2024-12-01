@@ -6,21 +6,18 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
 import { EncodeToPathSegmentPipe } from "@pipes";
 
 @Component({
-  selector: "app-fruit-list",
-  standalone: true,
-  imports: [
-    FruitPreviewComponent,
-    FruitPreviewPlaceholderComponent,
-    RouterLink,
-    RouterLinkActive,
-    EncodeToPathSegmentPipe,
-  ],
-
-  host: {
-    class: "block",
-  },
-
-  template: `
+    selector: "app-fruit-list",
+    imports: [
+        FruitPreviewComponent,
+        FruitPreviewPlaceholderComponent,
+        RouterLink,
+        RouterLinkActive,
+        EncodeToPathSegmentPipe,
+    ],
+    host: {
+        class: "block",
+    },
+    template: `
     <ul
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
@@ -64,7 +61,7 @@ import { EncodeToPathSegmentPipe } from "@pipes";
         </li>
       }
     </ul>
-  `,
+  `
 })
 export class FruitListComponent {
   fruits = input.required<Fruit[]>();

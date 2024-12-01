@@ -15,12 +15,11 @@ import {
 } from "@tokens";
 
 @Component({
-  selector: "app-fruit-nutrition-view",
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, CircleProgressComponent],
-  host: { class: "flex gap-4" },
-  template: `
+    selector: "app-fruit-nutrition-view",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, CircleProgressComponent],
+    host: { class: "flex gap-4" },
+    template: `
     @let rdiPercentage = recommendedDailyIntakePercentage();
     @let name = nutrition().name;
     @let value = nutrition().value;
@@ -55,7 +54,7 @@ import {
         of the recommended daily intake.
       </p>
     </div>
-  `,
+  `
 })
 export class FruitNutritionViewComponent<T extends Nutritions = Nutritions> {
   readonly #nutritionColors = inject(NUTRITION_COLORS);

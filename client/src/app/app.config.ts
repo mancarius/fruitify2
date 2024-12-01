@@ -1,12 +1,4 @@
-import {
-  ApplicationConfig,
-  isDevMode,
-  provideExperimentalZonelessChangeDetection,
-  signal,
-  inject,
-  ENVIRONMENT_INITIALIZER,
-  APP_INITIALIZER,
-} from "@angular/core";
+import { ApplicationConfig, isDevMode, provideExperimentalZonelessChangeDetection, signal, inject, provideAppInitializer, provideEnvironmentInitializer } from "@angular/core";
 import {
   provideRouter,
   withComponentInputBinding,
@@ -47,12 +39,10 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(withInterceptors([authenticationInterceptor])),
 
-    {
-      provide: APP_INITIALIZER,
-      useFactory: loadAppEnvConfig,
-      deps: [EnvironmentConfigService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (loadAppEnvConfig)(inject(EnvironmentConfigService));
+        return initializerFn();
+      }),
 
     {
       provide: MEDIA_SERVICE_CONFIG_TOKEN,
@@ -65,12 +55,11 @@ export const appConfig: ApplicationConfig = {
       useValue: { appearance: "outline" },
     },
 
-    {
-      provide: ENVIRONMENT_INITIALIZER,
-      useFactory() {
+    provideEnvironmentInitializer(() => {
+        const initializerFn = (() => {
         return registerCustomSvgIcons;
-      },
-      multi: true,
-    }, provideClientHydration()
+      })();
+        return initializerFn();
+      }), provideClientHydration()
   ],
 };

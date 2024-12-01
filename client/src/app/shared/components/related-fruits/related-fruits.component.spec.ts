@@ -18,17 +18,16 @@ class SomeComponent {
 }
 
 @Component({
-  standalone: true,
-  selector: 'test-cmp',
-  imports: [RelatedFruitsComponent, RelatedFruitsContentDirective, SomeComponent],
-  template: `
+    selector: 'test-cmp',
+    imports: [RelatedFruitsComponent, RelatedFruitsContentDirective, SomeComponent],
+    template: `
     <app-related-fruits [fruit]="fruit()">
       @if (showContent()) {
         <ng-template appRelatedFruitsContent let-fruits>
           <some-component [fruits]="fruits"></some-component>
         </ng-template>
       }
-    </app-related-fruits>`,
+    </app-related-fruits>`
 })
 class TestWrapperComponent {
   showContent = signal(true);

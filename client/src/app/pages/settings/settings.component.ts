@@ -5,14 +5,13 @@ import { MEDIA_SERVICE_CONFIG_TOKEN } from '@tokens';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [MatCardModule, MatListModule, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'flex flex-col items-center p-4 w-full',
-  },
-  template: `
+    selector: 'app-settings',
+    imports: [MatCardModule, MatListModule, RouterLink],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'flex flex-col items-center p-4 w-full',
+    },
+    template: `
     <div class="w-full max-w-screen-sm flex flex-col gap-4">
       <h3 class="text-sm font-bold text-gray-800 dark:text-gray-100 m-0">Media</h3>
 
@@ -28,7 +27,7 @@ import { RouterLink } from '@angular/router';
         </mat-card-content>
       </mat-card>
     </div>
-  `,
+  `
 })
 export class SettingsComponent {
   readonly #mediaServiceConfig = inject(MEDIA_SERVICE_CONFIG_TOKEN);

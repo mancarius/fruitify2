@@ -7,17 +7,16 @@ import { ThemeTogglerComponent } from '@shared/components/theme-toggler/theme-to
 import { MatRippleModule } from '@angular/material/core';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ThemeTogglerComponent,
-    MatButtonModule,
-    MatIconModule,
-    RouterLink,
-    MatRippleModule,
-  ],
-  template: `
+    selector: 'app-navbar',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        ThemeTogglerComponent,
+        MatButtonModule,
+        MatIconModule,
+        RouterLink,
+        MatRippleModule,
+    ],
+    template: `
     <nav class="w-full flex flex-wrap items-center justify-between px-2 py-3">
       <div
         class="container px-4 mx-auto flex flex-wrap items-stretch justify-between"
@@ -78,7 +77,7 @@ import { MatRippleModule } from '@angular/material/core';
         </div>
       </div>
     </nav>
-  `,
+  `
 })
 export class NavbarComponent {
   readonly showMenu = signal(false);

@@ -9,9 +9,8 @@ import { MatSelectHarness } from '@angular/material/select/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 
 @Component({
-  standalone: true,
-  imports: [FruitsSearchComponent, FormsModule, ReactiveFormsModule],
-  template: `<app-fruits-search [formControl]="searchControl"></app-fruits-search>`
+    imports: [FruitsSearchComponent, FormsModule, ReactiveFormsModule],
+    template: `<app-fruits-search [formControl]="searchControl"></app-fruits-search>`
 })
 class TestHostComponent {
   protected searchControl = new FormControl();

@@ -8,13 +8,12 @@ import { FooterComponent } from '@core/components/footer/footer.component';
 import { injectRouteTitle } from '@shared/helpers';
 
 @Component({
-  selector: 'app-settings-layout',
-  standalone: true,
-  imports: [MatButtonModule, MatIconModule, RouterOutlet, NavbarComponent, FooterComponent],
-  host: {
-    class: 'flex flex-col w-full grow',
-  },
-  template: `
+    selector: 'app-settings-layout',
+    imports: [MatButtonModule, MatIconModule, RouterOutlet, NavbarComponent, FooterComponent],
+    host: {
+        class: 'flex flex-col w-full grow',
+    },
+    template: `
     <!-- Header -->
     <header class="sticky top-0 z-50 w-full bg-white dark:bg-gray-900 shadow-md flex flex-col items-center">
       <app-navbar class="w-full"></app-navbar>
@@ -35,7 +34,7 @@ import { injectRouteTitle } from '@shared/helpers';
     <footer>
       <app-footer></app-footer>
     </footer>
-  `,
+  `
 })
 export class SettingsLayoutComponent {
   readonly location = inject(Location);

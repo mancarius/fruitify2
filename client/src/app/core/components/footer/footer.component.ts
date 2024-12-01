@@ -2,14 +2,13 @@ import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-footer',
-  standalone: true,
-  imports: [NgFor],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'relative bg-gray-300 dark:bg-gray-700 pt-8 pb-6'
-  },
-  template: `
+    selector: 'app-footer',
+    imports: [NgFor],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'relative bg-gray-300 dark:bg-gray-700 pt-8 pb-6'
+    },
+    template: `
     <div class="bg-gray-100 dark:bg-gray-900">
       <div class="container mx-auto px-4">
         <div class="flex flex-wrap items-center md:justify-between justify-center">

@@ -5,26 +5,25 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, MatProgressSpinnerModule],
-  host: {
-    class: 'grow flex flex-col w-full',
-  },
-  animations: [
-    trigger('fade', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('0.3s ease-in-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        style({ opacity: 1 }),
-        animate('0.3s ease-in-out', style({ opacity: 0 }))
-      ]),
-    ]),
-  ],
-  template: `
+    selector: 'app-root',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterOutlet, MatProgressSpinnerModule],
+    host: {
+        class: 'grow flex flex-col w-full',
+    },
+    animations: [
+        trigger('fade', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('0.3s ease-in-out', style({ opacity: 1 }))
+            ]),
+            transition(':leave', [
+                style({ opacity: 1 }),
+                animate('0.3s ease-in-out', style({ opacity: 0 }))
+            ]),
+        ]),
+    ],
+    template: `
     <router-outlet></router-outlet>
 
   @if (isLoading()) {
@@ -35,7 +34,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       <mat-spinner diameter="80" color="primary"></mat-spinner>
     </div>
   }
-  `,
+  `
 })
 export class AppComponent {
   readonly isLoading = inject(LoadingService).loading;
