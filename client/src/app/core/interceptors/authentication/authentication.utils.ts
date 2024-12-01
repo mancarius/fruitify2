@@ -10,7 +10,6 @@ import { MediaServiceConfig, ApiAuthConfig } from "@shared/types";
    * @returns A new request object with the updated authentication information.
    */
 export function setRequestAuth<T>(req: HttpRequest<T>, authConfigs: MediaServiceConfig['authConfigs']): HttpRequest<T> {
-  ;
   const { headers, params } = authConfigs.reduce((acc, curr) => {
     switch (curr.addTo) {
       case 'headers':
