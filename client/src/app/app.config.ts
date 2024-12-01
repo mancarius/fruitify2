@@ -25,6 +25,7 @@ import { PEXELS_API_CONFIG } from "@tokens";
 import { registerCustomSvgIcons } from "@core/utils/registerCustomSvgIcons";
 import { loadAppEnvConfig } from "@core/utils/loadAppEnvConfig";
 import { EnvironmentConfigService } from "@shared/services/configurations/configurations.service";
+import { provideClientHydration } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -70,6 +71,6 @@ export const appConfig: ApplicationConfig = {
         return registerCustomSvgIcons;
       },
       multi: true,
-    }
+    }, provideClientHydration()
   ],
 };
