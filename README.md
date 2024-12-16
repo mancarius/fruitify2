@@ -143,7 +143,7 @@ Access the application at `http://localhost:4200`
 Run the application in production mode using Docker:
 
   ```sh
-  docker-compose -f docker-compose.prod.yml up --build
+  docker-compose -f docker-compose.prod.yml up -d --build
   ```
 
 Access the application at `http://localhost`
