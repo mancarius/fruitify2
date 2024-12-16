@@ -1,5 +1,5 @@
 version: "3"
-name: "fruitify-prod"
+name: "fruitify"
 services:
 
   nginx:
@@ -7,9 +7,7 @@ services:
       - api
       - client
     restart: always
-    build:
-      dockerfile: prod.dockerfile
-      context: ./nginx
+    image: mancarius/fruitify:nginx-1.0.0
     volumes:
       - client-dist:/usr/share/nginx/html
     ports:
@@ -19,9 +17,7 @@ services:
       - client
 
   client:
-    build:
-      dockerfile: prod.dockerfile
-      context: ./client
+    image: mancarius/fruitify:client-1.0.0
     depends_on:
       - api
     volumes:
@@ -31,9 +27,7 @@ services:
 
   api:
     restart: always
-    build:
-      dockerfile: prod.dockerfile
-      context: ./api
+    image: mancarius/fruitify:api-1.0.0
     command: npm run start
     volumes:
       - type: bind
