@@ -91,6 +91,13 @@ This project requires Node.js (v19 or higher) and a package manager. While the e
 
 ### Installation
 
+<div style="background-color:#111; border-left: 4px solid #abcdef">
+  <h4 style="color:gray;padding:10px; padding-bottom:0">Note</h4>
+  <p style="padding:10px; padding-top:0">
+  If you just want to try the application in prduction-like mode, jump directly to the <a href="#production-like-mode">production-like mode</a> section.
+  </p>
+</div>
+
 1. Obtain free API keys at:
    * [Unsplash](https://unsplash.com/developers)
    * [Pexels](https://www.pexels.com/api/)
